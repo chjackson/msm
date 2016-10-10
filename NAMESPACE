@@ -1,0 +1,133 @@
+useDynLib(msm)
+
+export(
+absorbing.msm,
+boot.msm,
+coef.msm,
+contour.msm,
+crudeinits.msm,
+deltamethod,
+draic.msm,
+drlcv.msm,
+efpt.msm,
+ematrix.msm,
+envisits.msm,
+hazard.msm,
+image.msm,
+MatrixExp,
+msm,
+msm2Surv,
+msm.form.qoutput,
+msm.form.eoutput,
+logLik.msm,
+lrtest.msm,
+odds.msm,
+pearson.msm,
+persp.msm,
+phasemeans.msm,    
+plot.msm,
+plotprog.msm,
+pmatrix.msm,
+pmatrix.piecewise.msm,
+pnext.msm,
+ppass.msm,
+plot.prevalence.msm,
+plot.survfit.msm,
+prevalence.msm,
+printold.msm,
+printnew.msm,
+qmatrix.msm,
+qratio.msm,
+recreate.olddata,
+scoreresid.msm,
+sim.msm,
+simmulti.msm,
+simfitted.msm,
+sojourn.msm,
+statetable.msm,
+summary.msm,
+surface.msm,
+totlos.msm,
+transient.msm,
+viterbi.msm,
+hmmCat,
+hmmIdent,
+hmmUnif,
+hmmNorm,
+hmmLNorm,
+hmmExp,
+hmmGamma,
+hmmWeibull,
+hmmPois,
+hmmBinom,
+hmmTNorm,
+hmmMETNorm,
+hmmMEUnif,
+hmmNBinom,
+hmmBeta,
+hmmT,
+hmmMV,    
+dtnorm,
+ptnorm,
+qtnorm,
+rtnorm,
+dmenorm,
+pmenorm,
+qmenorm,
+rmenorm,
+dmeunif,
+pmeunif,
+qmeunif,
+rmeunif,
+dpexp,
+ppexp,
+qpexp,
+rpexp,
+qgeneric,
+d2phase,
+p2phase,
+q2phase,
+r2phase,
+h2phase   
+)
+
+importFrom(graphics, plot)
+importFrom(graphics, persp)
+importFrom(graphics, contour)
+importFrom(graphics, image)
+importFrom(stats, coef)
+importFrom(mvtnorm, rmvnorm)
+importFrom(survival, Surv)
+importFrom(survival, survfit)
+importFrom(expm, expm)
+
+S3method(print, msm)
+S3method(summary, msm)
+S3method(plot, msm)
+S3method(contour, msm)
+S3method(persp, msm)
+S3method(image, msm)
+S3method(coef, msm)
+S3method(logLik, msm)
+S3method(model.frame, msm)
+S3method(model.matrix, msm)
+S3method(print, hmodel)
+S3method(print, hmmdist)
+S3method(print, msm.est)
+S3method("[", msm.est)
+S3method(print, pearson.msm)
+
+S3method(plot, prevalence.msm)
+S3method(plot, survfit.msm)
+
+importFrom("grDevices", "rainbow")
+importFrom("graphics", "filled.contour", "legend", "lines", "par",
+           "text")
+importFrom("stats", "as.formula", "deriv", "dexp", "dnorm",
+           "integrate", "logLik", "model.extract", "model.frame",
+           "model.matrix", "na.fail", "na.omit", "na.pass",
+           "numericDeriv", "optimHess", "pchisq", "pexp", "plogis",
+           "pnorm", "qlogis", "qnorm", "quantile", "rbeta", "rbinom",
+           "reformulate", "rexp", "rgamma", "rlnorm", "rnbinom",
+           "rnorm", "rpois", "rt", "runif", "rweibull", "sd",
+           "setNames", "terms", "uniroot")

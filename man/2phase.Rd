@@ -1,0 +1,138 @@
+\name{2phase}
+\alias{d2phase}
+\alias{p2phase}
+\alias{q2phase}
+\alias{r2phase}
+\alias{h2phase}
+\title{Coxian phase-type distribution with two phases}
+\description{
+  Density, distribution, quantile functions and other utilities for
+  the Coxian phase-type distribution with two phases.
+}
+\usage{
+  d2phase(x, l1, mu1, mu2, log=FALSE)
+  p2phase(q, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE)
+  q2phase(p, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE)
+  r2phase(n, l1, mu1, mu2)
+  h2phase(x, l1, mu1, mu2, log=FALSE)
+}
+\arguments{
+  \item{x,q}{vector of quantiles.}
+  \item{p}{vector of probabilities.}
+  \item{n}{number of observations. If \code{length(n) > 1}, the length is
+    taken to be the number required.}
+  \item{l1}{Intensity for transition between phase 1 and phase 2.}
+  \item{mu1}{Intensity for transition from phase 1 to exit.}
+  \item{mu2}{Intensity for transition from phase 2 to exit.}
+  \item{log}{logical; if TRUE, return log density or log hazard.}
+  \item{log.p}{logical; if TRUE, probabilities p are given as
+    log(p).}
+  \item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x],
+    otherwise, P[X > x].}
+}
+\value{
+     \code{d2phase} gives the density, \code{p2phase} gives the distribution
+     function, \code{q2phase} gives the quantile function, \code{r2phase}
+     generates random deviates, and \code{h2phase} gives the hazard.
+}
+\details{
+  This is the distribution of the time to reach state 3 in a
+  continuous-time Markov model with three states and transitions permitted
+  from state 1 to state 2 (with intensity
+  \eqn{\lambda_1}{lambda1}) state 1 to state 3 (intensity
+  \eqn{\mu_1}{mu1}) and state 2 to state 3 (intensity \eqn{\mu_2}{mu2}).
+  States 1 and 2 are the two "phases" and state 3 is the "exit" state.
+
+  The density is
+
+  \deqn{f(t | \lambda_1, \mu_1) = e^{-(\lambda_1+\mu_1)t}(\mu_1 + (\lambda_1+\mu_1)\lambda_1 t)}{f(t | l1, mu1) = exp(-(l1+mu1)*t)*(mu1 + (l1+mu1)*l1*t)}
+  
+  if \eqn{\lambda_1 + \mu_1 = \mu_2}{l1 + mu1 = mu2}, and 
+  
+  \deqn{f(t | \lambda_1, \mu_1, \mu_2) = \frac{(\lambda_1+\mu_1)e^{-(\lambda_1+\mu_1)t}(\mu_2-\mu_1) + \mu_2\lambda_1e^{-\mu_2t}}{\lambda_1+\mu_1-\mu_2}}{f(t | l1, mu1, mu2) = ((l1+mu1)*exp(-(l1+mu1)*t)*(mu2-mu1) + mu2*l1*exp(-mu2*t))/(l1+mu1-mu2)}
+
+  otherwise.  The distribution function is
+
+  \deqn{F(t | \lambda_1, \mu_1) = 1 - e^{-(\lambda_1+\mu_1) t} (1 + \lambda_1 t)}{F(t | l1, mu1) = 1 - exp(-(l1+mu1)*t)*(1 + l1*t)}
+
+  if \eqn{\lambda_1 + \mu_1 = \mu_2}{l1 + mu1 = mu2}, and 
+
+  \deqn{F(t | \lambda_1, \mu_1, \mu_2) = 1 - \frac{e^{-(\lambda_1+\mu_1)
+  t} (\mu_2 - \mu_1)  + \lambda_1 e^{-\mu_2
+  t}}{\lambda_1+\mu_1-\mu_2}}{F(t | l1, mu1, mu2) = 1 -
+  (exp(-(l1+mu1)*t)*(-mu1+mu2) + l1*exp(-mu2*t))/(l1+mu1-mu2)}
+  otherwise.  Quantiles are calculated by numerically inverting the
+  distribution function.
+  
+  The mean is \eqn{(1 + \lambda_1/\mu_2) / (\lambda_1 + \mu_1)}{(1 + l1/mu2) / (l1 + mu1)}.
+
+  The variance is \eqn{(2 + 2\lambda_1(\lambda_1+\mu_1+ \mu_2)/\mu_2^2 - (1 + \lambda_1/\mu_2)^2)/(\lambda_1+\mu_1)^2}{(2 + 2*l1*(l1+mu1+ mu2)/mu2^2 - (1 + l1/mu2)^2)/(l1+mu1)^2}.
+
+  If \eqn{\mu_1=\mu_2}{mu1=mu2} it reduces to an exponential
+  distribution with rate \eqn{\mu_1}{mu1}, and the parameter
+  \eqn{\lambda_1}{l1} is redundant.  Or also if \eqn{\lambda_1=0}{l1=0}.
+
+  The hazard at \eqn{x=0} is \eqn{\mu_1}, and smoothly increasing if
+  \eqn{\mu_1<\mu_2}{mu1<mu2}.  If \eqn{\lambda_1 + \mu_1 \geq \mu_2}{l1 + mu1 >= mu2}
+  it increases to an asymptote of \eqn{\mu_2}{mu2}, and if
+  \eqn{\lambda_1 + \mu_1 \leq \mu_2}{l1 + mu1 <=  mu2} it increases to an
+  asymptote of \eqn{\lambda_1 + \mu_1}{l1 + mu1}.
+  The hazard is decreasing if \eqn{\mu_1>\mu_2}{mu1>mu2}, to an
+  asymptote of \eqn{\mu_2}{mu2}.
+}
+\section{Alternative parameterisation}{
+  An individual following this distribution can be seen as coming from
+  a mixture of two populations:
+
+  1) "short stayers" whose mean sojourn time is \eqn{M_1 =
+  1/(\lambda_1+\mu_1)}{M1 = 1/(l1+mu1)} and sojourn distribution is
+  exponential with rate \eqn{\lambda_1 + \mu_1}{l1+mu1}.
+
+  2) "long stayers" whose mean sojourn time \eqn{M_2 =
+  1/(\lambda_1+\mu_1) + 1/\mu_2}{1/(l1+mu1) + 1/mu2} and sojourn
+  distribution is the sum of two exponentials with rate \eqn{\lambda_1 +
+    \mu_1}{l1+mu1}
+  and \eqn{\mu_2}{mu2}
+  respectively.  The individual is a "long stayer" with probability
+  \eqn{p=\lambda_1/(\lambda_1 + \mu_1)}.
+
+  Thus a two-phase distribution can be more intuitively parameterised by
+  the short and long stay means \eqn{M_1 < M_2} and the long stay
+  probability \eqn{p}.  Given these parameters, the transition
+  intensities are \eqn{\lambda_1=p/M_1}{l1=p/M1},
+  \eqn{\mu_1=(1-p)/M_1}{mu1=(1-p)/M1}, and \eqn{\mu_2=1/(M_2-M_1)}{mu2 =
+    1/(M2 - M1)}.  This can be useful for choosing intuitively reasonable
+  initial values for procedures to fit these models to data.
+
+  The hazard is increasing at least if \eqn{M_2 < 2M_1}{M2 < 2M1},
+  and also only if \eqn{(M_2 - 2M_1)/(M_2 - M_1) < p}{(M2 - 2M1)/(M2 -
+  M1) < p}.
+
+  For increasing hazards with \eqn{\lambda_1 + \mu_1 \leq \mu_2}{l1 +
+    mu1 <=  mu2}, the maximum hazard
+  ratio between any time \eqn{t} and time 0 is \eqn{1/(1-p)}.
+
+  For increasing hazards with \eqn{\lambda_1 + \mu_1 \geq \mu_2}{l1 +
+    mu1 >=  mu2}, the maximum hazard ratio is \eqn{M_1/((1-p)(M_2 -
+  M_1))}{M1/((1-p)(M2 - M1))}. This is the minimum hazard ratio for
+    decreasing hazards.
+
+%  Illustration of hazard ratio at short mean and long mean.
+
+}
+\section{General phase-type distributions}{ 
+  This is a special case of the n-phase Coxian phase-type distribution,
+  which in turn is a special case of the (general) phase-type
+  distribution.   The \pkg{actuar} R package implements a general n-phase
+  distribution defined by the time to absorption of a general
+  continuous-time Markov chain with a single absorbing state, where the
+  process starts in one of the transient states with a given
+  probability.
+}
+\references{
+  C. Dutang, V. Goulet and M. Pigeon (2008). actuar: An R Package for
+  Actuarial Science. Journal of Statistical Software, vol. 25, no. 7,
+  1-37. URL http://www.jstatsoft.org/v25/i07
+}
+\author{C. H. Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk} }
+\keyword{distribution}

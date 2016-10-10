@@ -1,0 +1,17 @@
+\RequirePackage[T1]{fontenc}
+%%Check if we are compiling under latex or pdflatex
+\ifx\pdftexversion\undefined
+  \RequirePackage[dvips]{graphicx}
+\else
+  \RequirePackage[pdftex]{graphicx}
+  \RequirePackage{epstopdf}
+\fi
+\RequirePackage{ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\setkeys{Gin}{width=0.8\textwidth}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontshape=sl}
+
+\newenvironment{Schunk}{}{}

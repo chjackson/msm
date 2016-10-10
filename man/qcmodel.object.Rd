@@ -1,0 +1,40 @@
+\name{qcmodel.object}
+\alias{qcmodel.object}
+\title{Developer documentation: model for covariates on transition intensities}
+\description{A list representing the model for covariates on transition intensities}
+\value{
+  \item{npars}{Number of covariate effect parameters.  This is defined as the
+    number of covariates on intensities (with factors expanded as contrasts) multiplied
+    by the number of allowed transitions in the model.
+
+    Note if
+    \code{\link{msm}} was called with \code{covariates} set to a list of
+    different covariates for different intensities, then this will
+    include covariate effects that are implicitly defined as zero by
+    this list.  The information in
+    \code{\link[=paramdata.object]{paramdata}} objects
+    can be used to identify wich ones are fixed at zero.
+
+    This also includes any \code{timeperiod} covariates in a
+  time-inhomogeneous model defined by the \code{pci} option to \code{\link{msm}}.
+  }
+  \item{ndpars}{Number of distinct covariate effect parameters, as
+    \code{npars}, but after any equality constraints have been applied.}
+  \item{ncovs}{Number of covariates on intensities, with factors
+    expanded as contrasts.}
+  \item{constr}{List of equality constraints on these covariate effects,
+  as supplied in the \code{constraint} argument to \code{\link{msm}}.}
+  \item{covlabels}{Names / labels of these covariates in the model
+  matrix (see \code{\link{model.matrix.msm}}).}
+  \item{inits}{Initial values for these covariate effects, as a vector
+  formed from the \code{covinits} list supplied to \code{\link{msm}}.}
+  \item{covmeans}{Means of these covariates in the data (excluding data
+  not required to fit the model, such as observations with missing data
+  in other elements or subjects' last observations).  This includes
+  means of 0/1 factor contrasts as
+  well as continuous covariates (for
+  historic reasons, which may not be sensible).}
+}
+\seealso{
+  \code{\link{msm.object}}.
+}

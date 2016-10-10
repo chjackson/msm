@@ -1,0 +1,68 @@
+for every release
+-----------------
+* Need to delete vignette in inst/doc before rebuilding package
+* check all files are included in package build: help pages, PDF manual rebuilt, run update-docsrc.
+* check Changelog, NEWS, DESCRIPTION file have correct dates and versions
+* Run fast and slow tests
+* Use winbuilder to run checks on R-devel, but this doesn't turn on --as-cran.
+* Thus should compile a devel R locally! 
+* R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes" --vanilla < ~/work/msm/devel/test.R.   
+* PKG_CFLAGS=-g to get line numbers in valgrind  
+* undefined behaviour sanitizer: gcc 4.9, and R-3.1.2 configured with flags on, installed locally at work. turn flags on for package building in .R/Makevars
+* timing of tests
+
+
+POSSIBLE MAJOR DEVELOPMENTS
+
+MCMC estimation.  Done basic JAGS interface, but convergence
+difficulties typical.  Stan might be better (esp for HMMs) but can't
+do matrix exponentials in it.  Haven't tried inserting random effects
+yet.
+	 
+Internationalisation.
+
+
+SOME OTHER SUGGESTIONS: not all may be sensible.
+
+Handle NA or NaN arg or params in ptnorm, pmenorm, pmeunif and their q fns, and qpexp
+
+Return inf lik instead of halting when overflow occurs?  see tests/rory.r for test case where this doesn't help 
+
+Predict HMM pars and init probs for given covariate values 
+
+phase type constraints. yes/no for each phased state.  regular fixedpars/constraints apply to phase-constrained pars.
+msm.rep.constraints and msm.form.params
+
+ppass.msm with time dependent covs.  method in source comment.
+
+sojourn.msm with time dependent covs - needs mean of piecewise exponential, not sure analytic.  Similarly for efpt.msm
+  
+force treatment contrasts in model matrix instead of warning?
+
+more print statements for tracing.  print in lik.msm.  print parameter values before doing the likelihood, user accessible debug in C? 
+
+A FAQ: discrete-time models, exact times, flexible models
+
+OpenMP for parallel C code called from R, see Writing R Extensions.
+Can't call R from parallel part, but using R math lib or lapack/expm OK?
+
+Bureau survival plots
+
+Truncated observations.
+
+Steady state probabilities
+
+Use S_alloc instead of Calloc as in Viterbi - no need to free. Can't use on.exit to free on interrupt unless pointer declared globally.
+
+Time-inhomogeneous models with smoothly-varying intensities.  Product
+integral method looks easy, e.g. for predictable covariates like age.
+Alternatively, numerically integrate the Kolmogorov equations, as in
+Titman (Biometrics 2011).  deSolve package could be used for this in C.
+Difficult .Call type mechanism needed for using user-defined R functions
+in C. See Writing R Extensions 5.11.1 for a possible starting point.
+Or Rcpp.
+
+make msm.check.model for censored states - detect model
+   inconsistency. see previous errors.R
+
+parallelsugar: An implementation of mclapply for Windows

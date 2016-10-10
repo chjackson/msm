@@ -1,0 +1,76 @@
+
+aneur.Rd,15
+\usage{10,239
+
+boot.msm.Rd,0
+
+bos.Rd,15
+\usage{11,398
+
+coef.msm.Rd,0
+
+crudeinits.msm.Rd,0
+
+deltamethod.Rd,19
+\description{5,87
+
+ematrix.msm.Rd,0
+
+fev.Rd,37
+  function in 35,1455
+\usage{9,264
+
+hazard.msm.Rd,0
+
+heart.Rd,14
+\usage{9,300
+
+hmm-dists.Rd,0
+
+logLik.msm.Rd,0
+
+MatrixExp.Rd,23
+  function in 54,2039
+
+medists.Rd,0
+
+msm.Rd,0
+
+odds.msm.Rd,0
+
+pexp.Rd,0
+
+plot.msm.Rd,0
+
+pmatrix.msm.Rd,0
+
+pmatrix.piecewise.msm.Rd,0
+
+prevalence.msm.Rd,0
+
+psor.Rd,14
+\usage{8,181
+
+qmatrix.msm.Rd,0
+
+qratio.msm.Rd,0
+
+sim.msm.Rd,0
+
+simmulti.msm.Rd,0
+
+sojourn.msm.Rd,0
+
+statetable.msm.Rd,0
+
+summary.msm.Rd,0
+
+surface.msm.Rd,0
+
+tnorm.Rd,0
+
+totlos.msm.Rd,0
+
+transient.msm.Rd,0
+
+viterbi.msm.Rd,0

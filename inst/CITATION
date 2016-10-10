@@ -1,0 +1,19 @@
+citHeader("To cite msm in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Multi-State Models for Panel Data: The {msm} Package for {R}",
+  author       = personList(as.person("Christopher H. Jackson")),
+  journal      = "Journal of Statistical Software",
+  year         = "2011",
+  volume       = "38",
+  number       = "8",
+  pages        = "1--29",
+  url          = "http://www.jstatsoft.org/v38/i08/",
+
+  textVersion  =
+  paste("Christopher H. Jackson (2011).",
+        "Multi-State Models for Panel Data: The msm Package for R.",
+        "Journal of Statistical Software, 38(8), 1-29.",
+        "URL http://www.jstatsoft.org/v38/i08/.")
+)
+

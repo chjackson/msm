@@ -1,0 +1,1189 @@
+-*- text -*-
+
+USER-VISIBLE CHANGES (for detailed changes see ChangeLog in the source package)
+--------------------
+
+
+Version 1.6.4  (2016-10-02)
+-------------
+
+o CRAN release.  Vignette source included in vignettes directory, on
+  request of CRAN.
+
+
+Version 1.6.3  (2016-06-03)
+-------------
+
+o r-forge release only.  Fix of bug for qtnorm with vectorised
+  arguments.  Thanks to James Gibbons for the report.
+
+
+Version 1.6.2  (2016-03-17)
+-------------
+
+o r-forge release only.  Fix of bug for Pearson test with censored
+  states.  Thanks to Casimir Sofeu for the report.
+
+
+Version 1.6.1  (2016-03-09)
+-------------
+
+o Fix of bug introduced in 1.5.2 for models with "obstrue" and
+  "ematrix".  This affected the first misclassification model
+  presented in the PDF manual.  Documented behaviour of "obstrue"
+  clarified: with "ematrix" models, the state data are assumed to
+  contain the true state if "obstrue" is turned on at the
+  corresponding observation, and with "hmodel" models, the state data
+  are generated from the HMM outcome model conditionally on the true
+  state.
+
+o Fix of minor bugs in draic.msm and output printing.
+
+
+Version 1.6  (2015-11-17)
+------------
+
+o CRAN release. Includes the changes from versions 1.5.1 - 1.5.3, plus
+  also:
+
+o Analytic derivatives for HMMs with multiple outcomes.
+
+o Bug fix for printing model output when only one transition rate is
+  affected by covariates.  Thanks to Jordi Blanch for the report.
+
+
+Version 1.5.3  (2015-09-14)
+-------------
+
+o More underflow correction for probabilities of hidden states in
+  viterbi.msm. Thanks to Hannah Linder for the report.
+
+o "death" argument in msm() is deprecated and renamed to "deathexact".
+
+o censor.states now defaults to all transient states if not supplied,
+  instead of complaining, even if there is no absorbing state.  Thanks
+  to Jonathan Williams for the report.
+
+
+Version 1.5.2  (2015-02-17)
+-------------
+
+o HMMs can now have multiple observations at each time generated from
+  different distributions.  See new function hmmMV().
+
+o obstrue can now contain the actual true state, instead of an
+  indicator.  This allows the information from HMM outcomes generated
+  conditionally on this state to be included in the model.
+
+
+Version 1.5.1  (2015-01-15)
+-------------
+
+o R-forge only release. 
+
+o HMMs can now have multiple observations at each time from the same
+  distribution.  The "state" in the "formula" argument of msm() is
+  supplied as a matrix.
+
+o Up-to-date version of the vignette included in the package.
+
+
+Version 1.5  (2015-01-05)
+-----------
+
+o CRAN release. Includes the changes from versions 1.4.1 - 1.4.3.
+
+
+Version 1.4.3  (2014-12-12)
+-------------
+
+o R-forge only release. 
+
+o Phase type models now allow an extra hidden Markov model on top.
+
+
+Version 1.4.2  (2014-12-11)
+-------------
+
+o R-forge only release. 
+
+o viterbi.msm now returns the "posterior" probability of each hidden
+  state at each time, given the full data.
+
+o Bug fixes to misclassification models where some states were
+  misclassified as other states with probability 1, for both ematrix
+  and hmmCat specifications.  Thanks to Li Su.
+
+
+Version 1.4.1  (2014-12-10)
+-------------
+
+o R-forge only release. 
+
+o Experimental facility for two-phase semi-Markov models.
+
+o Memory leaks in C code fixed.  Thanks to Brian Ripley.
+
+o Don't print CIs for fixed parameters.
+
+o Documented that factors are allowed as the state variable as long as
+  their levels are called "1", "2",...
+
+o Bug fixes for covariates on initial state occupancy probabilities
+  with structural zeros.  Thanks to Jeffrey Eaton and Tara Mangal.
+
+o Bug fixes for drlcv.msm. Thanks to Howard Thom.
+
+o Give warning that polynomial contrasts aren't supported.
+
+o Three and four-state versions of the BOS data provided.
+
+
+Version 1.4  (2014-07-04)
+------------
+
+o CRAN release.  Includes the major changes from versions 1.3.2 and
+  1.3.3 below, previously only released on R-forge, plus:
+
+o Default confidence interval method for pnext.msm changed to
+  "normal", since delta method may not respect probability <1
+  constraint.
+
+
+Version 1.3.3  (2014-06-23)
+--------------
+
+o R-forge only release. 
+
+o C interface changed from .C to .Call, giving a slight speed
+  improvement.
+
+o Probabilities of passage, see ppass.msm.
+
+
+Version 1.3.2  (2014-06-19)
+--------------
+
+o R-forge only release. 
+
+o The new compact format for printing results from fitted models is
+  now the default.  The underlying numbers can be accessed from the
+  functions msm.form.qoutput or msm.form.eoutput, or from the object
+  returned by the print function, in the same tidy matrix form.  The
+  old print method is still available as "printold.msm".
+
+o Analytic derivatives available for most hidden Markov models and
+  models with censored states (excluding unknown initial state
+  probabilities, constraints on misclassification / categorical
+  outcome probabilities and their covariates, and truncated or
+  measurement error distributions).  This should speed up optimisation
+  with the BFGS or CG methods.  The corresponding Fisher information
+  matrix is also available for misclassification (categorical/identity
+  outcome) and censored state models.
+
+o The BFGS optimisation method is now the default, rather than
+  Nelder-Mead.
+
+o The internal code that deals with reading the data and passing it to
+  models has been rewritten to use formulae, model frames and model
+  matrices more efficiently.  As a result the "data" component of msm
+  objects now has a different structure.  The data can be extracted
+  with the new model.frame() and model.matrix() methods for msm
+  objects.  Also see help(recreate.olddata) for a utility to get the
+  old (undocumented) format back, but this will not be supported in
+  the long term.
+
+o New methods (draic.msm, drlcv.msm) for comparing models with
+  differently-aggregated states.  Thanks to Howard Thom.
+
+o Parallel processing supported for bootstrapping and bootstrap
+  confidence intervals (ci="boot"), if the "doParallel" package is
+  installed.
+
+o If msm is called with hessian=FALSE, then the Fisher (expected)
+  information is used to obtain standard errors and CIs, though this
+  is only available for non-hidden and misclassification models.
+  This may be preferable if the observed Hessian is very intensive to
+  approximate.
+
+o Optimisation code tidied, making it easier to add new methods.  As
+  an example, the "bobyqa" algorithm, a fast derivative-free method,
+  is now supported if the "minqa" package is installed.
+
+o Give informative warning for initial outcomes in HMMs which are
+  impossible for given initial state probabilites and outcome models.
+
+o Internal centering of "timeperiod" covariates around their means for
+  inhomogeneous models specified with "pci" is now done consistently
+  with other covariates, by omitting subjects' last observations
+  before calculating the mean, since they don't contribute to the
+  likelihood.  Therefore for these models, the initial values (with
+  "covariates centered around their means in the data") and outputs
+  for covariates="mean", have a very slightly different meaning from
+  previous versions.
+
+o When calculating the likelihood for hidden Markov or censoring
+  models, P matrices are not recalculated when the same one occurs
+  more than once.  This may speed up some models.
+
+o Test suite tidied up and converted to use "testthat" package.
+
+o Data consistency check added to crudeinits.msm().
+
+o Bug fix for misclassification models with constraints on baseline
+  misclassification probabilities and fixed parameters.
+
+o Bug fix for bootstrap CIs with efpt.msm
+
+o Miscellaneous minor bug fixes, see Changelog.
+
+
+Version 1.3.1  (2014-04-04)
+--------------
+
+o R-forge only release.
+
+o Time-dependent covariates supported in totlos.msm.
+
+o New function envisits.msm() for expected number of visits to each
+  state over a period, calculated as a corollary of totlos.msm().
+
+o New utility "msm2Surv" to export data from msm format to counting
+  process format for use with the survival and mstate packages.  This
+  assumes the exact transition times of the process are known.
+
+o More informative messages from model fits which have not converged.
+  In particular, a warning is now given when the optimiser iteration
+  limit was reached without convergence, which previously happened
+  silently.
+
+o Miscellaneous minor bug fixes, see Changelog.
+
+
+Version 1.3  (2014-01-15)
+-------------
+
+o CRAN release.  Includes the changes below from R-forge versions
+  1.2.1 up to 1.2.7, plus:
+
+o Fix of bug introduced in 1.2.3 which broke models with non-standard
+  state ordering.
+
+o Datasets now lazy loaded so data() not required.
+
+o New "start" argument to efpt.msm, allowing averaging over a set of
+  starting states.
+
+
+Version 1.2.7 (2013-10-07)
+-------------
+
+o R-forge only release
+
+o Fix of bug for logLik.msm with by.subject=TRUE.
+
+
+Version 1.2.6 (2013-09-13)
+-------------
+
+o R-forge only release
+
+o Row numbers reported in error message about different states at the
+  same time corrected to account for missing data.  Thanks to Lucy
+  Leigh for the report.
+
+o An informative error is now shown if trying to use gen.inits with a
+  hidden Markov model, and it is now documented that this is not
+  supported.
+
+
+Version 1.2.5 (2013-07-30)
+-------------
+
+o R-forge only release
+
+o Analytic formula for totlos.msm implemented, which is vastly more
+  efficient than the numerical integration used previously.  Debugging
+  outputs left in 1.2.3 also removed.
+
+o Matrix exponentials, in MatrixExp and non-analytic likelihood
+  calculations, are now calculated using expm from the expm package by
+  default.  As a result msm now depends on the expm package.
+
+
+Version 1.2.4 (2013-07-23)
+-------------
+
+o R-forge only release
+
+o Range constraints can now be given for HMM outcome parameters,
+  through a new argument "hranges" to msm. This may improve HMM
+  identifiability.
+
+
+Version 1.2.3 (2013-06-06)
+-------------
+
+o R-forge only release
+
+o New interface for easily specifiying different covariates for each
+  transition intensity, through a named list in the "covariates"
+  argument to msm.  Previously this required "fixedpars".
+
+o Major restructuring of the internal code, mainly so that parameters
+  are adjusted for covariates in R rather than C.  There should be no
+  differences visible to the user.
+
+o Initial state occupancy probabilities are estimated on the
+  multivariate logit scale, not univariate, and confidence intervals
+  are calculated using a simulation-based method (with 10000
+  simulations, so there will be a small Monte Carlo error).
+
+o When centering covariates around their means for the default
+  likelihood calculation, the means used are now after dropping
+  missing values and subjects with one observation, not before. Thanks
+  to Howard Thom for the report.
+
+o Relatedly, the covariate values for subjects' last observations are
+  not included in this mean, since they don't contribute to the
+  likelihood, so interpretation of initial values for the qmatrix, and
+  outputs for covariates="mean", will now be very slightly different.
+
+o Bug fix in totlos.msm: calculations were wrong for fromt > 0.
+
+o Memory bug in Viterbi, which could crash R, fixed.
+
+
+Version 1.2.2 (2013-05-21)
+-------------
+
+o R-forge only release
+
+o Can now examine subject-specific -2 log likelihoods at the maximum
+  likelihood estimates, via logLik.msm().
+
+o The state can now be a factor with levels (1:nstates), as well as
+  numeric.  Previously supplying a factor state led to unpredictable
+  behaviour and potential crashes.
+
+
+Version 1.2.1 (2013-05-16)
+-------------
+
+o R-forge only release
+
+o A matrix of fixed patient-specific initial state distributions can
+  now be supplied as "initprobs" in hidden Markov models.
+
+
+Version 1.2 (2013-05-14)
+-----------
+
+o Implemented accurate p-value for the Pearson-type test from Titman
+  (Lifetime Data Analysis, 2009). Non-hidden Markov models for pure
+  panel data only.
+
+o A Fisher scoring algorithm can now be used to maximise the
+  likelihood for panel data without censored / hidden states.
+  Thanks to Andrew Titman for help with this.
+
+o New function efpt.msm for expected first passage times for
+  time-homogeneous models.
+
+o prevalence.msm now produces expected values by integrating model
+  predictions over the covariate histories observed in the data, if
+  'covariates="population"' is supplied.  This is the default, but the
+  old behaviour is available by supplying fixed covariates in the
+  "covariates" argument.
+
+o In prevalence.msm and plot.prevalence.msm, subjects reaching the
+  absorbing state can be removed from the risk set after they have
+  reached an optional censoring time.  Thanks to Andrew Titman.
+
+o Newly user-accessible function simfitted.msm for simulating from a
+  model defined by the estimates from a model fitted in msm.
+
+o Subjects with only one observation are dropped from the data stored
+  in fitted model objects.  This gives more accurate numbers at risk
+  in prevalence.msm.
+
+o Arguments can be passed through summary.msm to prevalence.msm.
+
+o pmatrix.piecewise.msm allows time-homogeneous models with change
+  point vector "times" of length 0.
+
+o Fixes for bugs in the the Pearson test introduced in 0.9.5.
+
+o Misclassification models where some off-diagonal misclassification
+  probabilities are 1 are now handled properly.  Thanks to Howard Thom
+  for uncovering this.
+
+o Bug fix for interp="midpoint" method in calculation of observed
+  prevalences (prevalence.msm). Thanks to Erica Liu.
+
+o Bug fix for Viterbi algorithm with obstrue.  Thanks to Linda
+  Sharples.
+
+
+Version 1.1.4 (2012-12-10)
+-------------
+
+o Minor modification of package tests to enable R CMD check to pass
+  with the forthcoming release of mvtnorm.
+
+
+Version 1.1.3 (2012-09-28)
+-------------
+
+o Bug fix: qmatrix.msm and ematrix.msm were returning inaccurate delta
+  method standard errors / CIs with center=FALSE, covariates and
+  user-supplied covariate values. Thanks to Vikki O'Neill for the
+  report.
+
+o Use BFGS method for one-parameter optimisation unless method
+  supplied explicitly, avoiding warning about unreliability of
+  Nelder-Mead.
+
+
+Version 1.1.2 (2012-07-31)
+-------------
+
+o New Student t distribution for hidden Markov model outcomes.  Thanks
+  to Darren Gillis.
+
+o Removed debugging browser which had been inadvertently left in
+  pearson.msm.  Thanks to Chyi-Hung Hsu.
+
+o Corrected equation 5 in the PDF manual for the likelihood under
+  exact transition times.  The code was unaffected.  Thanks to Simon
+  Bond.
+
+
+Version 1.1.1 (2012-05-11)
+-------------
+
+o Fix of bug in calculation of confidence intervals using "ci=normal".
+  Affected models were those with fixed parameters or HMMs.  Users are
+  advised to check their results with the corrected package -
+  apologies.
+
+o If user supplies an ematrix with all misclassification probabilities
+  zero, this degrades gracefully to a non-misclassification model.
+  Thanks to Sharareh Taghipour for the report.
+
+o Bug fix for error messages when model inconsistent with data, and
+  when subject IDs not adjacent.  Thanks to Kelly Williams-Sieg for
+  the report.
+
+o Bug fix in pearson.msm for models where transitions are only allowed
+  from one state.  Thanks to Gavin Chan for the report.
+
+o qtnorm fixed for p=0 or 1 and upper < lower.  Thanks to Art Owen for
+  the report.
+
+
+Version 1.1 (2011-09-09)
+-------------
+
+o New function "pnext.msm" to compute a matrix of probabilities for
+  the next state of the process.
+
+o New "[" method to intuitively extract a row and column of
+  matrix-based estimates and confidence intervals, for example
+  qmatrix.msm(x)[1,2]
+
+o Miscellaneous doc and minor bug fixes, see Changelog.
+
+
+Version 1.0.1 (2011-05-26)
+-------------
+
+o Fix of a bug which made pmatrix.msm break for time-inhomogeneous
+  models with non-integer time cut points "pci".  Thanks to Christos
+  Argyropoulos for the report.
+
+o Return -Inf in dtnorm when outside truncation bounds and log=TRUE.
+
+
+Version 1.0 (2010-11-24)
+-------------
+
+o 1.0 release to accompany the forthcoming Journal of Statistical
+  Software paper about msm.
+
+o Line types, colours and widths can be configured in plotprog.msm,
+  plot.survfit.msm and plot.prevalence.msm.
+
+o Added warning for multiple observations at the same time on the same
+  person with different states, which leads to zero likelihood and
+  the dreaded "cannot be evaluated at initial values" message.
+
+o If center=FALSE, the $Qmatrices$baseline, $Ematrices$baseline and
+  $sojourn components of msm objects are evaluated with covariate
+  values of 0, for consistency with "logbaseline". Documentation and
+  printed output corrected accordingly.  These issues caused problems
+  with viterbi.msm.  Thanks to Kenneth Gundersen for the report.
+
+
+Version 0.9.7 (2010-05-18)
+-------------
+
+o Bug fixes for bootstrapping with totlos, covariates on HMM outcomes
+  and fixedpars. Thanks to Li Su for the report.
+
+
+Version 0.9.6 (2010-02-09)
+-------------
+
+o Fix of a bug which caused occasional wrong likelihood calculations
+  for models with "exacttimes".  Thanks to Brian Tom for the report.
+
+o Fix for "NA in probability vector" error in pearson.msm.  Thanks to
+  Wen-Wen Yang for the report.
+
+
+Version 0.9.5 (2009-11-25)
+-------------
+
+o Fix for a bug in pearson.msm triggered by a change in R version
+  2.10.0, which caused all expected values to be returned as zero.
+  Thanks to Brian Tom for the report.
+
+
+Version 0.9.4 (2009-11-13)
+-------------
+
+o Bug fix for calculation error in scoreresid.msm. Thanks to Aidan
+  O'Keeffe for the report.
+
+o Options to MatrixExp for calculating the matrix exponential can be
+  passed through from pmatrix.msm and pmatrix.piecewise.msm.  Thanks
+  to Peter Adamson for the suggestion.
+
+o Missing data handling bug fixes, in particular, crudeinits.msm and
+  gen.inits no longer give errors if there are missing values in the
+  subject, time or state variable.
+
+o Other minor bug fixes, see ChangeLog.
+
+
+Version 0.9.3 (2009-08-20)
+-------------
+
+o Bug fix - estimates of covariate effects in matrices outputted by
+  msm were ordered wrongly in models with "qconstraint".  Thanks to
+  Brian Tom for the report.
+
+o Bug fix - "gradient in optim evaluated to wrong length" was still
+  affecting certain models with fixed parameters. Thanks to Aidan
+  O'Keeffe for the report.
+
+o Fix to pearson.msm for R versions >= 2.9.1 ("replacement has 0 rows"
+  error)
+
+
+Version 0.9.2 (2009-07-07)
+-------------
+
+o Bug fix for models with fixed parameters fitted using optimisation
+  methods with derivatives ("BFGS"), which failed with the error
+  "gradient in optim evaluated to wrong length".  Thanks to Isaac
+  Dinner for the report.
+
+
+Version 0.9.1 (2009-06-12)
+-------------
+
+o Minor update to the test suite to allow build on Fedora / Red Hat
+  Linux.
+
+
+Version 0.9 (2009-06-09)
+-----------
+
+o Time-inhomogeneous models fitted with the "pci" argument to msm are
+  now fully supported in all output functions.
+
+  pmatrix.msm can now compute transition probabilities over any given
+  time interval for time-inhomogeneous models fitted with "pci".  A
+  new argument "t1" to pmatrix.msm specifies the starting time, while
+  "t" still specifies the interval length.
+
+  All functions which call on pmatrix.msm, such as plot.msm,
+  plot.survfit.msm, prevalence.msm and totlos.msm, now account for
+  time-inhomogeneity in models fitted using "pci".
+
+o Extractor functions are now more tolerant.  If a list of covariate
+  values is supplied, unknown covariates are ignored and covariates
+  with unspecified values are set to zero. Factor values can be
+  specified either by factor levels or by 0/1 contrasts.
+
+o Bug fix - score residuals were being calculated wrongly for models
+  with covariates.
+
+o Derivatives are now used in the optimisation by default (use.deriv=TRUE)
+  for optimisation methods such as BFGS which employ them.
+
+o Licence clarified as GPL-2 or later, to enable packaging of msm for
+  Fedora/Red Hat Linux.
+
+
+Version 0.8.2 (2009-04-08)
+-------------
+
+o Bug fix - extractor functions were not being calculated for models
+  with interactions between covariates.
+
+o Sources for the PDF manual included in the source package, to enable
+  inclusion of msm in Debian GNU/Linux.
+
+
+Version 0.8.1 (2008-07-25)
+-------------
+
+o New option "pci" to msm, which automatically constructs a model with
+  piecewise-constant transition intensities which change at the
+  supplied times.
+
+o The HMM outcome model is assumed to apply to censored states in
+  HMMs, unless obstrue = 1.
+
+o totlos.msm now calculates total length of stay for all states, not
+  just transient states. New argument "end" added.
+
+o Bug fix in the likelihood calculation for data containing a mixture
+  of obstype = 1 and obstype = 2.  Thanks to Peter Jepsen for
+  uncovering this.
+
+
+Version 0.8  (2008-03-28)
+-------------
+
+o New function "pearson.msm" implementing the Pearson-type
+  goodness-of-fit test for multi-state models fitted to panel data
+  (Aguirre-Hernandez and Farewell, Statistics in Medicine 2002;
+   Titman and Sharples, Statistics in Medicine 2007).  Thanks to
+   Andrew Titman for his work on this.
+
+o New function "scoreresid.msm" to compute and plot score residuals
+  for detecting influential subjects.
+
+o New function "plotprog.msm" to plot Kaplan-Meier estimates of time
+  to first occurrence of each state.
+
+o New function "plot.survfit.msm" to plot Kaplan-Meier estimate of
+  survival probabilty compared with the fitted survival probability from
+  a model.
+
+o New convenience function "lrtest.msm" for comparing a set of models
+  with likelihood ratio tests.
+
+o logLik method returns the log-likelihood, not the minus
+  log-likelihood, for consistency with methods in other
+  packages. Thanks to Jay Rotella.
+
+o msm now depends on the "survival" package.
+
+o Data "heart" renamed to "cav" to avoid clashing with the dataset in
+  the "survival" package.
+
+
+Version 0.7.6  (2007-12-10)
+-------------
+
+o Covariates on misclassification probabilities can now be specified
+  in simmulti.msm.   Simulation bug introduced in 0.7.5 fixed.
+
+o quantile functions (qtnorm,qmenorm,qmeunif,qpexp) made more robust
+  for small probabilities.
+
+
+Version 0.7.5  (2007-11-20)
+-------------
+
+o The Viterbi algorithm can now be used to impute the most likely true
+  state for censored states, as well as for HMMs
+
+o prevalence.msm now handles models with censored states correctly,
+  using the Viterbi algorithm to determine the observed states.
+
+o Bug fix: account for extra arguments supplied to "prevalence.msm"
+  when producing the plot of prevalences against time.  Thanks to
+  Peter Jepsen for the report.
+
+o Bug fixes involving factor covariates in bootstrapping and
+  qratio.msm. Thanks to Peter Jepsen.
+
+o New beta outcome distribution for hidden Markov models.
+
+
+Version 0.7.4  (2007-10-01)
+-------------
+
+o Minor changes to satisfy the package-building tools in the new R
+  version 2.6.0.
+
+
+Version 0.7.3  (2007-08-15)
+-------------
+
+o Confidence intervals in various output functions can now be
+  calculated by simulating from the asymptotic normal distribution of
+  the maximum likelihood estimates of the Q matrix and transforming.
+  The "ci.boot" argument in these functions has been replaced by the
+  "ci" argument, which can take values "none", "normal" and
+  "bootstrap".  This is implemented for qmatrix.msm, ematrix.msm,
+  sojourn.msm, qratio.msm, pmatrix.msm, pmatrix.piecewise.msm,
+  totlos.msm and prevalence.msm.  Such CIs are expected to be more
+  accurate than the delta method, but less accurate than
+  bootstrapping. There is a similar compromise in computation time.
+  Thanks to Andrew Titman for the suggestion.
+
+o As a result, msm now depends on the mvtnorm package.
+
+o In prevalence.msm, observed and expected prevalences can now be
+  plotted against time. Thanks to Andrew Titman for the suggestion.
+
+o In prevalence.msm, observed states can be interpolated using the
+  assumption that they change at the midpoints between observation
+  times.
+
+o Matrix exponential routines now handle matrices with complex
+  eigenvalues. Thanks to Véronique Bouchard for uncovering the bug.
+
+o Bug fix to surface.msm for HMMs. Thanks to Michael Sweeting.
+
+o Bug fix for bootstrapping - now handles models with obstype and
+  obstrue. Thanks to Peter Jepsen for the report.
+
+
+Version 0.7.2  (2007-05-31)
+-------------
+
+o An error in the calculation of multinomial logistic regression
+  probabilities has been fixed.  This will change the results of
+  misclassification models where there were both a) three or more
+  possible classifications for a particular underlying state and b)
+  covariates on the corresponding classification probabilities. Any
+  changes are not expected to be substantial.
+
+o Misclassification probabilities are now estimated on a different
+  scale during the optimisation: log relative to baseline probability,
+  instead of on a univariate logit scale. Therefore maximum likelihood
+  estimates for misclassification models may be very slightly
+  different from previous versions.
+
+o Confidence intervals for probabilities are now more appropriately
+  calculated using a delta method approximation to the variance of
+  logit(p), instead of log(p).
+
+o New argument "initcovariates" and "initcovinits" to msm, to allow
+  covariate effects on initial state probabilities in hidden Markov
+  models to be estimated through multinomial logistic regression.
+
+o Initial state probabilities initialised to zero are now fixed at
+  zero during optimisation, if initprobs is being estimated
+  ("structural zeroes").
+
+o New argument "obstrue" to msm, to allow some observations to be
+  observed without error in misclassification models.
+
+o Constraints on covariate effects on transition intensities are now
+  allowed such that some effects are equal to other effects multiplied
+  by -1.
+
+o New option "ci.boot" to prevalence.msm. This is a helper to
+  calculate bootstrap confidence limits for the expected prevalences
+  using "boot.msm".
+
+o rtnorm() for sampling from the truncated normal distribution now
+  uses the efficient rejection sampling methods by Christian Robert.
+
+
+Version 0.7.1  (2007-04-18)
+-------------
+
+o Maintainer's email address is now chris.jackson@mrc-bsu.cam.ac.uk
+
+o msm now gives a warning when the standard errors cannot be
+  calculated due to the Hessian at the converged "solution" being
+  non-positive-definite.  This issue had been causing a lot of user
+  confusion.
+
+o prevalence.msm can now calculate expected prevalences for models
+  with piecewise-constant intensities, in the same manner as
+  pmatrix.piecewise.msm.  Intensities must still be common to all
+  individuals.
+
+o Bug fix for presentation of intensity matrices in print.msm and
+  qmatrix.msm when center = FALSE.  These had been returning matrices
+  with covariates set to zero, when they should have been set to their
+  means. Thanks to Ross Boylan.
+
+o Covariates on transition process which are missing at an
+  individual's last observation are not dropped, because they are not
+  used in the analysis.  Thanks to Jonathan Williams. This has the
+  consequence that output from prevalence.msm may be different from
+  earlier versions (0.7 or earlier) if there are missing values in the
+  data.  Users are advised to deal with missing values in their data
+  appropriately before using msm.
+
+o Miscellaneous other bug fixes, see ChangeLog.
+
+
+Version 0.7  (2006-11-21)
+-----------
+
+o Initial state occupancy probabilities in hidden Markov models can
+  now be estimated.  See new argument "est.initprobs" to msm.
+
+o Bootstrap resampling is implemented.  This may be used to calculate
+  confidence intervals or standard errors for quantities such as the
+  transition probability matrix where this was previously not possible
+  with msm, or as an alternative to Hessian-based standard errors or the
+  delta method for other quantities.  See new function boot.msm.
+
+o Bootstrap confidence intervals can be calculated directly from
+  pmatrix.msm and totlos.msm.
+
+o Bug fix in estimation of observed prevalences at maximum observed
+  time. Thanks to Jeremy Penn for the report.  The function has also
+  been rewritten so that the calculation of these prevalences is now
+  much faster.
+
+o prevalence.msm is adapted sensibly to handle data where not all
+  individuals start at a common time.
+
+o The values of categorical (factor) covariates in output functions,
+  such as qmatrix.msm, are now specified in an intuitive way. For
+  example, to calculate a statistic with the categorical covariate
+  "smoke" at the level "CURRENT", just supply list(smoke="CURRENT") as
+  the "covariates" argument to the output function.
+
+
+Version 0.6.4  (2006-09-21)
+-------------
+
+o Bug fix to rtnorm for vector parameters. Thanks to Jean-Baptiste
+ Denis for the report.
+
+o Bug fix to sim.msm: multiply covariates by baseline intensities in
+ the correct order.  Thanks to Stephan Lenz for the report.
+
+
+Version 0.6.3  (2006-06-28)
+-------------
+
+o Correction to version 0.6.2 with the references reinstated in the
+ manual.
+
+
+Version 0.6.2  (2006-06-23)
+-------------
+
+o The likelihood for certain transient 2, 3, 4 and 5 state models is
+ now calculated using analytic expressions for the transition
+ probability matrix, instead of by numerically calculating the matrix
+ exponential.  This can give big speed improvements.
+
+o Various bug fixes, including support for character subject IDs.
+
+
+Version 0.6.1  (2006-03-26)
+-------------
+
+o Bug fix release. In Viterbi algorithm, don't ignore initial state
+ occupancy probabilities. Thanks to Melanie Wall for reporting this.
+ For other bug fixes see the ChangeLog.
+
+
+Version 0.6  (2005-11-25)
+-------------
+
+o New argument "use.deriv" to msm. If TRUE, then analytic derivatives
+ are used in the algorithm to maximise the likelihood, where an
+ appropriate algorithm is being used, such as optim's BFGS.  These
+ derivatives are also used to calculate the Hessian at the
+ maximum. Not supported for hidden Markov models or models with
+ censoring.  This may substantially speed up convergence, especially
+ for larger models.
+
+o The Newton-type algorithm (Dennis and Schnabel) from the R function
+ "nlm" can also be used to maximise the likelihood, as an alternative
+ to the algorithms in "optim".
+
+o New function "surface.msm" to plot likelihood surfaces, for example,
+ in the region of a suspected maximum.  Includes methods for the
+ generic R functions contour(), persp() and image(), to produce each
+ respective type of surface plot for a "msm" object.
+
+
+Version 0.5.2  (2005-10-11)
+-------------
+
+o Bug fix in Viterbi algorithm.  It didn't handle underlying Markov
+  models with progressive and regressive states properly.  Thanks to
+  Rochelle Watkins.
+
+o Negative binomial hidden Markov output distribution added.
+
+o Miscellaneous other bug fixes, see ChangeLog.
+
+
+Version 0.5.1  (2005-05-25)
+-------------
+
+o Bug fix in simulation functions (sim.msm, simmulti.msm).  Models
+  with time dependent covariates were not being simulated properly,
+  the covariate changes were not fully accounted for. Thanks to Mike
+  Sweeting for the report.
+
+o New functions dpexp, ppexp, qpexp, rpexp for the exponential
+  distribution with piecewise-constant rates.
+
+o Bug fix. covariates with the same names as internal msm variable
+  names, such as "subject", "time" and "state", are now allowed.
+
+o Argument "hessian" added to msm, to avoid calculating standard
+  errors, for example when bootstrapping.
+
+o Miscellaneous internal edits and fixes, see ChangeLog.
+
+
+Version 0.5 (2005-03-06)
+-----------
+
+o Major update. Much of the internal R and C code has been re-written.
+
+o General continuous-time hidden Markov models can now be fitted with
+  msm, as well as misclassification models.  Allowed response
+  distributions conditionally on the hidden state include categorical,
+  normal, Poisson, exponential and others.  See the new "hmodel"
+  argument. Misclassification models can either be fitted in the old
+  style using an ematrix, or using a general HMM with a categorical
+  response distribution.  Covariates can be fitted to many of the new
+  hidden response processes via generalized regressions.  See
+  "hcovariates", "hcovinits" arguments.
+
+o Per-observation observation schemes, generalising the "exacttimes"
+  and "death" concepts.  An optional new variable in the data can
+  specify whether each observation is a snapshot of the process, an
+  exactly-observed transition time, or a death state.  Observations
+  are allowed to be at identical times, for example, a snapshot
+  followed instantly by an exact transition time.
+
+o Various syntax changes for cleaner moder specification.
+
+  - Instead of 0/1 indicators, qmatrix and ematrix should contain the
+  initial values for the transition intensity / misclassification
+  matrix.  These matrices can be named with names for the states of
+  the Markov chain.
+
+  - The inits argument is abolished.  Initial values are estimated
+  automatically if the new argument to msm "gen.inits = TRUE" is
+  supplied.  This uses the initial values calculated by
+  crudeinits.msm.
+
+  - misc no longer needs to be specified if an ematrix is supplied.
+
+  - fixedpars=TRUE fixes all parameters, or specific parameters can
+  be fixed as before.
+
+  - crudeinits.msm takes a state ~ time formula instead of two
+  separate state, time arguments, for consistency with the msm
+  function.
+
+  - Initial values for covariate effects on transition rates /
+  misclassification probabilities are assumed to be zero unless
+  otherwise specified by the new "covinits" / "misccovinits" argument.
+
+o Support for 'from-to' style data has been withdrawn. Storing data in
+  this format is inadvisable as it destroys the longitudinal nature of
+  the data.
+
+o Speed improvements.  The algorithm for calculating the likelihood
+  for non-hidden multi-state models has changed so that the matrix
+  exponential of the Q matrix is only calculated once for each time
+  difference / covariate combination.  Therefore, users should see
+  speed improvements for data where the same from-state, to-state,
+  time difference, covariates combination appears many times.
+
+o Confidence intervals are now presented instead of standard errors
+  for uncertainty in parameter estimates.
+
+o New method of calculating matrix exponentials when the eigenvector
+  matrix is not invertible.  It now uses the more robust method of
+  Pade approximants with scaling and squaring, instead of power
+  series.  Faster LAPACK routines are now used for matrix inversion.
+
+o covmatch argument to msm has been abolished.  To take a
+  time-dependent covariate value from the end of the relevant
+  transition instead of the default start, users are expected to
+  manipulate their data accordingly before calling msm, shifting the
+  positions of the covariate back by one within each subject.
+
+o Syntax changes for simmulti.msm.
+
+Bug fixes
+---------
+
+o The likelihood is now calculated correctly for individuals with
+   censored intermediate states, as well as censored initial and final states.
+   Thanks to Michael Sweeting for reporting this.
+
+o hazard.scale and odds.scale were interpreted wrongly in hazard.msm
+  and odds.msm respectively.
+
+o time-dependent covariate values now taken from the start instead of
+  end of the transition under hidden Markov models.
+
+
+Version 0.41 (2005-01-28)
+------------
+
+o Censored outcomes in misclassification models are assumed to be not
+  subject to misclassification.
+
+o A couple of bug fixes for exact transition times.
+
+
+Version 0.4 (2005-01-07)
+-----------
+
+o Censored observations are now supported, via new "censor" and
+  "censor.states" arguments.  A censored observation is unknown, but
+  known to be one of a particular set of states.
+
+A major update to msm is under development, for release in the first
+half of 2005. This will support hidden Markov models with general
+response distributions.
+
+
+Version 0.3.3 (2004-09-18)
+-------------
+
+o Maintenance release with minor fixes and enhancements ready for
+R-2.0.0.
+
+
+Version 0.3.2 (2003-03-25)
+-------------
+
+o More than one death state is now permitted, through the "death"
+argument. Death states are those whose exact entry time is known,
+but the state at the previous instant before death is unknown.
+
+o The "tunit" argument has been abolished.  Death times are now
+assumed to be exact rather than known within one day.  This makes
+more sense since for longitudinal studies, all observations are
+usually recorded to within one basic time unit, not just death
+times.
+
+o Cleanups of the manual and minor fixes, as detailed in ChangeLog.
+
+
+Version 0.3.1 (2003-10-14)
+-------------
+
+o Bug fix. The likelihood was being wrongly calculated in cases when
+both the data represent exact transition times and the transition
+intensity matrix had repeated eigenvalues.
+
+o The "death" argument is no longer ignored when exacttimes=TRUE, as
+it is reasonable to have the entry time into one state accurate to
+within one day, and all other times exactly accurate.
+
+o More memory problems should be fixed.
+
+
+Version 0.3 (2003-09-29)
+-------------
+
+o Two errors in the calculation of the likelihood for a multi-state
+model have been corrected. These bugs affect only models with
+reversible transition matrices, that is, models which allow
+progression and regression between states.
+
+o The first bug occurred when death times were known to within one time
+unit (death = TRUE) - the likelihood calculation did not account for
+reversible states.
+
+o The second bug occurred when the data represent exact transition times
+(exacttimes = TRUE). The likelihood calculation did not properly
+account for reversible states.
+
+o Baseline transition intensities, or misclassification probabilities,
+can now be constrained to be equal to each other, in the same manner
+as covariate effects. Specified by new arguments "qconstraint" or
+"econstraint".
+
+o The memory allocation problems of version 0.2 have been fixed.
+
+
+Version 0.22 (2003-06-30)
+--------------
+
+o Fixed some minor bugs, as detailed in ChangeLog.
+
+o New function, pmatrix.piecewise.msm, for calculating transition
+probability matrices for processes with piecewise-constant
+intensities.
+
+
+Version 0.21 (2003-06-03)
+--------------
+
+o Fixed a handful of minor bugs, as detailed in ChangeLog.
+
+o Minor edits and additions to the manual.
+
+o The subject ID can now be factor or character.
+
+
+Version 0.2 (2003-01)
+-------------
+
+o A full manual in PDF format is included in the doc directory. This
+gives the mathematical background behind multi-state modelling, and a
+tutorial in the typical use of the functions in the msm package.
+
+o Many more methods for extracting summary statistics from the fitted
+model are included.  These are generally called with the fitted model
+as the argument, plus an optional argument indicating the assumed
+covariate values. The functions include qmatrix.msm, ematrix.msm,
+pmatrix.msm, qratio.msm, sojourn.msm, totlos.msm, hazard.msm,
+odds.msm, prevalence.msm.
+
+o New function statetable.msm to calculate frequencies of transitions
+between pairs of states observed in the data.
+
+o New function crudeinits.msm to estimate transition intensities
+assuming the data represent the exact transition times of the Markov
+process. These can be used as initial values in the msm function for
+fitting the model.
+
+o prevalencemisc.msm has been removed, as its methodology was
+overcomplicated and confusing.  The methods used in prevalence.msm
+have been extended naturally to deal with misclassification models.
+
+o Fix of a bug in the likelihood calculation for misclassification
+models (the number of non-death states was assumed to be the same as
+the number of states that could be misclassified, leading to failure
+to calculate the likelihood for models where some states are observed
+without error, but are not death states. ) Thanks to Martyn Plummer
+for reporting this.
+
+o Fix of a bug in the simulation routines (getobs.msm, called by
+simmulti.msm), where for models with absorbing states, the absorbing
+state is not retained in the simulated data.
+
+o New heart transplant example data set, as used in the manual, so
+that all the examples given in the manual can be run by the user.
+
+o Tidying of the help pages.
+
+
+Version 0.1 (2002-11)
+-------------
+
+o First release.

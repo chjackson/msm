@@ -1,0 +1,52 @@
+\name{qmodel.object}
+\alias{qmodel.object}
+\title{Developer documentation: transition model structure object}
+\description{
+  A list giving information about the structure of states and allowed
+  transitions in a multi-state model, and options for likelihood
+  calculation.  Used in internal computations, and returned in a fitted
+  \code{\link{msm}} model object.
+}
+\value{
+  \item{nstates}{Number of states}
+  \item{iso}{Label for which basic structure the model is isomorphic
+    to in the list of structures for which analytic formulae for the
+    transition probabilities are implemented in the source file
+    \code{src/analyticp.c}.
+    This list is given by the internal object \code{msm:::.msm.graphs}
+    which is defined and documented in the source file
+    \code{R/constants.R}.
+
+    \code{iso} is 0 if the analytic P matrix is not implemented for this
+    structure, or if analytic P matrix calculations are disabled using
+    \code{use.analyticp=FALSE} in the call to \code{\link{msm}}.
+    }
+  \item{perm}{Permutation required to convert the base isomorphism into
+    the structure of this model. A vector of integers
+    whose \eqn{r}th element is the state number in the base
+    structure representing state \eqn{r} in the current structure.
+  }
+  \item{qperm}{Inverse permutation: vector whose \eqn{r}th element
+    is the state number in the current structure representing the
+    \eqn{r}th state in the base structure.}
+  \item{npars}{Number of allowed instantaneous transitions, equal to \code{sum(imatrix)}.}
+  \item{imatrix}{Indicator matrix for allowed instantaneous transitions.  This has
+    \eqn{(r,s)} entry 1 if the transition from \eqn{r} to
+    \eqn{s} is permitted in continuous time, and 0 otherwise.  The
+    diagonal entries are arbitrarily set to 0.}
+  \item{qmatrix}{Matrix of initial values for the transition
+    intensities, supplied as the \code{qmatrix} argument of \code{\link{msm}}.}
+  \item{inits}{Vector of these initial values, reading across rows of
+    \code{qmatrix} and excluding the diagonal and disallowed transitions.}
+  \item{constr}{Indicators for equality constraints on baseline
+    intensities, taken from the \code{qconstraint} argument to
+    \code{\link{msm}}, and mapped if necessary to the set (1,2,3,...).}
+  \item{ndpars}{Number of distinct allowed instantaneous transitions, after applying
+    equality constraints.}
+  \item{expm}{Use \pkg{expm} package to calculate matrix exponentials
+    for likelihoods, as supplied to the \code{use.expm} argument of
+    \code{\link{msm}}.  \code{TRUE} or \code{FALSE}.}
+}
+\seealso{
+  \code{\link{msm.object}},\code{\link{emodel.object}}, \code{\link{hmodel.object}}.
+}

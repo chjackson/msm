@@ -1,0 +1,142 @@
+\name{simmulti.msm}
+\title{Simulate multiple trajectories from a multi-state Markov model with arbitrary observation times}
+\alias{simmulti.msm}
+\concept{Simulation}
+\description{Simulate a number of individual realisations from a
+  continuous-time Markov process. Observations of the process are made at
+  specified arbitrary times for each individual, giving panel-observed data.
+}
+\usage{
+simmulti.msm(data, qmatrix, covariates=NULL, death = FALSE,  start,
+             ematrix=NULL, misccovariates=NULL, hmodel=NULL, hcovariates=NULL,
+             censor.states=NULL, drop.absorb=TRUE)
+}
+
+\arguments{
+
+  \item{data}{A data frame with a mandatory column named \code{time},
+    representing observation times.  The optional column named \code{subject},
+    corresponds to subject identification numbers. If not given, all
+    observations are assumed to be on the same individual. Observation
+    times should be sorted within individuals.  The optional column
+    named \code{cens} indicates the times at which simulated states
+    should be censored. If \code{cens==0} then the state is not
+    censored, and if \code{cens==k}, say, then all simulated states at that
+    time which are in the set \code{censor.states} are replaced by
+    \code{k}.
+    Other named columns of the data frame represent any covariates,
+    which may be time-constant or time-dependent.  Time-dependent
+    covariates are assumed to be constant between the observation
+    times. 
+  }
+
+  \item{qmatrix}{
+    The transition intensity matrix of the
+    Markov process, with any covariates set to zero.  The diagonal of
+    \code{qmatrix} is ignored,
+    and computed as appropriate so that the rows sum to zero. For
+    example, a possible \code{qmatrix} for a three state illness-death
+    model with recovery is:
+
+    \code{rbind(
+      c( 0, 0.1, 0.02 ),
+      c( 0.1, 0, 0.01 ),
+      c( 0, 0, 0 )
+    )}
+
+}
+
+\item{covariates}{List of linear covariate effects on log transition
+  intensities. Each element is a vector of the effects of one
+  covariate on all the transition intensities. The intensities are ordered
+  by reading across rows of the intensity matrix, starting with the
+  first, counting the positive off-diagonal elements of the matrix.
+
+  For example, for a multi-state model with three transition
+  intensities, and two covariates \code{x} and \code{y} on each
+  intensity,
+
+  \code{covariates=list(x = c(-0.3,-0.3,-0.3), y=c(0.1, 0.1, 0.1))}
+}
+
+\item{death}{Vector of indices of the death states.  A death state is
+  an absorbing state whose time of entry is known exactly, but the
+  individual is assumed to be in an unknown transient state ("alive")
+  at the previous instant.  This is the usual situation for times of death in
+  chronic disease monitoring data.  For example, if you specify
+  \code{death = c(4, 5)} then states 4 and 5 are assumed to be death
+  states.
+
+  \code{death = TRUE} indicates that the
+  final state is a death state, and \code{death = FALSE} (the default)
+  indicates that there is no death state. }
+
+\item{start}{A vector with the same number of elements as there are
+  distinct subjects in the data, giving the states in which each
+  corresponding individual begins.  Or a single number, if all of these
+  are the same.  Defaults to state 1 for each subject.}
+
+\item{ematrix}{An optional misclassification matrix for generating observed states
+  conditionally on the simulated true states. As defined in
+  \code{\link{msm}}.}
+
+\item{misccovariates}{Covariate effects on misclassification
+  probabilities via multinomial logistic regression. Linear effects
+  operate on the log of each probability relative to the probability of
+  classification in the correct state. In same format as
+  \code{covariates}.}
+
+\item{hmodel}{An optional hidden Markov model for generating observed
+  outcomes conditionally on the simulated true states. As defined in
+  \code{\link{msm}}.}
+
+\item{hcovariates}{List of the same length as \code{hmodel}, defining any covariates
+  governing the hidden Markov outcome models.  Unlike in the
+  \code{msm} function, this should also define the values of the
+  covariate effects. Each element of the list is a named vector of the
+  initial values for each set of covariates for that state.  For
+  example, for a three-state hidden Markov model with two, one and no
+  covariates on the state 1, 2 and 3 outcome models respectively,
+
+  \code{ hcovariates = list (c(acute=-8, age=0), c(acute=-8), NULL) }
+}
+\item{censor.states}{Set of simulated states which should be replaced by a
+  censoring indicator at censoring times.  By default this is all
+  transient states (representing alive, with unknown state).}
+\item{drop.absorb}{Drop repeated observations in the absorbing state,
+  retaining only one.}
+}
+\value{A data frame with columns,
+  \item{subject}{Subject identification indicators}
+  \item{time}{Observation times}
+  \item{state}{Simulated (true) state at the corresponding time}
+  \item{obs}{Observed outcome at the corresponding time, if
+    \code{ematrix} or \code{hmodel} was supplied}
+  \item{keep}{Row numbers of the original data.  Useful when
+    \code{drop.absorb=TRUE}, to show which rows were not dropped}
+  plus any supplied covariates.
+}
+\details{
+  \code{\link{sim.msm}} is called repeatedly to produce a simulated
+  trajectory for each individual. The state at each specified
+  observation time is then taken to produce a new column \code{state}.
+  The effect of time-dependent covariates on the transition intensity
+  matrix for an individual is determined by assuming that the covariate is a step function
+  which remains constant in between the individual's observation times.
+  If the subject enters an absorbing state, then only the first
+  observation in that state is kept in the data frame. Rows corresponding to future
+  observations are deleted.  The entry times into states given in
+  \code{death} are assumed to be known exactly.
+}
+\seealso{ \code{\link{sim.msm}}
+}
+\examples{
+### Simulate 100 individuals with common observation times
+sim.df <- data.frame(subject = rep(1:100, rep(13,100)), time = rep(seq(0, 24, 2), 100))
+qmatrix <- rbind(c(-0.11,   0.1,  0.01 ),
+                 c(0.05,   -0.15,  0.1 ),
+                 c(0.02,   0.07, -0.09))
+simmulti.msm(sim.df, qmatrix)
+}
+\author{C. H. Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk}}
+\keyword{datagen}
