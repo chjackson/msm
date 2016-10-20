@@ -1391,24 +1391,25 @@ get.covhist <- function(x, subset=NULL) {
             subs <- mf$"(subject)" %in% subset
             mf <- mf[subs,,drop=FALSE]
         }
-        n <- length(mf$"(subject)")
+        subj <- match(mf$"(subject)", unique(mf$"(subject)"))
+        n <- length(subj)
         apaste <- do.call("paste", mf[,attr(mf,"covnames"),drop=FALSE])
-        first <- !duplicated(mf$"(subject)"); last <- rev(!duplicated(rev(mf$"(subject)")))
+        first <- !duplicated(subj); last <- rev(!duplicated(rev(subj)))
         keep <- (c(0, apaste[1:(n-1)]) != apaste) | first | last
         ## Keep and tabulate unique covariate series
-        covseries <- split(apaste[keep], mf$"(subject)"[keep]) # as a list of char vectors
+        covseries <- split(apaste[keep], subj[keep]) # as a list of char vectors
         covseries <- sapply(covseries, paste, collapse=" , ") # as one char vector, one series per pt.
         ## also need p matrices for different times as well as different covs.
         ## but only interested in cov change times if there's more than one
         ## transition (at least one times change point)
         change.times <- mf$"(time)"; change.times[first] <- change.times[last] <- 0
-        change.times <- split(change.times[keep & (!(first|last))], mf$"(subject)"[keep & (!(first|last))])
+        change.times <- split(change.times[keep & (!(first|last))], subj[keep & (!(first|last))])
         change.times <- sapply(change.times, paste, collapse= " , ")
         covseries.t <- paste(covseries, change.times, sep="; ")
-        ids <- unique(mf$"(subject)")[!duplicated(covseries.t)] # subj ids, one with each distinct series
+        ids <- unique(subj)[!duplicated(covseries.t)] # subj ids, one with each distinct series
         ncombs <- table(covseries.t)[unique(covseries.t)]# how many per series
-        covmat <- cbind(subject=mf$"(subject)", time=mf$"(time)", mf[,attr(mf,"covnames"),drop=FALSE])
-        covmat <- covmat[(mf$"(subject)" %in% ids) & keep,]
+        covmat <- cbind(subject=subj, time=mf$"(time)", mf[,attr(mf,"covnames"),drop=FALSE])
+        covmat <- covmat[(subj %in% ids) & keep,]
         list(example=covmat, # rows of the original data sufficient to define the distinct histories
              hist=covseries.t) # one per subject listing their covariate history as a string
     }
@@ -1426,7 +1427,8 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
     if (!is.null(x$pci)) {
         state <- x$data$mf$"(state)"[!x$data$mf$"(pci.imp)"]
         time <- x$data$mf$"(time)"[!x$data$mf$"(pci.imp)"]
-        subject <- x$data$mf$"(subject)"[!x$data$mf$"(pci.imp)"]
+        subject <- x$data$mf$"(subject)"
+        subject <- subject[!x$data$mf$"(pci.imp)"]
     } else {
         state <- if ((x$hmodel$hidden && !x$emodel$misc) || (!x$hmodel$hidden && x$cmodel$ncens>0) )
             viterbi.msm(x)$fitted else x$data$mf$"(state)"
@@ -1435,7 +1437,7 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
     if (is.null(subset)) subset <- unique(subject)
     time <- time[subject %in% subset]
     state <- state[subject %in% subset]
-    subject <- subject[subject %in% subset] ## fixme subj char/factor?
+    subject <- subject[subject %in% subset]
     if (is.null(times))
         times <- seq(min(time), max(time), (max(time) - min(time))/10)
     states.expand <- matrix(nrow=length(unique(subject)), ncol=length(times))

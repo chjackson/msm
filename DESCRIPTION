@@ -1,6 +1,6 @@
 Package: msm
-Version: 1.6.5
-Date: 2016-10-10
+Version: 1.6.5.9000
+Date: 2016-10-19
 Title: Multi-State Markov and Hidden Markov Models in Continuous Time
 Author: Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 Maintainer: Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>

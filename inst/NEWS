@@ -3,6 +3,8 @@
 USER-VISIBLE CHANGES (for detailed changes see ChangeLog in the source package)
 --------------------
 
+o Bug fix to prevalence.msm with factor subject IDs 
+
 
 Version 1.6.4  (2016-10-02)
 -------------

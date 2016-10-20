@@ -36,7 +36,7 @@
   \item{interp}{Interpolation method for observed states, see
     \code{\link{prevalence.msm}}.}
   \item{censtime}{Subject-specific maximum follow-up times, see \code{\link{prevalence.msm}}.} 
-  \item{subset}{Subset of subjects to calculated observed prevalences for.} 
+  \item{subset}{Vector of the subject identifiers to calculated observed prevalences for.} 
   \item{covariates}{Covariate values for which to forecast expected
     state occupancy.  See \code{\link{prevalence.msm}} --- if this
     function runs too slowly, as it may if there are continuous covariates,

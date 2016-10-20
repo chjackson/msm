@@ -1,3 +1,7 @@
+2016-10-19 Chris Jackson  <chris.jackson@mrc-bsu.cam.ac.uk>
+
+	*  Bug fix to prevalence.msm with factor subject IDs
+
 2016-10-02 Chris Jackson  <chris.jackson@mrc-bsu.cam.ac.uk>
 
 	* Vignette sources moved from "src/doc" to "vignettes" on CRAN
