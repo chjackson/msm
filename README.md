@@ -15,3 +15,6 @@ install.packages("msm")
 install.packages("devtools") # if devtools not already installed
 devtools::install_github('chjackson/msm')
 ```
+
+
+This is the current repository, hosting versions from 1.6.4 onwards.  Previous development versions were hosted on [r-forge](https://r-forge.r-project.org/projects/msm/). 
