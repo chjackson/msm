@@ -130,4 +130,5 @@ importFrom("stats", "as.formula", "deriv", "dexp", "dnorm",
            "pnorm", "qlogis", "qnorm", "quantile", "rbeta", "rbinom",
            "reformulate", "rexp", "rgamma", "rlnorm", "rnbinom",
            "rnorm", "rpois", "rt", "runif", "rweibull", "sd",
-           "setNames", "terms", "uniroot")
+"setNames", "terms", "uniroot")
+

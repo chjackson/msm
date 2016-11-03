@@ -1,9 +1,16 @@
 -*- text -*-
 
-USER-VISIBLE CHANGES (for detailed changes see ChangeLog in the source package)
+USER-VISIBLE CHANGES 
 --------------------
 
+(For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
+
+
+
+
 o Bug fix to prevalence.msm with factor subject IDs 
+
+o Bug fix to qpexp, and new "special" argument to qgeneric.
 
 
 Version 1.6.4  (2016-10-02)

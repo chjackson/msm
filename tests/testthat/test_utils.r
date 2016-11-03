@@ -89,6 +89,15 @@ test_that("Exponential distribution with piecewise constant hazard",{
     q <- rexp(10)
     expect_equal(q, qpexp(ppexp(q)), tol=1e-03)
 
+    ## "special" argument to qgeneric
+    r <- c(0.3,0.6,0.8,1.3)
+    t <- c(0,2,3,5)
+    expect_equal(qpexp(p = c(0.1,0.5,0.9,1) , rate=r, t=t),
+                 c(qpexp(p=0.1, rate=r, t=t), qpexp(p=0.5, rate=r, t=t),
+                   qpexp(p=0.9, rate=r, t=t), qpexp(p=1, rate=r, t=t)))
+    expect_error(qpexp(p=0.1, rate=r, t=t[-1]), "length of t must be equal to length of rate")
+    expect_error(qpexp(p=0.1, rate=r, t=c(0.1, t[-1])), "first element of t should be 0")
+    
     set.seed(220676)
     rt <- rpexp(10)
     set.seed(220676)

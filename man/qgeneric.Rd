@@ -6,7 +6,7 @@
   given the equivalent probability distribution function.
 }
 \usage{
-qgeneric(pdist, p, ...)
+qgeneric(pdist, p, special=NULL, ...)
 }
 \arguments{
   \item{pdist}{ Probability distribution function,
@@ -18,6 +18,10 @@ qgeneric(pdist, p, ...)
     for \eqn{x<0}.
   }
   \item{p}{ Vector of probabilities to find the quantiles for. }
+
+  \item{special}{Vector of character strings naming arguments of the
+    distribution function that should not be vectorised over. Used, for
+    example, for the \code{rate} and \code{t} arguments in \code{\link{qpexp}}.}
 
   \item{...}{ The remaining arguments define parameters of the
     distribution \code{pdist}.  These MUST be named explicitly.

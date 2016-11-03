@@ -316,7 +316,7 @@ ppexp <- function(q, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE)
   }
 
 qpexp <- function (p, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE) {
-    qgeneric(ppexp, p=p, rate=rate, t=t, lower.tail=lower.tail, log.p=log.p)
+    qgeneric(ppexp, p=p, rate=rate, t=t, special=c("rate", "t"), lower.tail=lower.tail, log.p=log.p)
 }
 
 ## Simulate n values from exponential distribution with parameters
@@ -344,9 +344,11 @@ rpexp <- function(n=1, rate=1, t=0)
       ret
   }
 
-qgeneric <- function(pdist, p, ...)
+qgeneric <- function(pdist, p, special=NULL, ...)
 {
     args <- list(...)
+    args.special <- if (!is.null(special)) args[special] else NULL
+    args <- args[!names(args) %in% special]
     if (is.null(args$log.p)) args$log.p <- FALSE
     if (is.null(args$lower.tail)) args$lower.tail <- TRUE
     if (is.null(args$lbound)) args$lbound <- -Inf
@@ -372,6 +374,7 @@ qgeneric <- function(pdist, p, ...)
             args <- lapply(args, function(x)x[hind[i]])
             p <- p[hind[i]]
             args$q <- y
+            args <- c(args, args.special)
             (do.call(pdist, args) - p)
         }
         ptmp <- numeric(length(p[ind]))
