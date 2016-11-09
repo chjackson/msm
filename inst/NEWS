@@ -7,6 +7,9 @@ USER-VISIBLE CHANGES
 
 
 
+o Bug fix to plot.survfit.msm, which had been assuming that everyone starts at time zero.  
+
+o plot.survfit.msm gets a speed-up for bigger datasets, and "from" is now handled properly in the empirical curve. 
 
 o Bug fix to prevalence.msm with factor subject IDs 
 

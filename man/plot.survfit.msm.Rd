@@ -11,6 +11,7 @@
                  legend.pos=NULL, xlab="Time", ylab="Survival probability",
                  lty=1, lwd=1, col="red", lty.ci=2, lwd.ci=1, col.ci="red", 
                  mark.time=TRUE, col.surv="blue", lty.surv=2, lwd.surv=1,
+                 survdata=FALSE,
                  ...)
 }
 \arguments{
@@ -18,8 +19,13 @@
   \item{x}{Output from \code{\link{msm}}, representing a fitted
     multi-state model object.}
 
-  \item{from}{State from which to consider survival. Defaults to
-    state 1. }
+  \item{from}{Non-absorbing state from which to consider survival.  Defaults to state 1.  The fitted
+    probabilities will then be calculated as the transition probabilities
+    from this state to \code{to}. 
+    The empirical survival curve plots survival from the first observation of
+    \code{from} (where this exists) to the
+    first entry time into \code{to}.
+  }
 
   \item{to}{Absorbing state to consider. Defaults to the
     highest-labelled absorbing state. }
@@ -44,6 +50,12 @@
     originally given in the model formula, or a named list, 
 
     \code{list (age = 60, sex = 1)}
+
+    but note the empirical curve is plotted for the full population.
+    To consider subsets for the empirical curve, set
+    \code{survdata=TRUE} to extract the survival data and build a
+    survival plot by hand using
+    \code{\link[survival]{plot.survfit}}.
   }
 
   \item{ci}{If \code{"none"} (the default) no confidence intervals are
@@ -79,7 +91,12 @@
   point, see \code{\link[survival]{lines.survfit}}.}
   \item{col.surv}{Colour for the empirical survival curve, passed to \code{\link[survival]{lines.survfit}}. See \code{\link{par}}.}
   \item{lty.surv}{Line type for the empirical survival curve, passed to \code{\link[survival]{lines.survfit}}. See \code{\link{par}}.}  
-  \item{lwd.surv}{Line width for the empirical survival curve, passed to \code{\link[survival]{lines.survfit}}. See \code{\link{par}}.}  
+  \item{lwd.surv}{Line width for the empirical survival curve, passed to
+    \code{\link[survival]{lines.survfit}}. See \code{\link{par}}.}  
+  \item{survdata}{Set to \code{TRUE} to return the survival data frame
+    constructed when plotting the empirical curve.  This can be used for
+    constructing survival plots by hand using
+    \code{\link[survival]{plot.survfit}}.}
   \item{...}{Other arguments to be passed to the
     \code{\link{plot}} function which draws the fitted curve, or the \code{\link[survival]{lines.survfit}}
     function which draws the empirical curve. }

@@ -148,3 +148,14 @@ test_that("piecewise constant intensities",{
                      covinits = list("timeperiod[5,10)"=rep(0.01,7), "timeperiod[10,Inf)"=rep(0.01,7)))
     expect_equal(3882.08834017773, cav10.msm$minus2loglik, tol=1e-06)
 })
+
+test_that("plot.survfit.msm",{
+    if (interactive()){ 
+        plot.survfit.msm(cav.msm)
+        plot.survfit.msm(cav.msm, from=2)
+        plot.survfit.msm(cav.msm, from=3)
+        plot.survfit.msm(cav.msm, interp="midpoint")
+        sd <- plot.survfit.msm(cav.msm, survdata=TRUE)
+        plot(survfit(Surv(survtime, died) ~ 1, data=sd))
+    }
+})

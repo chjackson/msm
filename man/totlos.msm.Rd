@@ -122,9 +122,10 @@ envisits.msm(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean",
   \eqn{P(t) = Exp(tQ)}, where \eqn{Q} is the transition intensity
   matrix.
 
-  The corresponding expected number of visits to state \eqn{j} is
-\eqn{\sum_{i=j} T_i Q_{i,j}} (excluding the stay in the current state at
-time 0).
+  The corresponding expected number of visits to state \eqn{j}
+  (excluding the stay in the current state at time 0) is
+  \eqn{\sum_{i!=j} T_i Q_{i,j}}, where \eqn{T_i} is the expected amount of
+  time spent in state \eqn{i}.
 
   More generally, suppose that \eqn{\pi_0}{pi_0}
   is the vector of probabilities of being in each state at time 0,

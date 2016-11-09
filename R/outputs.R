@@ -1679,25 +1679,26 @@ plot.prevalence.msm <- function(x, mintime=NULL, maxtime=NULL, timezero=NULL, in
 }
 
 ### Empirical versus fitted survival curve
-### For t,   plot   1 - P(dead at t given
 
 plot.survfit.msm <- function(x, from=1, to=NULL, range=NULL, covariates="mean",
                              interp=c("start","midpoint"), ci=c("none","normal","bootstrap"), B=100,
                              legend.pos=NULL, xlab="Time", ylab="Survival probability",
                              lty=1, lwd=1, col="red", lty.ci=2, lwd.ci=1, col.ci="red",
                              mark.time=TRUE, col.surv="blue", lty.surv=2, lwd.surv=1,
+                             survdata=FALSE, 
                              ...) {
-    if (!inherits(x, "msm")) stop("expected x to be a msm model")
+    if (!inherits(x, "msm")) stop("expected \"x\" to be a msm model")
     if (is.null(to))
         to <- max(absorbing.msm(x))
     else {
-        if (!is.numeric(to)) stop("to must be numeric")
-        if (! (to %in% absorbing.msm(x) ) ) stop("to must be an absorbing state")
+        if (!is.numeric(to)) stop("\"to\" must be numeric")
+        if (! (to %in% absorbing.msm(x) ) ) stop("\"to\" must be an absorbing state")
     }
+    if (! (from %in% transient.msm(x) ) ) stop("\"from\" must be a non-absorbing state")
     if (is.null(range))
         rg <- range(model.extract(x$data$mf, "time"))
     else {
-        if (!is.numeric(range) || length(range)!= 2) stop("range must be a numeric vector of two elements")
+        if (!is.numeric(range) || length(range)!= 2) stop("\"range\" must be a numeric vector of two elements")
         rg <- range
     }
     interp <- match.arg(interp)
@@ -1722,17 +1723,35 @@ plot.survfit.msm <- function(x, from=1, to=NULL, range=NULL, covariates="mean",
         lines(times, 1 - upper, lty=lty.ci, col=col.ci, lwd=lwd.ci)
     }
     dat <- x$data$mf[,c("(subject)", "(time)", "(state)")]
-    st <- as.data.frame(
-                        do.call("rbind", by(dat, dat$"(subject)", function(x)
-                                        {
-                                            dind <- which(x[,"(state)"] == to)
-                                            if(any(x[,"(state)"]==to))
-                                                mintime <- if(interp=="start") min(x[dind, "(time)"]) else 0.5 * (x[dind, "time"] + x[dind-1, "time"])
-                                            else mintime <- max(x[,"(time)"])
-                                            c(anystate = as.numeric(any(x[,"(state)"]==to)), mintime = mintime)
-                                        }
-                                            ))) # slow
-    lines(survfit(Surv(st$mintime,st$anystate) ~ 1), mark.time=mark.time, col=col.surv, lty=lty.surv, lwd=lwd.surv,...)
+    dat$"(subject)" <- match(dat$"(subject)", unique(dat$"(subject)")) # guard against factor
+    dat$subjstate <- paste(dat$"(subject)", dat$"(state)")
+
+    ## restrict data to subjects with any observations of "from" 
+    anyfrom <- tapply(dat$"(state)", dat$"(subject)", function(x)any(x==from))[as.character(dat$"(subject)")]
+    dat <- dat[anyfrom,]
+    obspt <- sequence(table(dat$"(subject)")) # observation numbers, starting at 1 for each subject
+    ## number of first observation of "from" for current subject 
+    minfrom <- rep(which(dat$"(state)"==from  & !duplicated(dat$subjstate)) - which(!duplicated(dat$"(subject)")), table(dat$"(subject)")) + 1
+    ## restrict data to observations after and including first observation of "from" for each person 
+    dat <- dat[obspt>=minfrom,]
+    
+    first <- !duplicated(dat$"(subject)")
+    last <- !duplicated(dat$"(subject)", fromLast=TRUE) 
+    ## does each subject have an absorbing state
+    anyabs <- tapply(dat$"(state)", dat$"(subject)", function(x)any(x==to))[as.character(dat$"(subject)")]
+    subjstate <- paste(dat$"(subject)", dat$"(state)")
+    ## index of first occurrence of absorbing state, or last obs if no absorbing state
+    minabs <- dat$"(state)"==to  & !duplicated(subjstate)
+    dtime <- dat$"(time)" - tapply(dat$"(time)", dat$"(subject)", min)[as.character(dat$"(subject)")]
+    if (interp=="midpoint"){
+        ## index of state just before first occurrence of abs state
+        prevminabs <- c(minabs[-1], FALSE)
+        dtime[minabs] <- 0.5*(dtime[minabs] + dtime[prevminabs])
+    }
+    minabs[!anyabs] <- last[!anyabs]
+    survdat <- data.frame(survtime =  dtime[minabs], died = as.numeric(anyabs[minabs]))
+
+    lines(survfit(Surv(survdat$survtime, survdat$died) ~ 1), mark.time=mark.time, col=col.surv, lty=lty.surv, lwd=lwd.surv,...)
     timediff <- (rg[2] - rg[1]) / 50
     if (!is.numeric(legend.pos) || length(legend.pos) != 2)
         legend.pos <- c(max(x$data$mf$"(time)") - 25*timediff, 1)
@@ -1742,7 +1761,7 @@ plot.survfit.msm <- function(x, from=1, to=NULL, range=NULL, covariates="mean",
     else legend(legend.pos[1], legend.pos[2], lty=c(lty, lty.ci, lty.surv), lwd=c(lwd,lwd.ci, lwd.surv), col=c(col ,col.ci, col.surv),
                 legend=c("Fitted","Fitted (confidence interval)", "Empirical"))
 
-    invisible()
+    if (survdata) survdat else invisible()
 }
 
 ### Obtain hazard ratios from estimated effects of covariates on log-transition rates
