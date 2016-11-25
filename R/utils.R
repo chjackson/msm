@@ -134,10 +134,12 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     upper <- (upper - mean) / sd
     ind <- seq(length=n)
     ret <- numeric(n)
+    nas <- is.na(mean) | is.na(sd) | is.na(lower) | is.na(upper)
+    if (any(nas)) warning("NAs produced")
     ## Different algorithms depending on where upper/lower limits lie.
     alg <- ifelse(
-                  lower > upper,
-                  -1,# return NaN if lower > upper
+                  ((lower > upper) | nas),
+                  -1,# return NaN
                   ifelse(
                          ((lower < 0 & upper == Inf) |
                           (lower == -Inf & upper > 0) |

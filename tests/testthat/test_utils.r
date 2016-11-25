@@ -25,6 +25,10 @@ test_that("truncated normal",{
     expect_warning(qtnorm(c(-1, 0, 1, 2)), "NaN")
     expect_warning(qtnorm(c(-1, 0, 1, 2),lower=-1,upper=1), "NaN")
     expect_equal(rl, qtnorm(ptnorm(rl, mean=1:10), mean=1:10))
+    ## NA handling in rtnorm
+    expect_warning(rtnorm(3, mean=c(1, NA, 0)), "NAs produced")
+    expect_warning(res <- rtnorm(3, sd=c(1, NA, 1), lower=c(NA, 0, 2)), "NAs produced")
+    expect_equal(res[1:2], c(NaN, NaN))
 })
 
 test_that("Measurement error distributions: normal",{
