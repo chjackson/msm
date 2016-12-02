@@ -968,7 +968,9 @@ msm.mninvlogit.transform <- function(pars, plabs, states){
         }
         else {
             psum <- tapply(exp(pars[plabs=="p"]), states[plabs=="p"], sum)
-            res[plabs=="pbase"][unique(states[plabs=="p"])] <- 1 / (1 + psum) # don't transform pbase if no p's for this state, i.e. if no/perfect misclassification
+##             res[plabs=="pbase"][unique(states[plabs=="p"])] <- 1 / (1 + psum) # don't transform pbase if no p's for this state, i.e. if no/perfect misclassification
+            ## only transform pbases where there also exists p's for the same state, i.e don't transform if no/perfect misclassification
+            res[plabs=="pbase" & states %in% unique(states[plabs=="p"])] <- 1 / (1 + psum)             
             res[plabs=="p"] <- exp(pars[plabs=="p"]) / (1 + psum[whichst])
         }
     }
