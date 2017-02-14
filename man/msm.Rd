@@ -615,6 +615,11 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
      previously-existing variable called \code{timeperiod} as a
      covariate in any part of a \code{msm} model.
 
+     To assume piecewise constant intensities for some transitions but
+     not others with \code{pci}, use the
+     \code{fixedpars} argument to fix the appropriate covariate effects
+     at their default initial values of zero. 
+
      Internally, this works by inserting censored observations in the
      data at times when the intensity changes but the state is not
      observed.

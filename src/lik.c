@@ -142,6 +142,7 @@ If this is a general outcome,  get prob of observing it from HMODELS
 void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpars, hmodel *hm, qmodel *qm, int obstrue)
 {
     int i, j, k, ind;
+
     for (i=0; i<qm->nst; ++i) {
 	if (hm->hidden && (obstrue==0)) { /* HMMs with true state not known */
 	    if (nout > 1) {  /* multivariate outcomes. Censored states not supported */ 
@@ -150,7 +151,7 @@ void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpa
 		    ind = (hm->mv ? 
 			   MI(k,i,nout) :  /* different models for different variables */
 			   i);             /* same model for all */
-		    if (!ISNA(outcome[k]) && !ISNA(hm->models[ind])){
+		    if (!ISNA(outcome[k]) && !(hm->models[ind]==NA_INTEGER)){
 			pout[i] *= ((HMODELS[hm->models[ind]])(outcome[k], &(hpars[hm->firstpar[ind]])));
 		    }		    
 		}
@@ -169,7 +170,7 @@ void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpa
 		    pout[i] = 1;
 		    for (k=0; k<nout; ++k) {
 			ind = (hm->mv ? MI(k,i,nout) : i);
-			if (!ISNA(outcome[k]) && !ISNA(hm->models[ind])){
+			if (!ISNA(outcome[k]) && !(hm->models[ind]==NA_INTEGER)){
 			    pout[i] *= ((HMODELS[hm->models[ind]])(outcome[k], &(hpars[hm->firstpar[ind]])));
 			}
 		    }
@@ -224,13 +225,13 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 		for (r=0; r<nout; ++r) {
 		    pout[r] = 0; 
 		    ind = (hm->mv ? MI(r,i,nout) : i);
-		    if (!ISNA(outcome[r]) && !ISNA(hm->models[ind])){
+		    if (!ISNA(outcome[r]) && !(hm->models[ind]==NA_INTEGER)){
 			pout[r] = ((HMODELS[hm->models[ind]])(outcome[r], &(hpars[hm->firstpar[ind]])));
 		    }
 		}
 		for (r=0; r<nout; ++r){
 		    ind = (hm->mv ? MI(r,i,nout) : i);
-		    if (!ISNA(outcome[r]) && !ISNA(hm->models[ind])){
+		    if (!ISNA(outcome[r]) && !(hm->models[ind]==NA_INTEGER)){
 			(DHMODELS[hm->models[ind]])(outcome[r], &(hpars[hm->firstpar[ind]]), dptmp);
 			for (k=0; k<hm->npars[ind]; ++k){
 			    for (s=0; s<nout; ++s)

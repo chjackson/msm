@@ -35,7 +35,14 @@ test_that("HMMs with multiple responses from the same distribution",{
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
     expect_equal(hmm$minus2loglik, 4387.58552977954, tol=1e-06)
-    expect_lt(deriv_error(hmm), err)
+    expect_lt(deriv_error(hmm), err)    
+})
+
+test_that("HMMs with multiple responses: cbind() in formula",{
+    hmm <- msm(cbind(obs1, obs2) ~ time, subject=subject, data=dat, qmatrix=two.q,
+               hmodel = list(hmmBinom(size=40, prob=0.2),
+               hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
+    expect_equal(hmm$minus2loglik, 4387.58552977954, tol=1e-06)
 })
 
 test_that("HMMs with multiple responses from different distributions",{
@@ -47,6 +54,13 @@ test_that("HMMs with multiple responses from different distributions",{
                fixedpars=TRUE)
     expect_equal(hmm$minus2loglik, 3767.11569380418, tol=1e-06)
     expect_lt(deriv_error(hmm), err)
+    expect_error(msm(obs1 ~ time, subject=subject, data=dat, qmatrix=two.q,   
+                     hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
+                                         hmmBinom(size=40, prob=0.3)),                 
+                                   hmmMV(hmmBinom(size=40, prob=0.3),
+                                         hmmBinom(size=40, prob=0.3))),
+                     fixedpars=TRUE),
+                 "Only one column in state outcome data")
 })
 
 test_that("HMMs with multiple responses from different distributions: non-default initprobs, different probs",{
@@ -73,8 +87,6 @@ test_that("HMMs with multiple responses from different distributions: missing da
     expect_lt(deriv_error(hmm), err)
 })
 
-## not tested: different number of models by design for different obs 
-
 dat$obstrue <- NA
 obstimes <- seq(2, 147, by=5)  # times when true state is known
 dat$obstrue[obstimes] <- dat$state[obstimes]
@@ -91,9 +103,30 @@ test_that("HMMs with multiple responses: true state known sometimes",{
     expect_lt(deriv_error(hmm), err)
 })
 
-## analytic derivatives
+datd <- dat
+datd$dobs[c(5,10),1] <- 999
+three.q <- rbind(cbind(two.q, c(0.1,0.1)), c(0,0,0))
 
 options(msm.test.analytic.derivatives=NULL)
 
+test_that("HMMs with multiple responses: exact death and hmmIdent",{
+    hmm <- msm(dobs ~ time, subject=subject, data=datd, qmatrix=three.q,
+               death = 3,
+               hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
+                                   hmmBinom(size=40, prob=0.3)),
+                             hmmMV(hmmBinom(size=40, prob=0.3),
+                                   hmmBinom(size=40, prob=0.3)),
+                         hmmIdent(999)),
+               fixedpars=TRUE)
+    expect_error(msm(dobs ~ time, subject=subject, data=datd, qmatrix=three.q,
+                     death = 3,
+                     hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
+                                         hmmBinom(size=40, prob=0.3)),
+                                   hmmMV(hmmBinom(size=40, prob=0.3),
+                                         hmmBinom(size=40, prob=0.3)),
+                                   hmmPois(1)),
+                     fixedpars=TRUE),
+                 "Exact death states should have the identity hidden distribution hmmIdent")
+})
 
 ## censoring? 

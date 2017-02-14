@@ -650,9 +650,9 @@ test_that("error handling: check model",{
 
 
 test_that("error handling: death",{
-    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = "foo", fixedpars=TRUE) ,"Death states indicator must be numeric")
-    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 5, fixedpars=TRUE) ,"Death states indicator contains states not in 1, 2, ... , 4")
-    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 1:5, fixedpars=TRUE) ,"Death states indicator contains states not in 1, 2, ... , 4")
+    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = "foo", fixedpars=TRUE) ,"Exact death states indicator must be numeric")
+    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 5, fixedpars=TRUE) ,"Exact death states indicator contains states not in 1, 2, ... , 4")
+    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 1:5, fixedpars=TRUE) ,"Exact death states indicator contains states not in 1, 2, ... , 4")
     expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 3, fixedpars=TRUE),"Not all the \"death\" states are absorbing states" )
 })
 

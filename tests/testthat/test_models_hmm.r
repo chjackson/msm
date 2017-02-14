@@ -125,7 +125,7 @@ test_that("error handling in HMM fits",{
     hmodel.rubbish <- list("should be a ", " list of ", "hmodel objects")
     expect_error(fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev, qmatrix=three.q, deathexact=3, hmodel=hmodel.rubbish, fixedpars=1:9), "hmodel should be a list of HMM distribution objects")
     ## Death state wrong (not HMM-specific error, but no harm putting it in this file anyway)
-    expect_error(fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev, qmatrix=three.q, deathexact=10, hmodel=hmodel3, fixedpars=1:9), "Death states indicator contains states not in 1, 2, 3")
+    expect_error(fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev, qmatrix=three.q, deathexact=10, hmodel=hmodel3, fixedpars=1:9), "Exact death states indicator contains states not in 1, 2, 3")
 
     ## Covariate list of wrong length
     expect_error(fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev, qmatrix=three.q, deathexact=3, hmodel=hmodel3, hcovariates=list(~acute, ~acute), hcovinits = list(-8, -8, NULL),), "hcovariates of length 2, expected 3")
