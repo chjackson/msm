@@ -34,3 +34,5 @@ chm
 TODO
 _region_.tex
 src/doc
+^.*\.Rproj$
+^\.Rproj\.user$

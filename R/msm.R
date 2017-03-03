@@ -63,7 +63,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
         emodel <- list(misc=FALSE, npars=0, ndpars=0, nipars=0, nicoveffs=0)
         hmodel$ematrix <- FALSE
     }
-
+    
 ### EXACT DEATH TIMES. Logical values allowed for backwards compatibility (TRUE means final state has exact death time, FALSE means no states with exact death times)
     if (!is.null(deathexact)) death <- deathexact
     dmodel <- msm.form.dmodel(death, qmodel, hmodel)  # returns death, ndeath,
@@ -106,7 +106,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     temp[["na.action"]] <- na.pass # run na.action later so we can pass aux info to it
     temp[["data"]] <- data
     mf <- eval(temp, parent.frame())
-
+    
     ## remember user-specified names for later (e.g. bootstrap/cross validation)
     usernames <- c(state=all.vars(formula[[2]]), time=all.vars(formula[[3]]), subject=as.character(temp$subject), obstype=as.character(substitute(obstype)), obstrue=as.character(temp$obstrue))
     attr(mf, "usernames") <- usernames
@@ -511,7 +511,7 @@ msm.check.state <- function(nstates, state, censor, hmodel)
                 stop("State vector contains elements not in ",statelist)
             miss.state <- setdiff(states, unique(state))
             ## Don't do this for misclassification models: it's OK to have particular state not observed by chance
-            if (length(miss.state) > 0 && !hmodel$ematrix)
+            if (length(miss.state) > 0 && (!hmodel$hidden || !hmodel$ematrix))
                 warning("State vector doesn't contain observations of ",paste(miss.state, collapse=","))
         }
     }

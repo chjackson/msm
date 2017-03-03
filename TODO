@@ -11,6 +11,8 @@ for every release
 * undefined behaviour sanitizer: gcc 4.9, and R-3.1.2 configured with flags on, installed locally at work. turn flags on for package building in .R/Makevars
 * timing of tests
 
+
+informative error for character state/time, see ~/msm/tests/helpTylerPyleMSM.R
    
 
 POSSIBLE MAJOR DEVELOPMENTS
