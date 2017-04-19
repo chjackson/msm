@@ -151,6 +151,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
         mf <- na.fail.msmdata(mf)
     else stop ("na.action should be \"na.omit\" or \"na.fail\"")
     attr(mf, "npts") <- length(unique(mf$"(subject)"))
+    attr(mf, "ntrans") <- nrow(mf) - attr(mf, "npts")
 
 ### UTILITY FOR PIECEWISE-CONSTANT INTENSITIES.  Insert censored
     ## observations into the model frame, add a factor "timeperiod" to

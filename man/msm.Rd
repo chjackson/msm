@@ -330,8 +330,8 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
     The maximum likelihood estimation chooses the combination of signs
     which has the higher likelihood.
 
-    For categorical covariates, defined using \code{factor(covname)},
-    specify constraints as follows:\cr
+    For categorical covariates, defined as factors, specify constraints
+    as follows:\cr
 
     \code{list(..., covnameVALUE1 = c(...), covnameVALUE2 = c(...), ...)}\cr
 

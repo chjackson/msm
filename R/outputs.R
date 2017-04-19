@@ -684,8 +684,11 @@ plot.msm <- function(x, from=NULL, to=NULL, range=NULL, covariates="mean", legen
         if (any (! (from %in% 1:x$qmodel$nstates ) ) )
             stop("from must be a vector of states in 1, ..., ", x$qmodel$nstates)
     }
-    if (is.null(to))
+    if (is.null(to)){
+        if (length(absorbing.msm(x))==0)
+            stop("\"to\" not specified, and no absorbing state in the model")
         to <- max(absorbing.msm(x))
+    }
     else {
         if (!is.numeric(to)) stop("to must be numeric")
         if (! (to %in% absorbing.msm(x) ) ) stop("to must be an absorbing state")
