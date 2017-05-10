@@ -7,14 +7,16 @@ USER-VISIBLE CHANGES
 
 
 
-Version 1.6.5  (2017-??-??)
+Version 1.6.5  (2017-04-20)
 -------------
+
+o Bug fix to prevalence.msm with factor subject IDs.
+
+o Bug fix to observed state prevalences in prevalence.msm for "ematrix"-style misclassification models with censoring - censored states were not being imputed correctly.
 
 o Bug fix to plot.survfit.msm, which had been assuming that everyone starts at time zero.  
 
 o plot.survfit.msm gets a speed-up for bigger datasets, and "from" is now handled properly in the empirical curve. 
-
-o Bug fix to prevalence.msm with factor subject IDs.
 
 o Bug fix to qpexp, and new "special" argument to qgeneric.
 

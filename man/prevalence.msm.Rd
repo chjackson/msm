@@ -168,6 +168,10 @@ The component
   (\code{\link{viterbi.msm}}).  The goodness of fit of
   these states to the underlying Markov model is tested.
 
+  In any model, if there are censored states, then these are replaced by
+  imputed values of highest probability from the Viterbi algorithm
+  in order to calculate the observed state prevalences.
+
   For an example of this approach, see Gentleman \emph{et al.} (1994).
 }
 

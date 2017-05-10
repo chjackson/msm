@@ -1433,8 +1433,17 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
         subject <- x$data$mf$"(subject)"
         subject <- subject[!x$data$mf$"(pci.imp)"]
     } else {
-        state <- if ((x$hmodel$hidden && !x$emodel$misc) || (!x$hmodel$hidden && x$cmodel$ncens>0) )
-            viterbi.msm(x)$fitted else x$data$mf$"(state)"
+        if ((x$hmodel$hidden && !x$emodel$misc) ||
+            (!x$emodel$misc && x$cmodel$ncens>0) )
+            state <- viterbi.msm(x)$fitted
+        else if (x$emodel$misc && x$cmodel$ncens>0) {
+            vit <- viterbi.msm(x)$fitted
+            state <- x$data$mf$"(state)"
+            state[state %in% x$cmodel$censor] <- vit[state %in% x$cmodel$censor]
+            ## TODO for misc models with censoring, impute only censored obs states from viterbi
+        }  else
+            state <- x$data$mf$"(state)"
+
         time <- x$data$mf$"(time)"; subject <- x$data$mf$"(subject)"
     }
     if (is.null(subset)) subset <- unique(subject)
@@ -1497,33 +1506,6 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
 
     list(obstab=obstab, obsperc=obsperc, risk=risk)
 }
-
-### TODO cleaner observed.msm.   Works for interp=start.
-### TODO debug midpoint. apply censoring times
-
-## times <- seq(0, 2, 0.5)
-## dat <- data.frame(time=msm_export_r$fu_year, state=msm_export_r$state3)
-## pt <- msm_export_r$ptid
-## nstates <- 3
-## trans <- c(1,2) # transient states
-
-## if (interp=="midpoint"){
-## t <- dat$time; n <- length(t)
-## t[duplicated(pt)] <- ((t + t[c(1, 1:(n-1))])/2)[duplicated(pt)]
-## dat$time <- t
-## }
-## spl <- split(dat, pt)
-## ## findInterval returns 0 if before first time.
-## st <- sapply(spl, function(x){y <- findInterval(times, x$time)
-##                               y[y==0] <- NA
-##                               res <- x$state[y]
-##                               res[(y==length(x$time)) & (res %in% trans)] <- NA
-##                               res
-##                           })
-## obstab <- t(apply(st, 1, function(x){table(factor(na.omit(x), levels=1:nstates))}))
-
-## observed.msm(pap.msm.noskip, times=times)
-## observed.msm(pap.msm.noskip, times=times, interp="midpoint")
 
 
 expected.msm <- function(x,
