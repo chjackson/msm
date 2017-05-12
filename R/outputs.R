@@ -1437,10 +1437,10 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
             (!x$emodel$misc && x$cmodel$ncens>0) )
             state <- viterbi.msm(x)$fitted
         else if (x$emodel$misc && x$cmodel$ncens>0) {
+            ## For misclassification models with censoring, impute only the censored observed states from viterbi
             vit <- viterbi.msm(x)$fitted
             state <- x$data$mf$"(state)"
             state[state %in% x$cmodel$censor] <- vit[state %in% x$cmodel$censor]
-            ## TODO for misc models with censoring, impute only censored obs states from viterbi
         }  else
             state <- x$data$mf$"(state)"
 
