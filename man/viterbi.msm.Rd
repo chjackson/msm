@@ -12,11 +12,15 @@
 }
 
 \usage{
-viterbi.msm(x)
+viterbi.msm(x, normboot=FALSE)
 }
 \arguments{
   \item{x}{A fitted hidden Markov multi-state model, or a model with
     censored state observations, as produced by \code{\link{msm}}}
+  \item{normboot}{If \code{TRUE}, then before running the algorithm, the
+    maximum likelihood estimates of the model parameters are replaced by
+    an alternative set of parameters drawn randomly from the asymptotic
+    multivariate normal distribution of the MLEs.}
 }
 \value{
     A data frame with columns:

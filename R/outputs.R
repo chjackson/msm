@@ -1832,8 +1832,9 @@ odds.msm <- function(x, odds.scale = 1, cl = 0.95)
     odds.list
 }
 
+## TODO method to return alternative bootstrapped value 
 
-viterbi.msm <- function(x)
+viterbi.msm <- function(x, normboot=FALSE)
 {
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
     if (x$cmodel$ncens > 0 && !x$hmodel$hidden) {
@@ -1851,8 +1852,12 @@ viterbi.msm <- function(x)
         x$paramdata$allinits <- c(x$paramdata$allinits,x$hmodel$pars)
         x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq(along=x$hmodel$pars))
     }
-    if (x$hmodel$hidden) {
-        ret <- Ccall.msm(x$paramdata$opt$par, do.what="viterbi", expand.data(x),
+    if (x$hmodel$hidden) {        
+        params <-
+          if (normboot)
+              rmvnorm(1, x$paramdata$opt$par, x$covmat[x$paramdata$optpars,x$paramdata$optpars])
+          else x$paramdata$opt$par
+        ret <- Ccall.msm(params, do.what="viterbi", expand.data(x),
                                x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata)
         fitted <- ret[[1]]; pstate <- ret[[2]]
         fitted <- fitted + 1
