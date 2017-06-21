@@ -1832,8 +1832,6 @@ odds.msm <- function(x, odds.scale = 1, cl = 0.95)
     odds.list
 }
 
-## TODO method to return alternative bootstrapped value 
-
 viterbi.msm <- function(x, normboot=FALSE)
 {
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
