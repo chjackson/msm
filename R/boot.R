@@ -65,7 +65,7 @@ bootdata.subject.msm <- function(x) {
     subj.num <- match(dat$"(subject)", unique(dat$"(subject)"))
     subjs <- sample(unique(subj.num), replace=TRUE)
     inds <- new.subj <- NULL
-    for (i in seq(along=subjs)) {
+    for (i in seq_along(subjs)) {
         subj.inds <- which(subj.num == subjs[i])
         inds <- c(inds, subj.inds)
         new.subj <- c(new.subj, rep(i, length(subj.inds)))

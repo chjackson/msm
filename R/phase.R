@@ -10,7 +10,7 @@ msm.phase2qmodel <- function(qmodel, phase.states, inits, qconstraint, analyticp
         if (!is.list(inits)) stop("phase.inits should be a list")
         if (!length(inits)==length(phase.states))
             stop(sprintf("phase.inits of length %d, but there are %d phased states", length(inits), length(phase.states)))
-        for (i in seq(along=inits)){
+        for (i in seq_along(inits)){
             if (!length(inits[[i]])==2) stop(sprintf("phase.inits[[%d]] list of length %d, should be 2", i, length(inits[[i]])))
             if (is.null(names(inits[[i]]))) names(inits[[i]]) <- c("trans","exit")
             if (is.vector(inits[[i]]$trans)) inits[[i]]$trans <- matrix(inits[[i]]$trans, nrow=1)
@@ -45,7 +45,7 @@ msm.phase2qmodel <- function(qmodel, phase.states, inits, qconstraint, analyticp
                  imatrix.orig=qmodel$imatrix, qmatrix.orig=qmodel$qmatrix,
                  pdests=list(), pdests.orig=list(),
                  phase1.ind=numeric(), phase2.ind=numeric()) 
-    for (i in seq(along=phase.states)){
+    for (i in seq_along(phase.states)){
         ## possible destination states from current phase state in
         ## original and expanded model respectively
         dests <- which(qmodel$imatrix[phase.states[i],]==1)

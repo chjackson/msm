@@ -51,7 +51,7 @@ MatrixExp <- function(mat, t = 1, method=NULL,...){
 
     }
     if (length(t) > 1) res <- array(dim=c(dim(mat), length(t)))
-    for (i in seq(along=t)) {
+    for (i in seq_along(t)) {
         if (is.null(method) || !(method %in% c("pade","series","analytic"))) {
             if (is.null(method)) method <- eval(formals(expm::expm)$method)
             resi <- expm::expm(t[i]*mat, method=method, ...)
@@ -335,10 +335,10 @@ rpexp <- function(n=1, rate=1, t=0)
       if (length(n) > 1) n <- length(n)
       ret <- numeric(n)                          # outcome is a vector length n
       left <- 1:n
-      for (i in seq(along=rate)){
+      for (i in seq_along(rate)){
           re <- rexp(length(left), rate[i])   # simulate as many exponentials as there are values remaining
           r <- t[i] + re
-          success <- if (i == length(rate)) seq(along=left) else which(r < t[i+1])
+          success <- if (i == length(rate)) seq_along(left) else which(r < t[i+1])
           ret[left[success]] <- r[success]
           left <- setdiff(left, left[success])  # indices of values in outcome remaining to simulate.
           if (length(left)==0) break;
@@ -364,14 +364,14 @@ qgeneric <- function(pdist, p, special=NULL, ...)
     ## Other args assumed to contain params of the distribution.
     ## Replicate all to their maximum length, along with p 
     maxlen <- max(sapply(c(args, p=list(p)), length))
-    for (i in seq(along=args))
+    for (i in seq_along(args))
         args[[i]] <- rep(args[[i]], length.out=maxlen)
     p <- rep(p, length.out=maxlen)
 
     ret[p < 0 | p > 1] <- NaN
     ind <- (p > 0 & p < 1)
     if (any(ind)) {
-        hind <- seq(along=p)[ind]
+        hind <- seq_along(p)[ind]
         h <- function(y) {
             args <- lapply(args, function(x)x[hind[i]])
             p <- p[hind[i]]

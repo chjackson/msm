@@ -405,7 +405,7 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
         psi <- function(u)prod((1 - 2i*lambda*u)^(-0.5))
         fn <- function(u){
             res <- numeric(length(u))
-            for (i in seq(along=u))
+            for (i in seq_along(u))
                 res[i] <- Im(psi(u[i])*exp(-1i*u[i]*stat) / (2*pi*u[i]))
             res
         }

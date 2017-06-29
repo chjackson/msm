@@ -786,7 +786,7 @@ msm.form.covmodel <- function(mf,
         msm.check.constraint(constraint, mm)
         constr <- inits <- numeric()
         maxc <- 0
-        for (i in seq(along=covlabels)){
+        for (i in seq_along(covlabels)){
             ## build complete vectorised list of constraints for covariates in covariates statement
             ## so. e.g. constraints = (x1=c(3,3,4,4,5), x2 = (0.1,0.2,0.3,0.4,0.4))
             ##     turns into constr = c(1,1,2,2,3,4,5,6,7,7) with seven distinct covariate effects
@@ -808,7 +808,7 @@ msm.form.covmodel <- function(mf,
     inits <- numeric()
     if (!is.null(covinits))
         msm.check.covinits(covinits, covlabels)
-    for (i in seq(along=covlabels)) {
+    for (i in seq_along(covlabels)) {
         if (!is.null(covinits) && is.element(covlabels[i], names(covinits))) {
             thisinit <- covinits[[covlabels[i]]]
             if (!is.numeric(thisinit)) {
@@ -853,7 +853,7 @@ msm.form.covmodel.byrate <- function(mf, mm,
     ## Convert short form constraints to long form
     msm.check.constraint(constraint, mm)
     constr <- inits <- numeric()
-    for (i in seq(along=covs)){
+    for (i in seq_along(covs)){
         if (covs[i] %in% names(constraint)){
             if (length(constraint[[covs[i]]]) != sum(cri[,i]))
                 stop("\"",covs[i],"\" constraint of length ",
@@ -866,7 +866,7 @@ msm.form.covmodel.byrate <- function(mf, mm,
     }
     ## convert short to long initial values in the same way
     if (!is.null(covinits)) msm.check.covinits(covinits, covs)
-    for (i in seq(along=covs)) {
+    for (i in seq_along(covs)) {
         if (!is.null(covinits) && (covs[i] %in% names(covinits))) {
             if (!is.numeric(covinits[[covs[i]]])) {
                 warning("initial values for covariates should be numeric, ignoring")
@@ -1770,7 +1770,7 @@ msm.check.covlist <- function(covlist, qemodel) {
         badnums <- paste(badnums, collapse=",")
         stop("Name", plural1, " ", badnames, " of \"covariates\" formula", plural2, " ", badnums, " not in format \"number-number\"")
     }
-    for (i in seq(along=covlist))
+    for (i in seq_along(covlist))
         if (!inherits(covlist[[i]], "formula"))
             stop("\"covariates\" should be a formula or list of formulae")
     trans <- sapply(strsplit(names(covlist), "-"), as.numeric)
@@ -1832,7 +1832,7 @@ na.find.msmdata <- function(object, ...) {
     lastobs <- !duplicated(subj, fromLast=TRUE)
     nm <- names(object)
     omit <- FALSE
-    for (j in seq(along=object)) {
+    for (j in seq_along(object)) {
         ## Drop all NAs in time, subject as usual
         if (nm[j] %in% c("(time)", "(subject)"))
             omit <- omit | is.na(object[[j]])

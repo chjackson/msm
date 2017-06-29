@@ -221,7 +221,7 @@ factorcov2numeric.msm <- function(covariates, x, mod=NULL) {
     cfac <- covariates[names(covariates) %in% covnames[which(covfactor)]]
     cnum <- covariates[! names(covariates) %in% covnames[which(covfactor)]]
     cfac.new <- list()
-    for (i in seq(along=cfac)) {
+    for (i in seq_along(cfac)) {
         levs.i <- covfactorlevels[[names(cfac)[[i]]]]
         cfac.i <- rep(0, length(levs.i))
         if (! cfac[[i]] %in% levs.i) stop("Level \"", cfac[[i]], "\" of covariate ", names(cfac)[[i]], " unknown")
@@ -230,7 +230,7 @@ factorcov2numeric.msm <- function(covariates, x, mod=NULL) {
         cfac.i <- as.list(cfac.i[-1])
         cfac.new <- c(cfac.new, cfac.i)
     }
-    covlabels.noint <- covnames.mm[setdiff(seq(along=covnames.mm), grep(":", covnames.mm))]
+    covlabels.noint <- covnames.mm[setdiff(seq_along(covnames.mm), grep(":", covnames.mm))]
     covs.out <- as.list(numeric(length(covlabels.noint)))
     names(covs.out) <- covlabels.noint
     covs.out[names(cnum)] <- cnum
@@ -1270,7 +1270,7 @@ totlos.msm <- function(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean"
             for (j in rem){
                 f <- function(time) {
                     y <- numeric(length(time))
-                    for (k in seq(along=y))
+                    for (k in seq_along(y))
                         y[k] <- (start %*% pmatrix.msm(x, time[k], t1=0, covariates=covs[[i]], ci="none")) [j]
                     y
                 }
@@ -1459,7 +1459,7 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
     if (!is.numeric(censtime)) stop("censtime should be numeric")
     if (length(censtime)==1) censtime <- rep(censtime, length(pts))
     else if (length(censtime)!=length(pts)) stop("censtime of length ", length(censtime), ", should be 1 or ", length(pts))
-    for (i in seq(along=pts)){
+    for (i in seq_along(pts)){
         state.i <- state[(subject==pts[i])]
         time.i <- time[(subject==pts[i])]
         j <- 1
@@ -1498,7 +1498,7 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
         if (is.null(covhist)) rep(1, length(unique(subject)))
         else match(covhist$hist, unique(covhist$hist))
     risk <- matrix(nrow=length(times), ncol=length(unique(covcat)), dimnames = list(times, unique(covhist$hist)))
-    for (i in seq(along=unique(covcat))) {
+    for (i in seq_along(unique(covcat))) {
         obst <- t(apply(states.expand[covcat==unique(covcat)[i],,drop=FALSE], 2,
                         function(y) table(factor(y, levels=seq(length=x$qmodel$nstates)))))
         risk[,i] <- rowSums(obst)
@@ -1848,7 +1848,7 @@ viterbi.msm <- function(x, normboot=FALSE)
         for (i in seq_len(x$hmodel$nstates))
             x$data$mm.hcov[[i]] <- model.matrix(~1, x$data$mf)
         x$paramdata$allinits <- c(x$paramdata$allinits,x$hmodel$pars)
-        x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq(along=x$hmodel$pars))
+        x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq_along(x$hmodel$pars))
     }
     if (x$hmodel$hidden) {        
         params <-
@@ -1885,7 +1885,7 @@ scoreresid.msm <- function(x, plot=FALSE){
     names(sres) <- unique(x$data$mf$"(subject)")
     if (plot) {
         plot(sres, type="n")
-        text(seq(along=sres), sres, names(sres))
+        text(seq_along(sres), sres, names(sres))
     }
     sres
 }

@@ -426,7 +426,7 @@ msm.form.hranges <- function(ranges, hmodel)
         }
     }
     ## ideally should be strict here if estimated, but allow inits on Inf boundary if not estimated.
-    for (i in seq(along=hmodel$pars)){
+    for (i in seq_along(hmodel$pars)){
         if (!in.range(hmodel$pars[i], hranges[i,], strict=FALSE))
             stop("Initial value ", hmodel$pars[i], " of parameter \"", hmodel$plabs[i], "\" outside allowed range ",
                  "[", paste(hranges[i,], collapse=","), "]")

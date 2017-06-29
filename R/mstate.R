@@ -48,7 +48,7 @@ msm2Surv <- function(data, # data frame
     surv$trans <- Qi[cbind(surv$from,surv$to)]
     rownames(surv) <- NULL
     tmat <- t(Q)
-    tmat[t(Q)==1] <- seq(along=tmat[t(Q)==1])
+    tmat[t(Q)==1] <- seq_along(tmat[t(Q)==1])
     tmat <- t(tmat); tmat[Q==0] <- NA
     names(dimnames(tmat)) <- c("from","to")
     attr(surv, "trans") <-  tmat

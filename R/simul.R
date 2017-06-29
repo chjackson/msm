@@ -290,7 +290,7 @@ simmisc.msm <- function(state, ematrix, beta, misccovs)
                     mu <- log(p / p[,i])
                     emu <- array(0, dim=dim(p))
                     miscstates <- setdiff(which(ematrix[i,] > 0), i)
-                    for (j in seq(along=miscstates))
+                    for (j in seq_along(miscstates))
                         emu[,miscstates[j]] <- exp(mu[,miscstates[j]] + X %*% b[,j])
                     emu[,i] <- 1
                     emu[,ematrix[i,]==0] <- 0
