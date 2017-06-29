@@ -41,6 +41,9 @@ pmatrix.msm(x=NULL, t=1, t1=0, covariates="mean",
 
     \code{list (age = 60, sex = 1)}
 
+    If some covariates are specified but not others, the missing ones
+    default to zero.
+
     For time-inhomogeneous models fitted using the \code{pci} option to
     \code{\link{msm}}, "covariates" here include only those specified using the
     \code{covariates} argument to \code{\link{msm}}, and exclude the

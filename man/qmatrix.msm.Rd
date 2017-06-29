@@ -36,6 +36,11 @@ qmatrix.msm(x, covariates="mean", sojourn=FALSE,
 
     If some covariates are specified but not others, the missing ones
     default to zero.
+
+    With \code{covariates="mean"}, for factor / categorical variables,
+    the mean of the 0/1 dummy variable for each factor level is used,
+    representing an average over all values in the data, rather than a
+    specific factor level.   
   }
   \item{sojourn}{Set to TRUE if the estimated sojourn times and their
     standard errors should also be returned.}

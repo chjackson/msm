@@ -1428,7 +1428,8 @@ All of these extractor functions take an argument called
 qmatrix.msm(cav.msm)
 @
 then the intensity matrix is evaluated as $Q(\bar x)$ with all
-covariates set to their mean values $\bar x$ in the data.
+covariates set to their mean values $\bar x$ in the data.  For factor / categorical variables, the mean of the 0/1 dummy variable for each factor level is used, representing an average over all values in the data, rather than a specific factor level.
+
 Alternatively, set \Rfunarg{covariates} to 0 to return the result
 $Q(0)$ with covariates set to zero. This will usually be
 preferable for categorical covariates, where we wish to see the
