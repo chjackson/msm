@@ -35,7 +35,7 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
     ## Do minimum needed to port this to msm version 1.4
     od <- dat[,c("(subject)","(time)","(state)","(obstype)")]
     names(od) <- c("subject","time","state","obstype")
-    od$cov <- dat[,attr(dat,"covnames.q")]
+    od$cov <- dat[,attr(dat,"covnames.q"),drop=FALSE]
     if (x$emodel$misc) od$misccov <- dat[,attr(dat,"covnames.e")]
     ncovs <- x$qcmodel$ncovs
     od$state <- factor(od$state, levels=sort(unique(od$state)))
