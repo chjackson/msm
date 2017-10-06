@@ -24,6 +24,8 @@ conditionally on the underlying state in a hidden Markov model.  A list
 of these function calls, with one component for each state, should be 
 used for the \code{hmodel} argument to \code{msm}. The initial values
 for the parameters of the distribution should be given as arguments.
+Note the initial values should be supplied as literal values - supplying
+them as variables is currently not supported.
 }
 \usage{
 hmmCat(prob, basecat)
