@@ -394,7 +394,7 @@ void MatrixExpEXPM(double *mat, int *n, double *expmat, double *t,
 	   stays at zero.
 	 */
 	    if (!R_FINITE(matt[i])){
-//		*err = -1; return;
+/*		*err = -1; return; */
 		error("numerical overflow in calculating likelihood\n");
 	    }
 	}
@@ -427,7 +427,7 @@ void Pmat(Matrix pmat, double t, Matrix qmat, int nstates, int exacttimes, int i
 	/* Floating point fuzz sometimes causes trouble */
 	for (i=0; i<nstates; ++i)
 	    for (j=0; j<nstates; ++j) {
-		/* if (err==-1) pmat[MI(i, j, nstates)] = 0;  */ /* leads to zero likelihood */
+		/* if (err==-1) pmat[MI(i, j, nstates)] = 0; */ /* leads to zero likelihood */
 		if (pmat[MI(i, j, nstates)] < DBL_EPSILON) pmat[MI(i, j, nstates)] = 0;
 		if (pmat[MI(i, j, nstates)] > 1 - DBL_EPSILON) pmat[MI(i, j, nstates)] = 1;
 	    }

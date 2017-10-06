@@ -1108,18 +1108,22 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
 
 sojourn.msm <- function(x, covariates = "mean", ci=c("delta","normal","bootstrap","none"), cl=0.95, B=1000)
 {
+    ci <- match.arg(ci)
     qmatrix <- qmatrix.msm(x, covariates, sojourn=TRUE, ci=ci, cl=cl, B=B)
     sojstates <- (1 : x$qmodel$nstates) [transient.msm(x)]
-    soj <- qmatrix$sojourn[sojstates]
-    names (soj) <- rownames(x$qmodel$qmatrix)[sojstates]
     if (x$foundse && (ci != "none")){
+        soj <- qmatrix$sojourn[sojstates]
+        names (soj) <- rownames(x$qmodel$qmatrix)[sojstates]
         sojse <- qmatrix$sojournSE[sojstates]
         sojl <- qmatrix$sojournL[sojstates]
         soju <- qmatrix$sojournU[sojstates]
         names(sojse) <- names(sojl) <- names(soju) <- names(soj)
         res <- data.frame(estimates=soj, SE=sojse, L=sojl, U=soju)
     }
-    else res <- list(estimates=soj)
+    else if (ci != "none") {
+        res <- list(estimates=qmatrix$sojourn[sojstates])
+    }
+    else res <- list(estimates=qmatrix[sojstates])
     res
 }
 
