@@ -30,7 +30,7 @@ qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","norma
             ## expit(sum covs)  / (1 + expit(sum(covs)))    or   1  /  (1  +  expit(sum(covs)))
             ## Use delta method to find approximate SE of the transform on log scale
             ## Work out a CI for this by assuming normal and transforming back
-            coefs <- c(1, covlist)
+            coefs <- as.numeric(c(1, covlist))
             semat <- lsemat <- lmat <- umat <- matrix(0, nst, nst)
             form <- as.formula(paste("~", expsum(seq(nc + 1), coefs)))
             lform <- as.formula(paste("~", lsum(seq(nc + 1), coefs)))
@@ -252,7 +252,7 @@ p.se.msm <- function(x, covariates)
     ni <- emodel$npars
     covlist <- msm.parse.covariates(x, covariates, ecmodel)
     nc <- length(covlist) 
-    coefs <- c(1, covlist)
+    coefs <- as.numeric(c(1, covlist))
     ppars <- hmodel$plabs %in% c("p","pbase")
     res <- data.frame(lab=hmodel$plabs[ppars])
     hmmallpars <- !(paramdata$plabs %in% c("qbase","qcov","initp","initp0","initpcov"))
@@ -311,7 +311,7 @@ qratio.se.msm <- function(x, ind1, ind2, covariates, cl=0.95)
     indmat[indmat == 1] <- seq(length = x$qmodel$npars)
     indmat <- t(indmat) # matrix of indices of estimate vector
     inds <- seq(length = x$qmodel$npars+x$qcmodel$npars) # identifiers for q and beta parameters
-    coefs <- c(1, unlist(covlist))
+    coefs <- as.numeric(c(1, unlist(covlist)))
     parinds <- numeric()
     indmatrow.n <- indmat[ind1[1],-ind1[1]]
     nir.n <- sum(indmatrow.n > 0)
@@ -390,7 +390,7 @@ qmatrix.diagse.msm <- function(x, covlist, sojourn, ni, ivector, nc)
     indmat <- t(indmat) # matrix of indices of estimate vector
     inds <- seq(length = ni + ni*nc)
     cur.i <- 1
-    coefs <- c(1, unlist(covlist))
+    coefs <- as.numeric(c(1, unlist(covlist)))
     for (i in 1:nst){
         ## Transformation for delta method is
         ## exp(x1 + x2 (cov1 - covmean1) + x3 (cov2 - covmean2) + ... ) +

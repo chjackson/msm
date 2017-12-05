@@ -36,3 +36,4 @@ _region_.tex
 src/doc
 ^.*\.Rproj$
 ^\.Rproj\.user$
+\.dropbox\.attr

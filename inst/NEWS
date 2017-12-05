@@ -7,7 +7,7 @@ USER-VISIBLE CHANGES
 
 
 
-Version 1.6.5  (2017-06-21)
+Version 1.6.5  (2017-12-05)
 -------------
 
 o New feature viterbi.msm(..., normboot=TRUE) to return Viterbi results for a parameter estimate randomly sampled from the distribution of the MLEs.
