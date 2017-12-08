@@ -15,7 +15,7 @@ updatepars.msm(x, pars)
     estimates corresponding to those in the \code{estimates} component
     of the fitted model object (\code{\link{msm.object}}).   The
     order of the parameters is  documented in \code{\link{msm}},
-    argument \code{fixedpars}. 
+    argument \code{fixedpars}.}
 }
 \value{
   An updated \code{\link{msm}} model object with the updated maximum likelihood
