@@ -227,6 +227,20 @@ expected.ci.msm <- function(x,
     res
 }
 
+updatepars.msm <- function(x, pars){
+    x.rep <- x
+    x.rep$paramdata$params <- pars
+    x.rep$estimates <- pars
+    output <- msm.form.output(x.rep, "intens")
+    x.rep$Qmatrices <- output$Qmatrices
+    if (x$emodel$misc) {
+        output <- msm.form.output(x.rep, "misc")
+        x.rep$Ematrices <- output$Ematrices
+        names(x.rep$Ematrices)[1] <- "logitbaseline"
+    }
+    x.rep    
+}
+
 ### Compute a CI for a statistic using a sample from the assumed MVN
 ### distribution of MLEs of log Q, logit E and covariate effects on these
 ### Not user visible: only support statistics based on Q matrix and E matrix
@@ -245,15 +259,7 @@ normboot.msm <- function(x, stat, B=1000) {
 
     sim.stat <- vector(B, mode="list")
     for (i in 1:B) {
-        x.rep <- x
-        x.rep$paramdata$params <- params[i,]
-        output <- msm.form.output(x.rep, "intens")
-        x.rep$Qmatrices <- output$Qmatrices
-        if (x$emodel$misc) {
-            output <- msm.form.output(x.rep, "misc")
-            x.rep$Ematrices <- output$Ematrices
-            names(x.rep$Ematrices)[1] <- "logitbaseline"
-        }
+        x.rep <- updatepars.msm(x, params[i,])
         sim.stat[[i]] <- stat(x.rep)
     }
     sim.stat
