@@ -42,6 +42,11 @@ test_that("analytic derivatives match numeric",{
     expect_lt(deriv_error(msmtest5), err)
 })
 
+test_that("analytic derivatives for models with censoring",{
+    cavcens.msm <- msm(state ~ years, subject=PTNUM, data=cav.cens, qmatrix=twoway4.q, censor=99, fixedpars=TRUE)
+    expect_lt(deriv_error(cavcens.msm), err)
+})
+
 if (0) {
 ### NOTE: NUMERIC DERIVS BREAK WITH THESE MATRICES when analyticp=TRUE: CLOSE TO REPEATED EIGENVALUES.
     psor.1.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
@@ -104,12 +109,12 @@ test_that("Derivatives with CAV misclassification model",{
     misc.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:200,], qmatrix = oneway4.q, ematrix=ematrix, misccovariates = ~dage + sex, covariates = ~ dage, covinits = list(dage=c(0.1,0.2,0.3,0.4,0.5)), misccovinits = list(dage=c(0.01,0.02,0.03,0.04), sex=c(-0.013,-0.014,-0.015,-0.016)), fixedpars=TRUE)
     expect_lt(deriv_error(misc.msm), err)
 
-    misc.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:2,], qmatrix = oneway4.q, ematrix=ematrix, fixedpars=TRUE)
+    misc.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:20,], qmatrix = oneway4.q, ematrix=ematrix, initprobs=c(0.5, 0.2, 0.1, 0.2),  fixedpars=TRUE)
     expect_lt(deriv_error(misc.msm), err)
 
     misc.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:2,],
                     qmatrix = rbind(c(0,0.5,0),c(0,0,0.5),c(0,0,0)),
-                    hmodel=list(hmmCat(c(0.9,0.1,0)), hmmCat(c(0.1,0.8,0.1)), hmmCat(c(0,0.1,0.9))),
+                    hmodel=list(hmmCat(c(0.9,0.1,0)), hmmCat(c(0.1,0.8,0.1)), hmmCat(c(0,0.1,0.9))), initprobs=c(0.5, 0.2, 0.3), 
                     fixedpars=TRUE)
     expect_lt(deriv_error(misc.msm), err)
 })

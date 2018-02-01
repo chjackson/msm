@@ -276,11 +276,13 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 	}
 	else {
 	    for (l=0; l<hm->nopt; ++l)
-		dpout[MI(i,l,qm->nst)] = 0;	    
-	    if (nout > 1 && hm->mv)
+		dpout[MI(i,l,qm->nst)] = 0;
+	    if (hm->hidden){
+	      if (nout > 1 && hm->mv)
 		for (r=0; r<nout; ++r)
-		    p += hm->npars[MI(r,i,nout)];
-	    else p += hm->npars[i];
+		  p += hm->npars[MI(r,i,nout)];
+	      else { p += hm->npars[i]; }
+	    }
 	}
     }
     Free(dptmp);
