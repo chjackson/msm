@@ -8,3 +8,4 @@ src/*.dll
 .dropbox.attr
 *.Rproj
 symbols.rds
+*~
