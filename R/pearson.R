@@ -185,8 +185,8 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
     ## Transition probability matrices are indexed by unique combinations of time intervals and Q matrices.
     timeint <- c(md$timeinterval[md$obtype != 1],c(imputation[,,"times"])) # time intervals, excluding deaths, concatenated with imputations of next interval after death
     qmatint <- c(qmatindex[md$obtype != 1],rep(qmatindex[deathindex],N)) # index into unique Q matrices
-    timeqmata <- unique(data.frame(timeint,qmatint))
     timeqmat <- paste(timeint,qmatint,sep="-")
+    timeqmata <- data.frame(timeint,qmatint)[!duplicated(timeqmat),]
     pastedu <- unique(timeqmat)
     timeqmatindex <- match(timeqmat,pastedu)
     ## Work out the transition probability matrix for each unique time interval and Q matrix
