@@ -56,6 +56,11 @@ test_that("misclassification model with initprobs",{
     expect_equal(4725.9078185031, miscinits.msm$minus2loglik, tol=1e-06)
 })
 
+test_that("misclassification model with est.initprobs",{
+    miscinits.msm <- msm(state ~ years, subject = PTNUM, data = cav,  qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4, initprobs=c(0.7, 0.1, 0.1, 0.1), est.initprobs=TRUE, control=list(maxit=10000), fixedpars=1:5)
+    miscinits.msm
+})
+
 test_that("misclassification model with censoring",{
     misccens.msm <- msm(state ~ years, subject = PTNUM, data = cav.cens,
                     qmatrix = oneway4.q, ematrix=ematrix, deathexact=TRUE, censor=99, fixedpars=TRUE)

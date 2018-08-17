@@ -14,6 +14,7 @@
 \alias{hmmMETNorm}
 \alias{hmmMEUnif}
 \alias{hmmNBinom}
+\alias{hmmBetaBinom}
 \alias{hmmBeta}
 \alias{hmmT}
 \title{Hidden Markov model constructors}
@@ -42,6 +43,7 @@ hmmTNorm(mean, sd, lower, upper)
 hmmMETNorm(mean, sd, lower, upper, sderr, meanerr=0)
 hmmMEUnif(lower, upper, sderr, meanerr=0)
 hmmNBinom(disp, prob)
+hmmBetaBinom(size, meanp, sdp)
 hmmBeta(shape1,shape2)
 hmmT(mean,scale,df)
 }
@@ -92,6 +94,11 @@ hmmT(mean,scale,df)
   \item{disp}{Dispersion parameter of a negative binomial distribution,
     also called \code{size} or \code{order}.  (see
     \code{\link{dnbinom}}).}
+
+  \item{meanp}{Mean outcome probability in a beta-binomial distribution}
+  
+  \item{sdp}{Standard deviation describing the overdispersion of the
+  outcome probability in a beta-binomial distribution }
   
   \item{lower}{ (\code{hmmUnif,hmmTNorm,hmmMEUnif}) Lower limit for an Uniform or truncated Normal distribution. } 
 
@@ -165,7 +172,8 @@ See the PDF manual  \file{msm-manual.pdf} in the \file{doc}
     \code{rate} \tab log \cr
     \code{scale} \tab log \cr
     \code{meanerr} \tab identity \cr
-    \code{prob} \tab (multinomial logistic regression)
+    \code{meanp} \tab logit \cr
+    \code{prob} \tab logit or multinomial logit
   }
 
   Parameters \code{basecat, lower, upper, size, meanerr} are fixed at

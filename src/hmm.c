@@ -75,6 +75,18 @@ double hmmBinom(double x, double *pars)
     return dbinom(x, size, prob, 0);
 }
 
+double hmmBetaBinom(double x, double *pars)
+{
+    double size = pars[0], meanp = pars[1], sdp = pars[2], shape1, shape2, dens;
+    shape1 = meanp/sdp;
+    shape2 = (1 - meanp)/sdp;
+    if ((x<0) || (x>size)) dens = 0.0;
+    else {
+	dens = exp(lchoose(size, x) + lbeta(x + shape1, size - x + shape2) - lbeta(shape1, shape2));
+    }
+    return dens;
+}
+
 /* Truncated normal distribution. Infinite bounds are allowed through
    a parameter with a value of "Inf" or "-Inf" passed from R */
 

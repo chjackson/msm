@@ -14,6 +14,7 @@
                         weibull = c("shape","scale"),
                         poisson = c("rate"),
                         binomial = c("size","prob"),
+                        betabinomial = c("size","meanp","sdp"),
                         truncnorm = c("mean", "sd", "lower", "upper"),
                         metruncnorm = c("mean", "sd", "lower", "upper", "sderr", "meanerr"),
                         meuniform = c("lower", "upper", "sderr", "meanerr"),
@@ -37,7 +38,7 @@
 ### Parameter in each distribution that can have covariates on it
 .msm.LOCPARS <- c(categorical="p", identity=NA, uniform=NA, normal="mean", lognormal="meanlog",
                   exponential="rate", gamma="rate", weibull="scale",
-                  poisson="rate", binomial="prob", truncnorm="mean",
+                  poisson="rate", binomial="prob", betabinomial="meanp", truncnorm="mean",
                   metruncnorm="meanerr", meuniform="meanerr", nbinom="prob", beta=NA, t="mean")
 
 ### Link functions for generalised regressions.
@@ -55,6 +56,7 @@
 .msm.PARRANGES <- list(qbase=c(0, Inf), lower=c(-Inf,Inf), upper=c(-Inf, Inf),
                        mean=c(-Inf, Inf), sd=c(0, Inf),
                        meanlog=c(-Inf,Inf), sdlog=c(0, Inf), rate=c(0, Inf), shape=c(0, Inf), scale=c(0, Inf), shape1=c(0,Inf), shape2=c(0,Inf),
+                       meanp=c(0, 1), sdp=c(0, Inf),
                        prob=c(0, 1), meanerr=c(-Inf, Inf), sderr=c(0, Inf), disp=c(0, Inf),
                        p=c(-Inf,Inf), # handled separately using multinomial logit
                        initp=c(-Inf,Inf), # handled separately using multinomial logit

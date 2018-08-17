@@ -1,5 +1,6 @@
 #include "hmm.h"
 #include <Rmath.h>
+#include <stdio.h>
 
 /* Derivatives of PDF w.r.t parameters, for each HMM outcome
  * distribution */
@@ -80,6 +81,61 @@ void DhmmBinom(double x, double *pars, double *d)
     d[1] = f*(x/prob - (size-x)/(1-prob));
 //    printf("f=%.3f, dlf=%.3f, d[1]=%.5f\n", f, (x/prob - (size-x)/(1-prob)), d[1]);
 }
+
+
+/* beta binomial   TODO 
+
+d/da B(a,b) = B(a,b) (digamma(a) - digamma(a+b))
+d/db B(a,b) = B(a,b) (digamma(b) - digamma(a+b))
+
+d/da B(x+a, n-x+b) * B(a,b)^-1 = 
+
+d/da B(x+a, n-x+b) * B(a,b)^-1 + 
+  B(x+a, n-x+b) * -B(a,b)^-2 * d/da B(a,b) = 
+
+(  d/da B(x+a, n-x+b) B(a,b) -  B(x+a, n-x+b) d/da B(a,b)  ) / B(a,b)^2  = 
+
+( 
+B(x+a,n-x+b) (digamma(x+a) - digamma(n+a+b)) B(a,b) - 
+B(x+a, n-x+b) B(a,b) (digamma(a) - digamma(a+b))
+) / B(a,b)^2  = 
+
+B(x+a,n-x+b) (digamma(x+a) - digamma(n+a+b) - digamma(a) + digamma(a+b))  / B(a,b) 
+
+and 
+d/db B(x+a, n-x+b) * B(a,b)^-1 = 
+
+B(x+a,n-x+b) (digamma(n-x+b) - digamma(n+a+b) - digamma(b) + digamma(a+b))  / B(a,b) 
+
+ */
+
+// FIXME this doesn't match num derivs for meanp, but does for sdp
+
+void DhmmBetaBinom(double x, double *pars, double *d)
+{
+    double size = pars[0], meanp = pars[1], sdp = pars[2], shape1, shape2, dens;
+    double pd[2], J[2][2];
+    dens = hmmBetaBinom(x, pars);
+    shape1 = meanp/sdp;
+    shape2 = (1 - meanp)/sdp;
+
+    if ((x<0) || (x>size)) {
+	d[0]=0.0; d[1]=0.0; d[2]=0.0;
+    }
+    else { 
+	J[0][0] = 1.0/sdp;  J[0][1] = -meanp/(sdp*sdp);
+	J[1][0] = -1.0/sdp; J[1][1] = -(1-meanp)/(sdp*sdp);
+
+	pd[0] = 0; // fixed
+	pd[1] = dens * (digamma(x+shape1) - digamma(size+shape1+shape2) - digamma(shape1) + digamma(shape1+shape2));
+	pd[2] = dens * (digamma(size-x+shape2) - digamma(size+shape1+shape2) - digamma(shape2) + digamma(shape1+shape2));
+	
+	d[0] = 0;
+	d[1] = pd[1]*J[0][0] + pd[2]*J[1][0];
+	d[2] = pd[1]*J[0][1] + pd[2]*J[1][1];
+    }
+}
+
  
 /* not sure these three are tractable. don't support */
 void DhmmTNorm(double x, double *pars, double *d){}

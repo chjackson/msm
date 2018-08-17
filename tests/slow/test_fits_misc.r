@@ -1,11 +1,14 @@
 context("msm misclassification model fits")
 
-misc.msm <- msm(state ~ years, subject = PTNUM, data = cav, qmatrix = oneway4.q, ematrix=ematrix, death = 4)
-miscnew.msm <- msm(state ~ years, subject = PTNUM, data = cav, qmatrix = oneway4.q, death = 4,
+misc.msm <- msm(state ~ years, subject = PTNUM, data = cav, qmatrix = oneway4.q, ematrix=ematrix, obstrue=firstobs, death = 4)
+miscnew.msm <- msm(state ~ years, subject = PTNUM, data = cav, qmatrix = oneway4.q,
+                   death = 4, obstrue=firstobs, 
                    hmodel=list(
                    hmmCat(prob=c(0.9, 0.1, 0, 0)),
                    hmmCat(prob=c(0.1, 0.8, 0.1, 0)),
                    hmmCat(prob=c(0, 0.1, 0.9, 0)), hmmIdent()))
+
+### FIXME don't match with obstrue=firstobs
 
 test_that("cav misclassification model fit",{
     expect_equal(3951.82919869367, misc.msm$minus2loglik, tol=1e-06)

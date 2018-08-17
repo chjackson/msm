@@ -143,6 +143,14 @@ hmmBinom <- function(size, prob)
                match.call())
   }
 
+hmmBetaBinom <- function(size, meanp, sdp)
+  {
+      hmmDIST (label = "betabinomial",
+               link = "qlogis",
+               r = function(n) rbinom(n, size, rbeta(n, meanp/sdp, (1-meanp)/sdp)),
+               match.call())
+  }
+
 hmmNBinom <- function(disp, prob)
   {
       hmmDIST (label = "nbinom",

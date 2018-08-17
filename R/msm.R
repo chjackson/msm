@@ -1473,7 +1473,6 @@ Ccall.msm <- function(params, do.what="lik", msmdata, qmodel, qcmodel, cmodel, h
                   ematrix=as.integer(hmodel$ematrix))
     pars <- list(Q=as.double(Q),DQ=as.double(DQ),H=as.double(H),DH=as.double(DH),
                 initprobs=as.double(initprobs),nopt=as.integer(nopt))
-
     .Call("msmCEntry",  as.integer(match(do.what, .msm.CTASKS) - 1),
          mfac, mfc, auxdata, qmodel, cmodel, hmodel, pars, PACKAGE="msm")
 }

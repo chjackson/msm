@@ -164,6 +164,22 @@ test_that("binomial",{
     expect_lt(deriv_error(sim.hid), err)
 })
 
+
+## Derivatives not working yet for beta-binomial
+if (0){ 
+test_that("betabinomial",{
+    hmodel3 <- list(hmmBetaBinom(20, 0.7, 0.1), hmmBetaBinom(20, 0.3, 0.1), hmmIdent(999))
+    three.q <- rbind(c(0, exp(-2), exp(-4)), c(0, 0, exp(-2)), c(0, 0, 0))
+    sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=three.q, hmodel = hmodel3)
+    sim.hid <- msm(obs ~ time, subject=subject, data=sim2.df[1:2,], qmatrix=three.q, hmodel=hmodel3, fixedpars=TRUE)
+    sim.hid
+    sim.hid$paramdata$deriv.test
+    deriv_error(sim.hid)
+    expect_lt(deriv_error(sim.hid), err)
+    sim.hid <- msm(obs ~ time, subject=subject, data=sim2.df, qmatrix=three.q, hmodel=hmodel3)
+})
+}
+
 test_that("negative binomial",{
     hmodel3 <- list(hmmNBinom(10, 0.1), hmmNBinom(20, 0.3), hmmIdent(999))
     sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=three.q, hmodel = hmodel3)

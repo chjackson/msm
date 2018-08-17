@@ -2227,6 +2227,8 @@ parameters of this hidden Markov model would then be
     \Rfunction{hmmPois}   & Poisson  & \Rfunarg{rate}  & $\lambda$  & $\lambda$ (log) & $\lambda^x \exp(-\lambda)/x!$, $x = 0, 1, 2, \ldots$  \\
     \Rfunction{hmmBinom}   & Binomial  & \Rfunarg{size, prob}  & $n,p$  & $p$ (logit) & ${n \choose x} p^x (1-p)^{n-x}$  \\
     \Rfunction{hmmNBinom}   & Negative binomial  & \Rfunarg{disp, prob}  & $n,p$  & $p$ (logit) & $\Gamma(x+n)/(\Gamma(n)x!) p^n (1-p)^x$ \\
+    \Rfunction{hmmBetaBinom}   & Beta-binomial  & \Rfunarg{size, meanp, sdp}  & $n,\mu,\sigma$  & $\mu$ (logit) & ${n \choose x} Beta(x+a,n-x+b)/Beta(a,b)$ \\
+                                                                                                 & &   &   &  & where $a=\mu/\sigma, b=(1-\mu)/\sigma$ \\
     \Rfunction{hmmBeta}   & Beta  & \Rfunarg{shape1,shape2}  & $a,b$  & & $ \Gamma(a+b) / (\Gamma(a)\Gamma(b))x^{a-1}(1-x)^{b-1}$ \\
     \Rfunction{hmmT}   & Student $t$  & \Rfunarg{mean, scale, df}  & $\mu,\sigma,k$  &  $\mu$ (identity) & $\frac{\Gamma\left((k+1)/2\right)}{\Gamma(k/2)}{\sqrt{\frac{1}{k\pi\sigma^2}}}\left\{1 + \frac{1}{k\sigma^2}(x - \mu)^{2} \right\}^{-(k + 1)/2}$ \\
     \Rfunction{hmmTNorm}   & Truncated normal  & \Rfunarg{mean, sd, lower, upper}  & $\mu,\sigma,l,u$  & $\mu$ (identity) &
@@ -2481,8 +2483,21 @@ state 3 can be observed as states 2 or 3, and underlying state 4
 the 1-2, 2-1, 2-3 and 3-2 misclassification probabilities.
 
 This is equivalent to the model below, specified using a
-\Rfunarg{hmodel} argument to \Rfunction{msm}.  The maximum likelihood
-estimates should be the same as before (Model 5).
+\Rfunarg{hmodel} argument to \Rfunction{msm}.  
+
+The maximum likelihood estimates should be the same as before (Model
+5) if the \Rfunarg{obstrue=firstobs} is removed from the
+\Rfunction{msm()} call.  \Rfunarg{obstrue} has a slightly different
+meaning for models specified with \Rfunarg{hmodel}.  If supplied, the
+variable indicated by \Rfunarg{obstrue} should contain the true state
+if this is known, and \Robject{NA} otherwise, whereas the
+\Rfunarg{state} variable contains an observation generated from the
+HMM outcome model given the (unobserved) true state.  For models
+specified with \Rfunarg{ematrix}, the \Rfunarg{state} variable
+contains the (observed) true state itself.  Thus the \Rfunarg{hmodel}
+specification is not strictly suitable for the CAV data, since the
+true state is both \emph{known} and \emph{observed} at the time of
+transplant.
 
 \begin{Scode}
 Qm <- rbind(c(0, 0.148, 0, 0.0171),
@@ -2494,7 +2509,7 @@ cavmisc.msm <- msm(state ~ years, subject = PTNUM, data = cav,
                                     hmmCat(c(0.1, 0.8, 0.1, 0)),
                                     hmmCat(c(0, 0.1, 0.9, 0)),
                                     hmmIdent(4)),
-                     qmatrix = Qm, obstrue=firstobs, deathexact = 4)
+                     qmatrix = Qm, deathexact = 4)
 cavmisc.msm
 \end{Scode}
 
@@ -2663,15 +2678,13 @@ documentation, and a link to this manual in PDF format.
 
 For a detailed list of the changes in recent versions of
 \Rpackage{msm}, see the \texttt{NEWS} file in the top-level directory
-of the installed package.  The \texttt{Changelog} file in the
-top-level directory of the source package contains more technical
-detail about these changes.
+of the installed package.
 
-Development versions of \Rpackage{msm} are to be found on R-Forge,
-\url{http://msm.r-forge.r-project.org/}.  These are often more recent
+Development versions of \Rpackage{msm} are to be found on GitHub
+\url{https://github.com/chjackson/msm}.  These are often more recent
 than the version released on CRAN, so if you think you have found a
 bug, then please check first to see whether it has been fixed on the
-R-Forge version.
+GitHub version.
 
 \section{Get in touch}
 

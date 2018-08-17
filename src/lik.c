@@ -29,6 +29,7 @@ hmmfn HMODELS[] = {
     hmmWeibull,
     hmmPois,
     hmmBinom,
+    hmmBetaBinom,
     hmmTNorm,
     hmmMETNorm,
     hmmMEUnif,
@@ -49,6 +50,7 @@ dhmmfn DHMODELS[] = {
     DhmmWeibull,
     DhmmPois,
     DhmmBinom,
+    DhmmBetaBinom,
     DhmmTNorm,
     DhmmMETNorm,
     DhmmMEUnif,
@@ -142,7 +144,6 @@ If this is a general outcome,  get prob of observing it from HMODELS
 void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpars, hmodel *hm, qmodel *qm, int obstrue)
 {
     int i, j, k, ind;
-
     for (i=0; i<qm->nst; ++i) {
 	if (hm->hidden && (obstrue==0)) { /* HMMs with true state not known */
 	    if (nout > 1) {  /* multivariate outcomes. Censored states not supported */ 
@@ -157,7 +158,7 @@ void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpa
 		}
 	    } else {  /* Standard univariate HMM (with or without censored state) */
 		pout[i] = 0;
-		for (j=0; j<nc; ++j){		    
+		for (j=0; j<nc; ++j){
 		    pout[i] += (HMODELS[hm->models[i]])(outcome[j], &(hpars[hm->firstpar[i]]));
 		}
 	    }
