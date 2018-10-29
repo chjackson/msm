@@ -591,7 +591,7 @@ print.msm <- function(x, covariates=NULL, digits=4, ...)
                 hrmessage <- paste0(" with hazard ratios for each covariate")
             else hrmessage <- ""
             q.header <- paste0("Transition intensities", hrmessage, "\n")
-            ret <- msm.form.qoutput(x, covariates, cl=cl, digitets=digits, ...)
+            ret <- msm.form.qoutput(x, covariates, cl=cl, digits=digits, ...)
             fres <- attr(ret, "formatted")
             cat("\n"); cat(q.header)
             print(fres, quote=FALSE)
@@ -830,7 +830,7 @@ print.msm.est <- function(x, digits=NULL, ...)
 {
     if (is.list(x))
         print.ci(x$estimates, x$L, x$U, x$fixed, digits=digits)
-    else print(unclass(x))
+    else print(unclass(x), digits=digits)
 }
 
 print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
