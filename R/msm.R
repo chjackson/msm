@@ -390,6 +390,7 @@ msm.form.qmodel <- function(qmatrix, qconstraint=NULL, analyticp=TRUE, use.expm=
     imatrix <- ifelse(qmatrix > 0, 1, 0)
     inits <- t(qmatrix)[t(imatrix)==1]
     npars <- sum(imatrix)
+    if (npars==0) stop("qmatrix contains all zeroes off the diagonal, so no transitions are permitted in the model")
     ## for phase-type models, leave processing qconstraint until after phased Q matrix has been formed in msm.phase2qmodel
     if (!is.null(qconstraint) && is.null(phase.states)) { 
         if (!is.numeric(qconstraint)) stop("qconstraint should be numeric")
@@ -962,37 +963,53 @@ msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix)
 }
 
 ### Transform set of sets of probs {prs} to {log(prs/pr1)}
-msm.mnlogit.transform <- function(pars, plabs, states){
+msm.mnlogit.transform <- function(pars, hmodel){
     res <- pars
+    plabs <- hmodel$plabs
+    states <- hmodel$parstate
+    outcomes <- hmodel$parout
     if (any(plabs=="p")) {
-        whichst <- match(states[plabs == "p"], unique(states[plabs == "p"]))
-        for (i in unique(whichst)) # recalculate baseline prob if necessary, e.g. if constraints applied
-            res[plabs=="pbase"][i] <- 1 - sum(res[plabs=="p"][whichst==i])
-        res[plabs == "p"] <- log(pars[plabs=="p"] / res[plabs=="pbase"][whichst])
+        for (i in unique(states)) {
+            for (j in unique(outcomes)) {
+                pfree <- which(plabs=="p" & states==i & outcomes==j)
+                pbase <- which(plabs=="pbase" & states==i & outcomes==j)
+                ## recalculate baseline prob if necessary, e.g. if constraints applied
+                res[pbase] <- 1 - sum(res[pfree])
+                res[pfree] <- log(res[pfree] / res[pbase])
+            }
+        }
     }
     res
 }
 
 ### Transform set of sets of murs = {log(prs/pr1)} to probs {prs}
 ### ie psum = sum(exp(mus)),  pr1 = 1 / (1 + psum),  prs = exp(mus) / (1 + psum)
-msm.mninvlogit.transform <- function(pars, plabs, states){
+msm.mninvlogit.transform <- function(pars, hmodel) {
     res <- pars
-    if (any(plabs=="p")) {
+    plabs <- hmodel$plabs
+    states <- hmodel$parstate
+    outcomes <- hmodel$parout 
+    if (any(plabs=="p")) { # p's are unconstrained probabilities 
+        ## indicator for which p's belong to which state 
         whichst <- match(states[plabs=="p"], unique(states[plabs=="p"]))
-        if (is.matrix(pars)) {# will be used when applying covariates
-            for (i in unique(whichst)) {
-                psum <- colSums(exp(pars[which(plabs=="p")[whichst==i],,drop=FALSE]))
-                res[which(plabs=="pbase")[i],] <- 1 / (1 + psum)
-                res[which(plabs=="p")[whichst==i],] <-
-                    exp(pars[plabs=="p",,drop=FALSE][whichst==i,]) /
-                        rep(1 + psum, each=sum(whichst==i))
+        ## indicator for which p's belong to which outcome in multivariate HMMs
+        whichout <- match(outcomes[plabs=="p"], unique(outcomes[plabs=="p"]))
+        for (i in unique(whichst)) {
+            for (j in unique(whichout)) { 
+                pfree <- which(plabs=="p")[whichst==i & whichout==j] 
+                pbase <- which(plabs=="pbase" & states==i & outcomes==j)
+
+                if (is.matrix(pars)) {# will be used when applying covariates
+                    psum <- colSums(exp(pars[pfree,,drop=FALSE]))
+                    res[pbase,] <- 1 / (1 + psum)
+                    res[pfree,] <- exp(pars[pfree,,drop=FALSE]) /
+                      rep(1 + psum, each=sum(whichst==i & whichout==j))
+                } else {
+                    psum <- sum(exp(pars[pfree]))
+                    res[pbase] <- 1 / (1 + psum)
+                    res[pfree] <- exp(pars[pfree]) / (1 + psum)
+                }
             }
-        }
-        else {
-            psum <- tapply(exp(pars[plabs=="p"]), states[plabs=="p"], sum)
-            ## only transform pbases where there also exists p's for the same state, i.e don't transform if no/perfect misclassification
-            res[plabs=="pbase" & states %in% unique(states[plabs=="p"])] <- 1 / (1 + psum)             
-            res[plabs=="p"] <- exp(pars[plabs=="p"]) / (1 + psum[whichst])
         }
     }
     res
@@ -1005,7 +1022,7 @@ msm.transform <- function(pars, hmodel, ranges){
     pars <- glogit(pars, ranges[,"lower"], ranges[,"upper"])
     hpinds <- which(!(labs %in% c("qbase","qcov","hcov","initpbase","initp","initp0","initpcov")))
     hpars <- pars[hpinds]
-    hpars <- msm.mnlogit.transform(hpars, hmodel$plabs, hmodel$parstate)
+    hpars <- msm.mnlogit.transform(hpars, hmodel)
     pars[hpinds] <- hpars
     pars[labs=="initp"] <- log(pars[labs=="initp"] / pars[labs=="initpbase"])
     pars
@@ -1018,7 +1035,7 @@ msm.inv.transform <- function(pars, hmodel, ranges){
     pars <- gexpit(pars, ranges[,"lower"], ranges[,"upper"])
     hpinds <- which(!(labs %in% c("qbase","qcov","hcov","initp","initp0","initpcov")))
     hpars <- pars[hpinds]
-    hpars <- msm.mninvlogit.transform(hpars, hmodel$plabs, hmodel$parstate)
+    hpars <- msm.mninvlogit.transform(hpars, hmodel)
     pars[hpinds] <- hpars
     ep <- exp(pars[labs=="initp"])
     pars[labs=="initp"] <- ep / (1 + sum(ep))
@@ -1143,10 +1160,10 @@ msm.rep.constraints <- function(pars, # transformed pars
     }
     ## ...then replicate them between states, on pr scale, so that constraint applies
     ## to pr not log(pr/pbase). After, transform back
-    pars[p$hmmpars] <- msm.mninvlogit.transform(pars[p$hmmpars], hmodel$plabs, hmodel$parstate)
+    pars[p$hmmpars] <- msm.mninvlogit.transform(pars[p$hmmpars], hmodel)
     plabs <- plabs[!duplicated(abs(p$constr))][abs(p$constr)]
     pars <- pars[!duplicated(abs(p$constr))][abs(p$constr)]*sign(p$constr)
-    pars[p$hmmpars] <- msm.mnlogit.transform(pars[p$hmmpars], hmodel$plabs, hmodel$parstate)
+    pars[p$hmmpars] <- msm.mnlogit.transform(pars[p$hmmpars], hmodel)
     names(pars) <- plabs
     pars
 }
@@ -1240,7 +1257,7 @@ msm.add.hmmcovs <- function(hmodel, pars, mml){
     for (i in seq_along(hpinds)){
         hpars[i,] <- gexpit(hpars[i,], hmodel$ranges[i,"lower"], hmodel$ranges[i,"upper"])
     }
-    hpars <- msm.mninvlogit.transform(hpars, hmodel$plabs, hmodel$parstate)
+    hpars <- msm.mninvlogit.transform(hpars, hmodel)
     hpars
 }
 

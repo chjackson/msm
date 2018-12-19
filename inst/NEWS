@@ -6,6 +6,12 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
+Version 1.6.7  (??)
+-------------
+
+o Fix of bug that affected HMMs with categorical outcomes and multiple outcomes, where outcome probabilites did not add up to 1.
+
+
 Version 1.6.6  (2018-02-02)
 -------------
 

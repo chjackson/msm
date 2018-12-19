@@ -253,7 +253,7 @@ normboot.msm <- function(x, stat, B=1000) {
     params <- matrix(nrow=B, ncol=x$paramdata$npars)  # replicate constrained parameters.
     params[,x$paramdata$optpars] <- sim
     params[,x$paramdata$fixedpars] <- rep(x$paramdata$params[x$paramdata$fixedpars], each=B)
-    params[,x$paramdata$hmmpars] <- rep(msm.mninvlogit.transform(x$paramdata$params[x$paramdata$hmmpars], x$hmodel$plabs, x$hmodel$parstate), each=B)
+    params[,x$paramdata$hmmpars] <- rep(msm.mninvlogit.transform(x$paramdata$params[x$paramdata$hmmpars], x$hmodel), each=B)
     params <- params[, !duplicated(abs(x$paramdata$constr)), drop=FALSE][, abs(x$paramdata$constr), drop=FALSE] *
         rep(sign(x$paramdata$constr), each=B)
 
