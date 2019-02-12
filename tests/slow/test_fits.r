@@ -2,8 +2,9 @@
 
 context("msm simple model fits")
 
+cav.msm <- msm( state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, death = TRUE)
+
 test_that("cav model fit",{
-    cav.msm <- msm( state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, death = TRUE)
     expect_equal(3968.7978930519, cav.msm$minus2loglik)
 })
 

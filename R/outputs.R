@@ -108,7 +108,9 @@ ematrix.msm <- function(x, covariates="mean", ci=c("delta","normal","bootstrap",
     plabs <- x$emodel$imatrix
     plabs[x$emodel$imatrix==1] <- "p"
     diag(plabs)[rowSums(x$emodel$imatrix)>0] <- "pbase"
-    mat <- matrix(msm.mninvlogit.transform(as.vector(t(logest)), as.vector(t(plabs)), rep(1:nst, each=nst)), nrow=nst, byrow=TRUE)
+    hmodeltmp <- list(plabs = as.vector(t(plabs)), parstate = rep(1:nst, each=nst), parout = rep(1, length(plabs)))
+    mat <- matrix(msm.mninvlogit.transform(as.vector(t(logest)), hmodeltmp),
+                  nrow=nst, byrow=TRUE)
     ## true states with no misclassification or perfect misclassification 
     mat[cbind(which(x$hmodel$model==match("identity", .msm.HMODELS)),
               x$hmodel$pars[names(x$hmodel$pars)=="which"])] <- 1
@@ -235,6 +237,8 @@ factorcov2numeric.msm <- function(covariates, x, mod=NULL) {
     names(covs.out) <- covlabels.noint
     covs.out[names(cnum)] <- cnum
     covs.out[names(cfac.new)] <- cfac.new
+## fixme when called from bootstrap, hasn't worked. 
+## is it because covfactor is all false?  is covdata.mf wrong?  yes both numeric 
     covs.out <- expand.interactions.msm(covs.out, covnames.mm)
     covs.out
 }
@@ -256,7 +260,7 @@ p.se.msm <- function(x, covariates)
     ppars <- hmodel$plabs %in% c("p","pbase")
     res <- data.frame(lab=hmodel$plabs[ppars])
     hmmallpars <- !(paramdata$plabs %in% c("qbase","qcov","initp","initp0","initpcov"))
-    res$est <- msm.mninvlogit.transform(paramdata$params[paramdata$hmmpars], hmodel$plabs, hmodel$parstate)[ppars]
+    res$est <- msm.mninvlogit.transform(paramdata$params[paramdata$hmmpars], hmodel)[ppars]
     res$parstate <- hmodel$parstate[ppars]
     if (any(ppars)) res$se <- res$lse <- res$LCL <- res$UCL <- res$inds <- res$strs <- 0
     cur.i <- 1

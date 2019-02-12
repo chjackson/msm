@@ -88,7 +88,8 @@ msm.form.univhmodel <- function(hmodel){
     plabs <- unlist(plabs)
     locpars <- which(plabs == rep(.msm.LOCPARS[labels], npars))
     names(pars) <- plabs
-    list(models=models, labels=labels, npars=npars, nout=rep(1, nst), mv=FALSE,
+    list(models=models, labels=labels, npars=npars,
+         nout=rep(1, nst), mv=FALSE, parout=rep(1, sum(npars)), 
          totpars=sum(npars), pars=pars, plabs=plabs, parstate=parstate,
          firstpar=firstpar, locpars=locpars)
 }
@@ -229,7 +230,9 @@ msm.emodel2hmodel <- function(emodel, qmodel)
                        ematrix=TRUE, ## remember if obtained from ematrix, since could change meaning of obstrue
                        nout=rep(1, nst), mv=FALSE,
                        npars=npars, totpars=sum(npars), locpars=locpars,
-                       pars=pars, plabs=plabs, parstate=parstate, firstpar=firstpar, nipars=emodel$nipars, initprobs=emodel$initprobs, est.initprobs=emodel$est.initprobs)
+                       pars=pars, plabs=plabs, parstate=parstate, firstpar=firstpar,
+                       parout = rep(1, sum(npars)),
+                       nipars=emodel$nipars, initprobs=emodel$initprobs, est.initprobs=emodel$est.initprobs)
           hmod$constr <- msm.econstr2hconstr(emodel$constr, hmod)
       }
       else {

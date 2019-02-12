@@ -126,7 +126,7 @@ test_that("HMMs with multiple responses: exact death and hmmIdent",{
                                          hmmBinom(size=40, prob=0.3)),
                                    hmmPois(1)),
                      fixedpars=TRUE),
-                 "Exact death states should have the identity hidden distribution hmmIdent")
+                 "States specified in \"deathexact\" should have the identity hidden distribution hmmIdent")
 })
 
 ## censoring? 

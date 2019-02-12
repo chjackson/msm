@@ -533,7 +533,7 @@ test_that("error handling: qmatrix",{
     expect_error(cav.msm <- msm(state~years, subject=PTNUM, data = cav, qmatrix = wrong.q, deathexact = TRUE, fixedpars=TRUE),"Number of rows and columns of qmatrix should be equal")
     wrong.q <- cbind(c(0,1), c(0,1))
     expect_error(cav.msm <- msm(state~years, subject=PTNUM, data = cav, qmatrix = wrong.q, fixedpars=TRUE),"State vector contains elements not in 1, 2")
-    expect_error(cav.msm <- msm(state~years, subject=PTNUM, data = cav, qmatrix = wrong.q, deathexact = TRUE, fixedpars=TRUE),"Not all the \"death\" states are absorbing")
+    expect_error(cav.msm <- msm(state~years, subject=PTNUM, data = cav, qmatrix = wrong.q, deathexact = TRUE, fixedpars=TRUE),"Not all the states specified in \"deathexact\" are absorbing")
     wrong.q <- "foo"
     expect_error(cav.msm <- msm(state~years, subject=PTNUM, data = cav, qmatrix = wrong.q, deathexact = TRUE, fixedpars=TRUE),"qmatrix should be a numeric matrix")
     wrong.q <- 1
@@ -653,7 +653,7 @@ test_that("error handling: death",{
     expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = "foo", fixedpars=TRUE) ,"Exact death states indicator must be numeric")
     expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 5, fixedpars=TRUE) ,"Exact death states indicator contains states not in 1, 2, ... , 4")
     expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 1:5, fixedpars=TRUE) ,"Exact death states indicator contains states not in 1, 2, ... , 4")
-    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 3, fixedpars=TRUE),"Not all the \"death\" states are absorbing states" )
+    expect_error(cav.msm <- msm(state ~ years, subject=PTNUM, data = cav, qmatrix = twoway4.q, deathexact = 3, fixedpars=TRUE),"Not all the states specified in \"deathexact\" are absorbing" )
 })
 
 test_that("error handling: censor",{

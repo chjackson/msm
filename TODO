@@ -13,7 +13,11 @@ for every release
 
 
 informative error for character state/time, see ~/msm/tests/helpTylerPyleMSM.R
-   
+
+informative error if all q are zero 
+
+vignette about using censor and viterbi for non HMMs to do prediction 
+
 
 POSSIBLE MAJOR DEVELOPMENTS
 

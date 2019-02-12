@@ -1,8 +1,9 @@
 deriv.supported <- function(msmdata, hmodel, cmodel){
+    single_outcome <- (is.null(ncol(msmdata$mf$"(state)")) || (ncol(msmdata$mf$"(state)")==1))
     (!hmodel$hidden || (hmodel$hidden &&
                         ## Models where derivatives not supported: 
-                        ## multiple outcomes 
-#                        (is.null(ncol(msmdata$mf$"(state)")) || (ncol(msmdata$mf$"(state)")==1)) &&
+                        ## multiple outcomes where any outcome is categorical
+                        (single_outcome || (!any(na.omit(as.vector(hmodel$labels)) == "categorical"))) &&
                         ## unknown initial state probs
                         !hmodel$est.initprobs &&
                         ## constraints on misclassification / categorical outcome probabilities
