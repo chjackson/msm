@@ -110,6 +110,7 @@ three.q <- rbind(cbind(two.q, c(0.1,0.1)), c(0,0,0))
 options(msm.test.analytic.derivatives=NULL)
 
 test_that("HMMs with multiple responses: exact death and hmmIdent",{
+
     hmm <- msm(dobs ~ time, subject=subject, data=datd, qmatrix=three.q,
                death = 3,
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
@@ -118,6 +119,7 @@ test_that("HMMs with multiple responses: exact death and hmmIdent",{
                                    hmmBinom(size=40, prob=0.3)),
                          hmmIdent(999)),
                fixedpars=TRUE)
+
     expect_error(msm(dobs ~ time, subject=subject, data=datd, qmatrix=three.q,
                      death = 3,
                      hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),

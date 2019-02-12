@@ -9,7 +9,7 @@ USER-VISIBLE CHANGES
 Version 1.6.7  (2019-??-??)
 -------------
 
-o Bug fix for multivariate hidden Markov models with hmmCat, where probabilities were being transformed wrongly.
+o Fix of bug that affected HMMs with categorical outcomes and multiple outcomes, where outcome probabilites did not add up to 1.
 
 
 Version 1.6.6  (2018-02-02)

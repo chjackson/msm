@@ -963,13 +963,21 @@ msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix)
 }
 
 ### Transform set of sets of probs {prs} to {log(prs/pr1)}
-msm.mnlogit.transform <- function(pars, plabs, states){
+msm.mnlogit.transform <- function(pars, hmodel){
     res <- pars
+    plabs <- hmodel$plabs
+    states <- hmodel$parstate
+    outcomes <- hmodel$parout
     if (any(plabs=="p")) {
-        whichst <- match(states[plabs == "p"], unique(states[plabs == "p"]))
-        for (i in unique(whichst)) # recalculate baseline prob if necessary, e.g. if constraints applied
-            res[plabs=="pbase"][i] <- 1 - sum(res[plabs=="p"][whichst==i])
-        res[plabs == "p"] <- log(pars[plabs=="p"] / res[plabs=="pbase"][whichst])
+        for (i in unique(states)) {
+            for (j in unique(outcomes)) {
+                pfree <- which(plabs=="p" & states==i & outcomes==j)
+                pbase <- which(plabs=="pbase" & states==i & outcomes==j)
+                ## recalculate baseline prob if necessary, e.g. if constraints applied
+                res[pbase] <- 1 - sum(res[pfree])
+                res[pfree] <- log(res[pfree] / res[pbase])
+            }
+        }
     }
     res
 }
@@ -998,7 +1006,6 @@ msm.mninvlogit.transform <- function(pars, hmodel) {
                       rep(1 + psum, each=sum(whichst==i & whichout==j))
                 } else {
                     psum <- sum(exp(pars[pfree]))
-                    ## TODO test this if no/perfect misclassification
                     res[pbase] <- 1 / (1 + psum)
                     res[pfree] <- exp(pars[pfree]) / (1 + psum)
                 }
@@ -1015,7 +1022,7 @@ msm.transform <- function(pars, hmodel, ranges){
     pars <- glogit(pars, ranges[,"lower"], ranges[,"upper"])
     hpinds <- which(!(labs %in% c("qbase","qcov","hcov","initpbase","initp","initp0","initpcov")))
     hpars <- pars[hpinds]
-    hpars <- msm.mnlogit.transform(hpars, hmodel$plabs, hmodel$parstate)
+    hpars <- msm.mnlogit.transform(hpars, hmodel)
     pars[hpinds] <- hpars
     pars[labs=="initp"] <- log(pars[labs=="initp"] / pars[labs=="initpbase"])
     pars
@@ -1156,7 +1163,7 @@ msm.rep.constraints <- function(pars, # transformed pars
     pars[p$hmmpars] <- msm.mninvlogit.transform(pars[p$hmmpars], hmodel)
     plabs <- plabs[!duplicated(abs(p$constr))][abs(p$constr)]
     pars <- pars[!duplicated(abs(p$constr))][abs(p$constr)]*sign(p$constr)
-    pars[p$hmmpars] <- msm.mnlogit.transform(pars[p$hmmpars], hmodel$plabs, hmodel$parstate)
+    pars[p$hmmpars] <- msm.mnlogit.transform(pars[p$hmmpars], hmodel)
     names(pars) <- plabs
     pars
 }

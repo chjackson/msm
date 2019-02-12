@@ -230,9 +230,8 @@ msm.emodel2hmodel <- function(emodel, qmodel)
                        ematrix=TRUE, ## remember if obtained from ematrix, since could change meaning of obstrue
                        nout=rep(1, nst), mv=FALSE,
                        npars=npars, totpars=sum(npars), locpars=locpars,
-                       pars=pars, plabs=plabs, parstate=parstate, firstpar=firstpar,
-                       parout = rep(1, sum(npars)),
-                       nipars=emodel$nipars, initprobs=emodel$initprobs, est.initprobs=emodel$est.initprobs)
+                       pars=pars, plabs=plabs, parstate=parstate, parout=rep(1,sum(npars)),
+                       firstpar=firstpar, nipars=emodel$nipars, initprobs=emodel$initprobs, est.initprobs=emodel$est.initprobs)
           hmod$constr <- msm.econstr2hconstr(emodel$constr, hmod)
       }
       else {
