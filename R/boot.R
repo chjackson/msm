@@ -50,7 +50,8 @@ bootdata.trans.msm <- function(x) {
     data.boot <- as.data.frame(data.boot)
     ## label every transition in new data as from a different subject
     data.boot[,un["subject"]] <- rep(1:ntrans, each=2)
-    for (i in which(sapply(data.boot, is.factor)))
+
+    for (i in names(dat)[sapply(dat, is.factor)])
         data.boot[,i] <- factor(data.boot[,i], labels=sort(unique(dat[,i])))
     data.boot
 }
@@ -253,7 +254,7 @@ normboot.msm <- function(x, stat, B=1000) {
     params <- matrix(nrow=B, ncol=x$paramdata$npars)  # replicate constrained parameters.
     params[,x$paramdata$optpars] <- sim
     params[,x$paramdata$fixedpars] <- rep(x$paramdata$params[x$paramdata$fixedpars], each=B)
-    params[,x$paramdata$hmmpars] <- rep(msm.mninvlogit.transform(x$paramdata$params[x$paramdata$hmmpars], x$hmodel$plabs, x$hmodel$parstate), each=B)
+    params[,x$paramdata$hmmpars] <- rep(msm.mninvlogit.transform(x$paramdata$params[x$paramdata$hmmpars], x$hmodel), each=B)
     params <- params[, !duplicated(abs(x$paramdata$constr)), drop=FALSE][, abs(x$paramdata$constr), drop=FALSE] *
         rep(sign(x$paramdata$constr), each=B)
 
