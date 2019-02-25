@@ -2030,3 +2030,60 @@ ppass.msm <- function(x=NULL, qmatrix=NULL, tot, start="all", covariates="mean",
     }
     res
 }
+
+
+
+
+# Function to a hmodel.object (from a msm.object - eg fittedmsm$hmodel)
+# and convert it to a list of hmmdist objects that can be passed back 
+# to the hmodel argument in msm()
+# if hmmdist = TRUE then returns list that can be passed directly to msm
+# if hmmdist = FALSE then returns a list of input arguments without passing those arguments to hmmdist functions
+hmodel2list <- function(hmodel, hmmdist = TRUE){
+  
+  if(!hmodel$hidden) stop("hmodel.object is not a Hidden Markov Model")
+  
+  .msm.LOOKUP <- data.frame(
+    label = .msm.HMODELS,
+    hmmname = c("hmmCat", "hmmIdent", "hmmUnif", "hmmNorm", "hmmLNorm", "hmmExp", "hmmGamma", "hmmWeibull", "hmmPois", "hmmBinom", "hmmBetaBinom", "hmmTNorm", "hmmMETNorm", "hmmMEUnif", "hmmNBinom", "hmmBeta", "hmmT"),
+    stringsAsFactors = FALSE
+  )
+  
+  # makes a state-specific vector of parameters extracted from hmodel into a list of parameters (treating hmmCat as a special case)
+  makeargslist <- function(params, label){
+    # params = named vector of parameters for the distribution function
+    #label = label (character) of the distribution function
+    if(!(label %in% .msm.LOOKUP$label)) stop("Distribution ", label, " not currently supported for hmodel2list")
+    if(label=="categorical")
+      list(prob = params[names(params) %in% c("p", "p0", "pbase")], basecat = params[names(params)=="basecat"])
+    else if(label=="identity")
+      list(x = params[names(params) == "which"])
+    else
+      as.list(params)
+  }
+  
+  labellist <- array_branch(hmodel$labels)
+  paramlist <- split(hmodel$pars, list(hmodel$parout, hmodel$parstate))
+  paramnestedlist <- mapply(makeargslist, paramlist, labellist, SIMPLIFY=FALSE, USE.NAMES=FALSE)
+  distlist <- lapply(labellist, function(label){match.fun(.msm.LOOKUP$hmmname[.msm.LOOKUP$label==label])})
+  
+  if(hmodel$mv){
+    hmmdistlist <- invoke_map(distlist, paramnestedlist)
+    hmmdistnestedlist <- split(hmmdistlist, rep(seq_len(hmodel$nstates), times=hmodel$nout))
+    msmlist <- lapply(hmmdistnestedlist, function(hmmdist){lift_dl(msm::hmmMV)(hmmdist)})
+    
+    if(hmmdist)
+      msmlist
+    else
+      split(paramnestedlist, rep(seq_len(hmodel$nstates), times=hmodel$nout))
+  } else {
+    if(hmmdist)
+      invoke_map(distlist, paramnestedlist)
+    else
+      split(paramnestedlist, rep(seq_len(hmodel$nstates), times=hmodel$nout))
+  }
+  
+}
+
+
+
