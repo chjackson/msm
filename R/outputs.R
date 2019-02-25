@@ -1846,8 +1846,9 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
   
   if (!is.null(newdata)){
     ## initialise msm with new data but do not fit (hence fixedpars = TRUE)
-    x$call$data <- substitute(newdata)
-    newcall <- pryr::modify_call(x$call, list(fixedpars = TRUE))
+    newcall <- x$call
+    newcall$data <- substitute(newdata)
+    newcall$fixedpars <- TRUE
     xnew <- try(eval(newcall))
   } else {
     xnew <- x
