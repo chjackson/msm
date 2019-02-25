@@ -102,7 +102,6 @@ importFrom(mvtnorm, rmvnorm)
 importFrom(survival, Surv)
 importFrom(survival, survfit)
 importFrom(expm, expm)
-importFrom(pryr, modify_call)
 
 S3method(print, msm)
 S3method(summary, msm)
