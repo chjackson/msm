@@ -12,6 +12,12 @@ for every release
 * timing of tests
 
 
+
+suppressWarnings(RNGversion("3.5.0"))
+before calling set.seed 
+
+
+
 informative error for character state/time, see ~/msm/tests/helpTylerPyleMSM.R
 
 informative error if all q are zero 

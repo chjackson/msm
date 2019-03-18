@@ -175,6 +175,7 @@ test_that("piecewise constant intensities with pci, cut points outside data",{
     expect_equal(cav.pci.msm$minus2loglik, cav.msm$minus2loglik) # degrades to time-homogeneous if all cuts outside data
 })
 
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(22061976)
 cav$pdiag3 <- cav$pdiag
 cav$pdiag3[!cav$pdiag %in% c("IDC","IHD")] <- "Other"

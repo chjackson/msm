@@ -193,7 +193,7 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
     npmats<-length(pastedu)
     pmi <- array(0,dim=c(nst,nst,npmats))
     for (i in unique(timeqmata[,2]))
-        pmi[,,timeqmata[,2]==i] <- MatrixExp(qmatmaster[,,i], timeqmata[timeqmata[,2]==i,1])
+        pmi[,,timeqmata[,2]==i] <- MatrixExp(qmatmaster[,,i], timeqmata[timeqmata[,2]==i,1], method="pade")
     md$timeqmatindex<-rep(0,ntrans)
     md$timeqmatindex[md$obtype != 1] <- timeqmatindex[1:(ntrans-ndeath)]
     if (exact.death && is.null(next.obstime))

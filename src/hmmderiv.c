@@ -114,7 +114,7 @@ B(x+a,n-x+b) (digamma(n-x+b) - digamma(n+a+b) - digamma(b) + digamma(a+b))  / B(
 void DhmmBetaBinom(double x, double *pars, double *d)
 {
     double size = pars[0], meanp = pars[1], sdp = pars[2], shape1, shape2, dens;
-    double pd[2], J[2][2];
+    double pd[3], J[2][2];
     dens = hmmBetaBinom(x, pars);
     shape1 = meanp/sdp;
     shape2 = (1 - meanp)/sdp;

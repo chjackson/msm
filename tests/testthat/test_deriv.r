@@ -135,7 +135,7 @@ test_that("Information matrix",{
     p1 <- 0.2; p2 <- 0.2;  pr1 <- c(1-p1, p1) # P obs(1,2) | true 1
     pr2 <- c(p2, 1-p2) # P obs(1,2) | true 2
     (tm <- msm(obs ~ time, qmatrix=rbind(c(0,1),c(0,0)), hmodel=list(hmmCat(pr1),hmmCat(pr2)), data=test.df, fixedpars=TRUE, hessian=TRUE))
-    expect_equal(c(0.88475550512612, 0.202501688704573, -0.474183198550202), tm$paramdata$info[1:3], tol=1e-05)
+    expect_equal(c(1.04546473067556, 0.0871961544119157, -1.04895069406505), tm$paramdata$info[1:3], tol=1e-05)
     tm$paramdata$opt$hessian
 })
 

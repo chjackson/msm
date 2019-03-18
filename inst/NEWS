@@ -6,10 +6,14 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
-Version 1.6.7  (2019-??-??)
+Version 1.6.7  (2019-03-15)
 -------------
 
+o Beta-binomial outcome model in HMMs added.
+
 o Fix of bug that affected HMMs with categorical outcomes and multiple outcomes, where outcome probabilites did not add up to 1.
+
+o Fix of bug affecting bootstrapping with factor covariates. 
 
 
 Version 1.6.6  (2018-02-02)
