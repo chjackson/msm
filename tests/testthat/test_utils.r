@@ -13,6 +13,7 @@ test_that("MatrixExp",{
 })
 
 test_that("truncated normal",{
+    suppressWarnings(RNGversion("3.5.0"))
     set.seed(220676)
     rl <- rnorm(10)
     expect_equal(dtnorm(rl), dnorm(rl), tol=1e-06)
@@ -113,6 +114,7 @@ test_that("deltamethod",{
     ## Example in help(deltamethod)
     ## Simple linear regression, E(y) = alpha + beta x
     x <- 1:100
+    suppressWarnings(RNGversion("3.5.0"))
     set.seed(220676)
     y <- rnorm(100, 4*x, 5)
     toy.lm <- lm(y ~ x)

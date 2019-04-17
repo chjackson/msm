@@ -12,11 +12,10 @@ for every release
 * timing of tests
 
 
+pci in comb with list() trans specific covs.
+see tests/natalia_pci.r
 
-suppressWarnings(RNGversion("3.5.0"))
-before calling set.seed 
-
-
+in pearson output, display uncentred covariate values. 
 
 informative error for character state/time, see ~/msm/tests/helpTylerPyleMSM.R
 

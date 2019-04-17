@@ -126,7 +126,9 @@ hmmT(mean,scale,df)
   categories in this case are (some subset of) the underlying states. 
   
   The \code{hmmIdent} distribution is used for underlying states which are
-  observed exactly without error.
+  observed exactly without error.   For hidden Markov models with multiple outcomes, 
+  (see \code{\link{hmmMV}}), the outcome in the data which takes the
+  special \code{hmmIdent} value must be the first of the multiple outcomes. 
 
   \code{hmmUnif}, \code{hmmNorm}, \code{hmmLNorm}, \code{hmmExp},
   \code{hmmGamma}, \code{hmmWeibull}, \code{hmmPois}, \code{hmmBinom}, 

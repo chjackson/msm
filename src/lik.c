@@ -131,8 +131,6 @@ void GetCensored (double obs, cmodel *cm, int *nc, double **states)
   pout =   if i in curr 1, else 0
 */
 
-/* TODO does find_exactdeath_hmm need updating for multivariate observations with different models ? */
-
 /* New obstrue facility 
 On entry, obstrue will contain 0 if state unknown, and state if state known
 But how do we know if there are any extra outcome data in the outcome variable?
@@ -356,15 +354,20 @@ void calc_dp(msmdata *d, qmodel *qm, double *dpmat)
  * hmmIdent(obs).  This function also works for non-HMM censoring
  * models, just returning the observed state. */
 
+/* For multivariate HMMs, the hmmIdent observation must be in the
+   first outcome */
+
 int find_exactdeath_hmm(double *outcome, int obsno, msmdata *d, qmodel *qm, hmodel *hm){
-    int ideath;
+  int ideath, ind;
     double *hpars = &(hm->pars[MI(0, obsno, hm->totpars)]);
     if (!hm->hidden || d->obstrue[obsno])
 	ideath = outcome[0] - 1;
     else
-	for (ideath=0; ideath < qm->nst; ++ideath)
-	    if (hm->models[ideath] == 1 && hmmIdent(outcome[0], &(hpars[hm->firstpar[ideath]])))
+      for (ideath=0; ideath < qm->nst; ++ideath){
+	ind = (hm->mv ? MI(0,ideath,d->nout) : ideath);
+	    if (hm->models[ind] == 1 && hmmIdent(outcome[0], &(hpars[hm->firstpar[ind]])))
 		break;
+      }	    
     return ideath;
 }
 
@@ -387,11 +390,12 @@ void update_likhidden(double *outcome, int nc, int obsno, msmdata *d, qmodel *qm
 	    newp[j] = 0.0;
 	    for(i = 0; i < qm->nst; ++i)
 		{
-		    if (d->obstype[obsno] == OBS_DEATH)
+		  if (d->obstype[obsno] == OBS_DEATH){
 			T = pmat[MI(i,j,qm->nst)] * qmat[MI(j,ideath,qm->nst)];
+		  }
 		    else {
 			T = pmat[MI(i, j, qm->nst)] * pout[j];
-//			printf("pmat[%d,%d]=%16.12lf,pout[%d]=%16.12lf\n,", i, j, pmat[MI(i, j, qm->nst)], j, pout[j]);
+			//			printf("pmat[%d,%d]=%16.12lf,pout[%d]=%16.12lf\n,", i, j, pmat[MI(i, j, qm->nst)], j, pout[j]);
 
 		    }
 		    if (T < 0) T = 0;

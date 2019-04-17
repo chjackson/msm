@@ -4,12 +4,14 @@ context("HMMs with multivariate responses")
 nsubj <- 30; nobspt <- 5
 sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
                      time = seq(0, 20, length=nobspt))
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(1)
 two.q <- rbind(c(-0.1, 0.1), c(0, 0))
 dat <- simmulti.msm(sim.df[,1:2], qmatrix=two.q, drop.absorb=FALSE)
 
 ## Bin(40, 0.1) for state 1, Bin(40, 0.5) for state 2
 dat$obs1 <- dat$obs2 <- NA
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(1)
 dat$obs1[dat$state==1] <- rbinom(sum(dat$state==1), 40, 0.1)
 dat$obs2[dat$state==1] <- rbinom(sum(dat$state==1), 40, 0.1)
@@ -18,6 +20,7 @@ dat$obs2[dat$state==2] <- rbinom(sum(dat$state==2), 40, 0.5)
 dat$obs <- cbind(obs1 = dat$obs1, obs2 = dat$obs2)
 
 dat$dobs1 <- dat$dobs2 <- NA
+suppressWarnings(RNGversion("3.5.0"))
 set.seed(1)
 ## Bin(40, 0.1) and Bin(40, 0.2) for state 1, 
 dat$dobs1[dat$state==1] <- rbinom(sum(dat$state==1), 40, 0.1)
@@ -110,7 +113,6 @@ three.q <- rbind(cbind(two.q, c(0.1,0.1)), c(0,0,0))
 options(msm.test.analytic.derivatives=NULL)
 
 test_that("HMMs with multiple responses: exact death and hmmIdent",{
-
     hmm <- msm(dobs ~ time, subject=subject, data=datd, qmatrix=three.q,
                death = 3,
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
