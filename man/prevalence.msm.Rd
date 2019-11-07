@@ -40,6 +40,11 @@ prevalence.msm(x, times=NULL, timezero=NULL, initstates=NULL, covariates="popula
     \code{covariates="population"} is too slow, using the mean observed
     values through \code{covariates="mean"} may give a reasonable
     approximation.
+
+    This argument is ignored if \code{piecewise.times} is specified. If
+    there are a mixture of time-constant and time-dependent covariates,
+    then the values for all covariates should be supplied in
+    \code{piecewise.covariates}. 
   }
   \item{misccovariates}{(Misclassification models only)
     Values of covariates on the misclassification probability matrix

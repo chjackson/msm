@@ -163,7 +163,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
             mf <- tdmodel$mf; covariates <- tdmodel$covariates; cmodel <- tdmodel$cmodel
             pci <- tdmodel$tcut # was returned in msm object
         } else {pci <- NULL; mf$"(pci.imp)" <- 0}
-    }
+    } else tdmodel <- NULL
 
 ### CALCULATE COVARIATE MEANS from data by transition, including means of 0/1 contrasts.
     forms <- c(covariates, misccovariates, hcovariates, initcovariates) # covariates may have been updated to include timeperiod for pci
@@ -197,7 +197,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
 
 ### MODEL FOR COVARIATES ON INTENSITIES
     if (!is.null(covlist)) {
-        cri <- msm.form.cri(covlist, qmodel, mf, mm.cov)
+        cri <- msm.form.cri(covlist, qmodel, mf, mm.cov, tdmodel)
     } else cri <- NULL
     qcmodel <-
         if (ncol(mm.cov) > 1)
@@ -1802,12 +1802,19 @@ msm.check.covlist <- function(covlist, qemodel) {
 ## Form indicator matrix for effects that will be fixed to zero when
 ## "covariates" specified as a list of transition-specific formulae
 
-msm.form.cri <- function(covlist, qmodel, mf, mm) {
+msm.form.cri <- function(covlist, qmodel, mf, mm, tdmodel) {
+
     imat <- t(qmodel$imatrix) # order named transitions / misclassifications by row
     tnames <- paste(col(imat)[imat==1],row(imat)[imat==1],sep="-")
     covlabs <- colnames(mm)[-1]
     npars <- qmodel$npars
     cri <- matrix(0, nrow=npars, ncol=length(covlabs), dimnames = list(tnames, covlabs))
+    ## time effects specified through "pci" will always be applied to all transitions
+    if (!is.null(tdmodel)){
+        grep("timeperiod\\[.+,.+\\)", covlabs)
+        tdcovs <- grep("timeperiod\\[.+,.+\\)", covlabs)
+        cri[,tdcovs] <- 1
+    }
     sorti <- function(x) {
         ## converts, e.g. c("b:a:c","d:f","f:e") to c("a:b:c", "d:f", "e:f")
         sapply(lapply(strsplit(x, ":"), sort), paste, collapse=":")

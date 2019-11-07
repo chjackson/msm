@@ -40,6 +40,24 @@ test_that("psor model: covariates, constraints",{
     expect_equal(exp(psor.msm$Qmatrices$logbaseline[c(5,10,15)]), psor.msm$Qmatrices$baseline[c(5,10,15)], tol=1e-06)
 })
 
+test_that("psor model: transition-specific covariates",{
+    psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = list("2-3"=~ollwsdrt, "3-4"=~hieffusn), control=list(fnscale=1))
+    expect_equal(hazard.msm(psor.msm)$ollwsdrt["State 1 - State 2","HR"], 1)
+    expect_equal(hazard.msm(psor.msm)$hieffusn["State 2 - State 3","HR"], 1)
+})
+
+test_that("psor model: transition-specific covariates with pci",{
+    psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,
+                    covariates = list("2-3"=~ollwsdrt, "3-4"=~hieffusn),
+                    pci = 10, fixedpars=7:8, control=list(fnscale=1))
+    h <- hazard.msm(psor.msm)
+    expect_equal(h$ollwsdrt["State 1 - State 2","HR"], 1)
+    expect_equal(h$hieffusn["State 1 - State 2","HR"], 1)
+    expect_true(!isTRUE(all.equal(h$"timeperiod[10,Inf)"["State 1 - State 2","HR"], 1)))
+    expect_equal(h$"timeperiod[10,Inf)"["State 2 - State 3","HR"], 1)
+    expect_equal(h$"timeperiod[10,Inf)"["State 3 - State 4","HR"], 1)
+})
+
 psor.nocen.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = ~ollwsdrt+hieffusn, constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), center=FALSE)
 test_that("no covariate centering",{
     expect_equal(exp(psor.nocen.msm$Qmatrices$logbaseline[c(5,10,15)]), psor.nocen.msm$Qmatrices$baseline[c(5,10,15)], tol=1e-06)
