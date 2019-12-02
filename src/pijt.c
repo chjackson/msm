@@ -26,7 +26,9 @@
 #define MEXP_SERIES 2
 #include "R_ext/Lapack.h"
 #include "R_ext/Rdynload.h"
-#include "expm.h"
+
+typedef enum {Ward_2, Ward_1, Ward_buggy_octave} precond_type;
+extern void (*expm)(double *x, int n, double *z, precond_type precond_kind);
 
 #define NODERIVDEBUG
 
