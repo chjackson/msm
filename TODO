@@ -1,6 +1,5 @@
 for every release
 -----------------
-* Need to delete vignette in inst/doc before rebuilding package
 * check all files are included in package build: help pages, PDF manual rebuilt, run update-docsrc.
 * check Changelog, NEWS, DESCRIPTION file have correct dates and versions
 * Run fast and slow tests

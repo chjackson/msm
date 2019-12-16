@@ -6,6 +6,16 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
+Version 1.6.8  (2019-12-16)
+-------------
+
+o Bug fix for bootstrapping with factor subject IDs.
+
+o Fix of bug that broke piecewise-constant intensities with "pci" and transition-specific covariates.
+
+o Bug fix for multivariate hidden Markov models and hmmIdent.
+
+
 Version 1.6.7  (2019-03-15)
 -------------
 
