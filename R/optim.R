@@ -139,6 +139,7 @@ msm.optim.nlm <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, hmod
     p$lik <- opt$minimum
     p$params[p$optpars] <- opt$estimate
     p$opt <- opt
+    p$opt$par <- opt$estimate
     p
 }
 
