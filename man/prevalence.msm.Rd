@@ -97,7 +97,10 @@ prevalence.msm(x, times=NULL, timezero=NULL, initstates=NULL, covariates="popula
      generally more reasonable for "progressive" models.
    }
 
-   \item{censtime}{If the time is greater than \code{censtime} and the
+   \item{censtime}{Adjustment to the observed prevalences to account
+     for limited follow-up in the data.
+     
+     If the time is greater than \code{censtime} and the
      patient has reached an absorbing state, then that subject will be
      removed from the risk set.  For example, if patients have died but
      would only have been observed up to this time, then this avoids

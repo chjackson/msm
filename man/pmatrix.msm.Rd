@@ -2,7 +2,8 @@
 \alias{pmatrix.msm}
 \title{Transition probability matrix}
 \description{
-  Extract the estimated transition probability matrix from a fitted multi-state
+  Extract the estimated transition probability matrix from a fitted
+  continuous-time multi-state
   model for a given time interval, at a given set of covariate values.
 }
 \usage{

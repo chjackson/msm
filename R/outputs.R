@@ -1242,6 +1242,10 @@ totlos.msm <- function(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean"
     if (length(absorbing.msm(x)) == 0)
         if (tot==Inf) stop("Must specify a finite end time for a model with no absorbing state")
 
+    if (!is.null(x$pci)){
+        piecewise.times <- x$pci
+        piecewise.covariates <- msm.fill.pci.covs(x, covariates)
+    }
     ncuts <- length(piecewise.times)
     npieces <- length(piecewise.covariates)
     if (!is.null(piecewise.times) && (!is.numeric(piecewise.times) || is.unsorted(piecewise.times)))

@@ -383,7 +383,7 @@ Pad\'e approximants with scaling and squaring \cite{matrixexp} (if
 there are repeated eigenvalues). Notice that the states are not
 labelled in these figures.  Each graph can correspond to several
 different $Q$ matrices, depending on how the states are labelled.  For
-example, Figure 1 a) illustrates the model defined by either \( Q =
+example, Figure~\ref{fig:anp2} a) illustrates the model defined by either \( Q =
 \left(
   \begin{array}{ll}
     - q_{12} & q_{12} \\
@@ -499,7 +499,7 @@ based on equation \ref{eq:multi:lik:contrib}.
 In some circumstances, \emph{states} may be censored as well as
 \emph{event times}.  For example, at the end of some chronic disease
 studies, patients are known to be alive but in an \emph{unknown
-  state}.  For such a censored observation $S(t_{j+1})$, known only to
+  state}.  For such a censored observation $S(t_{j+1})$ ($j+1=n$) known only to
 be a state in the set $C$, the equivalent contribution to the
 likelihood is
 \begin{equation}
@@ -1755,7 +1755,8 @@ of maximum potential follow-up times, one for each individual in the
 same order as the original data, in the \Rfunarg{censtime} argument to
 \Rfunction{prevalence.msm}.  Ignoring the potential follow-up times is
 likely to have resulted in overestimates of the number of deaths
-at later times in the CAV example, though these times are not
+at later times for the ``observed'' prevalences in the CAV example,
+though these times are not
 available in the data supplied with \Rpackage{msm}.
 
 
