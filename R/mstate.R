@@ -5,6 +5,8 @@ msm2Surv <- function(data, # data frame
                      covs=NULL, # names of covariates (character vector)
                      Q # transition intensity matrix.  should be zero where transitions are disallowed.
                      ) {
+    if (!inherits(data, "data.frame")) stop("`data` should inherit class `data.frame`")
+    data <- as.data.frame(data)
     if (missing(subject)) stop("subject variable not given")
     if (missing(time)) stop("time variable not given")
     if (missing(state)) stop("state variable not given")
