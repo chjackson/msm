@@ -123,7 +123,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
         if (!all(grepl("^[[:digit:]]+$", as.character(mf$"(state)"))))
             stop("state variable should be numeric or a factor with ordinal numbers as levels")
         else mf$"(state)" <- as.numeric(as.character(mf$"(state)"))
-    }
+    } else if (is.character(mf$"(state)")) stop("state variable is character, should be numeric") 
     msm.check.state(qmodel$nstates, mf$"(state)", cmodel$censor, hmodel)
     if (is.null(mf$"(subject)")) mf$"(subject)" <- rep(1, nrow(mf))
     msm.check.times(mf$"(time)", mf$"(subject)", mf$"(state)")
