@@ -806,6 +806,9 @@ void update_likcensor(int obsno, double *prev, double *curr, int np, int nc,
 
 		}
 		else {
+#ifdef DEBUG
+		    printf("i=%d, j=%d, pm=%lf\n", i, j, pmat[MI((int) prev[j]-1, (int) curr[i]-1, qm->nst)]);
+#endif	    
 		    newp[i] += cump[j] * pmat[MI((int) prev[j]-1, (int) curr[i]-1, qm->nst)];
 		}
 	    }
@@ -872,9 +875,9 @@ double liksimple(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm)
 		contrib = pmat[MI(d->fromstate[i], d->tostate[i], qm->nst)];
 	    lik += d->nocc[i] * log(contrib);
 #ifdef DEBUG
-/*	    printf("obs %d, from %d, to %d, time %lf, obstypea %d, ", i, d->fromstate[i], d->tostate[i], d->timelag[i], d->obstypea[i]);
-	    printf("nocc %d, con %lf, lik %lf\n", d->nocc[i], log(contrib), lik);*/
-//	    printf("%d-%d in %lf, q=%lf,%lf, lik=%20.20lf, ll=%lf\n",d->fromstate[i], d->tostate[i], d->timelag[i],qmat[0],qmat[1], contrib, d->nocc[i] * log(contrib));
+	    printf("obs %d, from %d, to %d, time %lf, obstypea %d, ", i, d->fromstate[i], d->tostate[i], d->timelag[i], d->obstypea[i]);
+	    printf("nocc %d, con %lf, lik %lf\n", d->nocc[i], log(contrib), lik);
+	    printf("%d-%d in %lf, q=%lf,%lf, lik=%20.20lf, ll=%lf\n",d->fromstate[i], d->tostate[i], d->timelag[i],qmat[0],qmat[1], contrib, d->nocc[i] * log(contrib));
 #endif
 	}
     Free(pmat);

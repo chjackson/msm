@@ -6,6 +6,9 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
+o Bug fix for likelihood calculation for models with both censoring and exact transition times (obstype=2).  This includes models with "pci" specified and obstype=2.
+
+
 Version 1.6.8  (2019-12-16)
 -------------
 

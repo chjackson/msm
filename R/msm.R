@@ -1711,16 +1711,25 @@ msm.pci <- function(tcut, mf, qmodel, cmodel, covariates)
     label <- if (cmodel$ncens > 0) max(cmodel$censor)*2 else qmodel$nstates + 1
     new$"(state)"[is.na(new$"(state)")] <- label
     ## Only keep cutpoints within range of each patient's followup
-    mintime <- tapply(mf$"(time)", mf$"(subject)", min)[as.character(unique(mf$"(subject)"))]
-    maxtime <- tapply(mf$"(time)", mf$"(subject)", max)[as.character(unique(mf$"(subject)"))]
-    nobspt <- as.numeric(table(new$"(subject)")[as.character(unique(new$"(subject)"))])
-    new <- new[new$"(time)" >= rep(mintime, nobspt) & new$"(time)" <= rep(maxtime, nobspt), ]
-
-    ## Drop imputed observations at times when there was already an observation
-    ## assumes there wasn't already duplicated obs times
+    mintime <- tapply(mf$"(time)", mf$"(subject)", min)
+    maxtime <- tapply(mf$"(time)", mf$"(subject)", max)
+    ptminmax <- data.frame(subject = names(mintime), mintime, maxtime) 
+    new$"(mintime)" <- ptminmax$mintime[match(new$`(subject)`, ptminmax$subject)]
+    new$"(maxtime)" <- ptminmax$maxtime[match(new$`(subject)`, ptminmax$subject)]
+    new <- new[new$"(time)" >= new$"(mintime)" & new$"(time)" <= new$"(maxtime)", ]
+    
     prevsubj <- c(NA,new$"(subject)"[1:(nrow(new)-1)]); nextsubj <- c(new$"(subject)"[2:nrow(new)], NA)
     prevtime <- c(NA,new$"(time)"[1:(nrow(new)-1)]); nexttime <- c(new$"(time)"[2:nrow(new)], NA)
     prevstate <- c(NA,new$"(state)"[1:(nrow(new)-1)]); nextstate <- c(new$"(state)"[2:nrow(new)], NA)
+
+    ## Don't label imputed states as censored if the next observation has obstype=2,
+    ## because we know the state at the imputed time is the same as the previous observation 
+    nextobstype <- c(new$"(obstype)"[2:nrow(new)], NA)
+    ot2 <- new$"(pci.imp)"==1 & nextobstype==2
+    new$"(state)"[ot2] <- prevstate[ot2]
+    
+    ## Drop imputed observations at times when there was already an observation
+    ## assumes there wasn't already duplicated obs times
     new <- new[!((new$"(subject)"==prevsubj & new$"(time)"==prevtime & new$"(state)"==label & prevstate!=label) |
                  (new$"(subject)"==nextsubj & new$"(time)"==nexttime & new$"(state)"==label & nextstate!=label))
                ,]
@@ -1745,6 +1754,7 @@ msm.pci <- function(tcut, mf, qmodel, cmodel, covariates)
                 " greater than or equal to maximum observed time of ",max(mf$"(time)"))
     tcut <- tcut[tcut > min(mf$"(time)") & tcut < max(mf$"(time)")]
     ntcut <- length(tcut)
+
     if (ntcut==0)
         res <- NULL # no cut points in range of data, continue with no time-dependent model
     else {
