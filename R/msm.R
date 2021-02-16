@@ -1776,7 +1776,7 @@ msm.pci <- function(tcut, mf, qmodel, cmodel, covariates)
         ## New censoring model
         cmodel$ncens <- cmodel$ncens + 1
         cmodel$censor <- c(cmodel$censor, label)
-        cmodel$states <- c(cmodel$states, 1:qmodel$nstates)
+        cmodel$states <- c(cmodel$states, transient.msm(qmatrix=qmodel$imatrix))
         cmodel$index <- if (is.null(cmodel$index)) 1 else cmodel$index
         cmodel$index <- c(cmodel$index, length(cmodel$states) + 1)
         res <- list(mf=new, covariates=covariates, cmodel=cmodel, tcut=tcut)
