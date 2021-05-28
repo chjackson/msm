@@ -9,3 +9,6 @@ src/*.dll
 *.Rproj
 symbols.rds
 *~
+vignettes/_region_.tex
+vignettes/auto
+
