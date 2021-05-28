@@ -57,7 +57,11 @@ test_that("misclassification model with initprobs",{
 })
 
 test_that("misclassification model with est.initprobs",{
-    miscinits.msm <- msm(state ~ years, subject = PTNUM, data = cav,  qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4, initprobs=c(0.7, 0.1, 0.1, 0.1), est.initprobs=TRUE, control=list(maxit=10000), fixedpars=1:5)
+    miscinits.msm <- msm(state ~ years, subject = PTNUM, data = cav,  
+                         qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4,
+                         initprobs=c(0.8, 0.1, 0.1, 0), est.initprobs=TRUE,
+                         method="BFGS",
+                         control=list(fnscale=4000, maxit=10000), fixedpars=1:9)
     miscinits.msm
 })
 
