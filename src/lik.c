@@ -1276,15 +1276,18 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 	    ++j;
 	  }
 	  else lvold[k] = R_NegInf;
+	  pout[k] = 1;
 	}
       }
       else { /* use initprobs */
 	for (k = 0; k < qm->nst; ++k)
 	    lvold[k] = log(hm->initp[MI(0, k, d->npts)]);
+	hpars = &(hm->pars[MI(0, i, hm->totpars)]);
+	GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
       }
     }
     for (k = 0; k < qm->nst; ++k)
-    	pfwd[MI(i,k,d->n)] = exp(lvold[k]);
+    	pfwd[MI(i,k,d->n)] = exp(lvold[k])*pout[k];
     ucfwd[0] = 0;
 		  
     for (i = 1; i <= d->n; ++i)
@@ -1308,7 +1311,8 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    }
 		    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 #ifdef VITDEBUG0
-		    for (tru=0;tru<nc;++tru) printf("outcome[%d] = %1.0lf, ",tru, outcome[tru]); printf("\n");
+		    for (tru=0;tru<nc;++tru) printf("outcome[%d] = %1.0lf, ",tru, outcome[tru]);
+		    printf("\n");
 #endif
 		    Pmat(pmat, dt, qmat, qm->nst,
 			 (d->obstype[i] == OBS_EXACT), qm->iso, qm->perm,  qm->qperm, qm->expm);
@@ -1448,15 +1452,18 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 					++j;
 				    }
 				    else lvold[k] = R_NegInf;
+				    pout[k] = 1;
 				}
 			    }
 			    else { /* use initprobs */
 				for (k = 0; k < qm->nst; ++k)
 				    lvold[k] = log(hm->initp[MI(d->subject[i]-1, k, d->npts)]);
+				hpars = &(hm->pars[MI(0, i, hm->totpars)]);
+				GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 			    }
 			}
 			for (k = 0; k < qm->nst; ++k)
-			    pfwd[MI(i,k,d->n)] = exp(lvold[k]); 
+			    pfwd[MI(i,k,d->n)] = exp(lvold[k])*pout[k]; 
 			ucfwd[i] = 0;
 		    }
 		}
