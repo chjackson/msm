@@ -741,7 +741,8 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
     given in the order: transition intensities (reading across rows of
     the transition matrix), covariates on intensities (ordered by
     intensities within covariates), hidden Markov model parameters,
-    including misclassification probabilities (ordered by parameters
+    including misclassification probabilities or parameters of HMM
+    outcome distributions (ordered by parameters
     within states), hidden Markov model covariate parameters (ordered by
     covariates within parameters within states), initial state occupancy
     probabilities (excluding the first probability, which is fixed at one
