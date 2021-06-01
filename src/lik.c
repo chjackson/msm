@@ -1240,7 +1240,7 @@ void pmax(double *x, int n, int *maxi)
 
 void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, double *pstate)
 {
-    int i, j, tru, k, kmax, obs, nc = 1;
+    int i, j, tru, k, kmax, obs, nc = 1, first_obs;
 
     double *pmat = Calloc((qm->nst)*(qm->nst), double);
     int *ptr = Calloc((d->n)*(qm->nst), int);
@@ -1259,8 +1259,10 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 
     i = 0;
     if (d->obstrue[i]) {
-      for (k = 0; k < qm->nst; ++k)
+      for (k = 0; k < qm->nst; ++k){
 	lvold[k] = (k+1 == d->obstrue[i] ? 0 : R_NegInf);
+	pout[k] = 1;
+      }
     }
     else {
       if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
@@ -1286,9 +1288,12 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 	GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
       }
     }
-    for (k = 0; k < qm->nst; ++k)
-    	pfwd[MI(i,k,d->n)] = exp(lvold[k])*pout[k];
+    for (k = 0; k < qm->nst; ++k){
+	lvp[k] = lvold[k] + log(pout[k]);
+    	pfwd[MI(i,k,d->n)] = exp(lvp[k]);
+    }
     ucfwd[0] = 0;
+    first_obs = 1;
 		  
     for (i = 1; i <= d->n; ++i)
 	{
@@ -1326,11 +1331,12 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 */
 			    pfwd[MI(i,tru,d->n)] = 0;
 			    for (k = 0; k < qm->nst; ++k) {
+			      if (!first_obs){
 				lvp[k] = lvold[k] + log(pmat[MI(k, tru, qm->nst)]);
-				pfwd[MI(i,tru,d->n)] += pfwd[MI(i-1,k,d->n)] * pmat[MI(k,tru,qm->nst)];
+			      }
+			      pfwd[MI(i,tru,d->n)] += pfwd[MI(i-1,k,d->n)] * pmat[MI(k,tru,qm->nst)];
 			    }
 			    if (d->obstrue[i-1])
-//				kmax = d->obs[MI(0, i-1, d->nout)] - 1;
 				kmax = d->obstrue[i-1] - 1;
 			    else pmax(lvp, qm->nst, &kmax);
 			    lvnew[tru] = log ( pout[tru] )  +  lvp[kmax];
@@ -1342,6 +1348,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 				   tru, tru, pout[tru], lvold[tru], pmat[MI(kmax, tru, qm->nst)], lvnew[tru], i, tru, ptr[MI(i, tru, d->n)]);
 #endif
 			}
+		    if (first_obs) first_obs = 0;
 		    ucfwd[i] = ucfwd[i-1] + log(psum);
 		    for (k = 0; k < qm->nst; ++k){
 			pfwd[MI(i,k,d->n)] /= psum;
@@ -1434,9 +1441,10 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 #endif
 		    if (i < d->n) {
 			if (d->obstrue[i]) {
-			    for (k = 0; k < qm->nst; ++k)
-//				lvold[k] = (k+1 == d->obs[MI(0,i,d->nout)] ? 0 : R_NegInf);
-				lvold[k] = (k+1 == d->obstrue[i] ? 0 : R_NegInf);
+			  for (k = 0; k < qm->nst; ++k){
+			    lvold[k] = (k+1 == d->obstrue[i] ? 0 : R_NegInf);
+			    pout[k] = 1;
+			  }
 			}
 			else {
 			    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
@@ -1462,9 +1470,12 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 				GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 			    }
 			}
-			for (k = 0; k < qm->nst; ++k)
-			    pfwd[MI(i,k,d->n)] = exp(lvold[k])*pout[k]; 
+			for (k = 0; k < qm->nst; ++k){
+			  lvp[k] = lvold[k] + log(pout[k]);
+			  pfwd[MI(i,k,d->n)] = exp(lvp[k]);
+			}
 			ucfwd[i] = 0;
+			first_obs = 1;
 		    }
 		}
 	}
