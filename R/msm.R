@@ -146,9 +146,9 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     oic <- ic[!ic %in% unlist(lapply(others, all.vars))]
     attr(mf, "icovi") <- match(oic, colnames(mf))
     if (missing(na.action) || identical(na.action, na.omit) || (identical(na.action,"na.omit")))
-        mf <- na.omit.msmdata(mf)
+        mf <- na.omit.msmdata(mf, hidden=hmodel$hidden, misc=emodel$misc)
     else if (identical(na.action, na.fail) || (identical(na.action,"na.fail")))
-        mf <- na.fail.msmdata(mf)
+        mf <- na.fail.msmdata(mf, hidden=hmodel$hidden, misc=emodel$misc)
     else stop ("na.action should be \"na.omit\" or \"na.fail\"")
     attr(mf, "npts") <- length(unique(mf$"(subject)"))
     attr(mf, "ntrans") <- nrow(mf) - attr(mf, "npts")
@@ -1841,8 +1841,8 @@ msm.form.cri <- function(covlist, qmodel, mf, mm, tdmodel) {
 ## adapted from stats:::na.omit.data.frame.  ignore handling of
 ## non-atomic, matrix within df
 
-na.omit.msmdata <- function(object, ...) {
-    omit <- na.find.msmdata(object)
+na.omit.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
+    omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     xx <- object[!omit, , drop = FALSE]
     if (any(omit > 0L)) {
         temp <- setNames(seq(omit)[omit], attr(object, "row.names")[omit])
@@ -1852,17 +1852,21 @@ na.omit.msmdata <- function(object, ...) {
     xx
 }
 
-na.fail.msmdata <- function(object, ...) {
-    omit <- na.find.msmdata(object)
+na.fail.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
+    omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     if (any(omit))
         stop("Missing values or subjects with only one observation in data")
     else object
 }
 
-na.find.msmdata <- function(object, ...) {
+na.find.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     subj <- as.character(object[,"(subject)"])
     firstobs <- !duplicated(subj)
     lastobs <- !duplicated(subj, fromLast=TRUE)
+    if (misc)
+        obstrue <- object[,"(obstrue)"]
+    else if (hidden)
+        obstrue <- !is.na(object[,"(obstrue)"])
     nm <- names(object)
     omit <- FALSE
     for (j in seq_along(object)) {
@@ -1870,9 +1874,13 @@ na.find.msmdata <- function(object, ...) {
         if (nm[j] %in% c("(time)", "(subject)"))
             omit <- omit | is.na(object[[j]])
         if (nm[j] == "(state)") {
+            ## Indicator for missing outcome 
             ## For matrix HMM outcomes ("states"), only drop a row if all columns are NA
             nas <- if (is.matrix(object[[j]])) apply(object[[j]], 1, function(x)all(is.na(x)))
                    else is.na(object[[j]])
+            ## Don't drop missing outcomes in HMMs at first obs or if true state known
+            ## since there is information then 
+            if (hidden) nas[obstrue | firstobs] <- FALSE 
             omit <- omit | nas
         }
         ## Don't drop NAs in obstype at first observation for a subject

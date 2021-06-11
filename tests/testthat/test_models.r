@@ -519,19 +519,23 @@ test_that("observed, expected etc",{
 })
 
 test_that("observed, expected etc with one covariate, should run",{
-    psor1.msm <- msm(state ~ months, covariates=~ollwsdrt, subject=ptnum, data=psor, qmatrix = psor.q)
-    get.covhist(psor1.msm)
-    observed.msm(psor1.msm)
-    expected.msm(psor1.msm)
-    expected.msm(psor1.msm, covariates="mean")
+    expect_error({
+        psor1.msm <- msm(state ~ months, covariates=~ollwsdrt, subject=ptnum, data=psor, qmatrix = psor.q)
+        get.covhist(psor1.msm)
+        observed.msm(psor1.msm)
+        expected.msm(psor1.msm)
+        expected.msm(psor1.msm, covariates="mean")
+    }, NA)
 })
 
 test_that("observed, expected etc with PCI, should run",{
-    psor1.msm <- msm(state ~ months, covariates=~ollwsdrt+hieffusn, subject=ptnum, data=psor, qmatrix = psor.q, pci=c(5,10))
-    covhist <- get.covhist(psor1.msm)
-    observed.msm(psor1.msm)
-    expected.msm(psor1.msm)
-    expected.msm(psor1.msm, covariates="mean")
+    expect_error({
+        psor1.msm <- msm(state ~ months, covariates=~ollwsdrt+hieffusn, subject=ptnum, data=psor, qmatrix = psor.q, pci=c(5,10))
+        covhist <- get.covhist(psor1.msm)
+        observed.msm(psor1.msm)
+        expected.msm(psor1.msm)
+        expected.msm(psor1.msm, covariates="mean")
+    }, NA)
 })
 
 test_that("subset argument to observed",{

@@ -134,7 +134,7 @@ void GetCensored (double obs, cmodel *cm, int *nc, double **states)
 /* New obstrue facility 
 On entry, obstrue will contain 0 if state unknown, and state if state known
 But how do we know if there are any extra outcome data in the outcome variable?
-If this is NA, we can ignore it but still use obstrue (TODO put in na.find.msmdata)
+If this is NA, we ignore it but still use obstrue, by setting pout = 1
 If this is a state (eg in misc models) prob of observing it cond on true state is 1. 
 If this is a general outcome,  get prob of observing it from HMODELS
 */
@@ -176,11 +176,13 @@ void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpa
 		}
 	    } else {
 		pout[i] = 0;
-		if (hm->hidden && nc == 1 && !hm->ematrix){ /* "state" data contain an actual observation. 
-				 get its distribution here conditional on the supplied true state */
-		    if (obstrue == i+1){
-			pout[i] = (HMODELS[hm->models[i]])(outcome[0], &(hpars[hm->firstpar[i]]));
-		    } 
+		if (hm->hidden && nc == 1 && !hm->ematrix){
+		  pout[i] = 1;
+		  /* "outcome" data contain an actual observation. 
+		     get its distribution here conditional on the supplied true state */
+		  if (!ISNA(outcome[0])  &&  obstrue == i+1){
+		    pout[i] = (HMODELS[hm->models[i]])(outcome[0], &(hpars[hm->firstpar[i]]));
+		  } 
 		} else {  /* "state" data contain the true state (for hm->ematrix with obstrue) or censor indicator */
 		    for (j=0; j<nc; ++j){
 			if ((int) outcome[j] == i+1)
