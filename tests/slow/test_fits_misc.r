@@ -78,7 +78,7 @@ test_that("misclassification covariate constraints in misclassification models",
 
 test_that("estimating initprobs",{
     nsubj <- 50; nobspt <- 6
-    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt),
+    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt),
                          x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
     (three.q <- rbind(c(0, exp(-3), exp(-6)), c(0, 0, exp(-3)), c(0, 0, 0)))
     ematrix3 <- rbind(c(0, 0.1, 0), c(0.1, 0, 0), c(0,0,0))
@@ -93,7 +93,7 @@ test_that("estimating covariate effects on initprobs",{
     nsubj <- 500; nobspt <- 6
     set.seed(22061976)
     sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
-                         time = seq(0, 20, length=nobspt),
+                         time = seq(0, 20, length.out=nobspt),
                          x = rnorm(nsubj*nobspt))
     (three.q <- (rbind(c(0, exp(-3), exp(-6)),
                        c(0, 0, exp(-3)),

@@ -3,7 +3,7 @@ context("analytic transition probability matrices")
 fixq <- function(Q){ diag(Q) <- 0;  diag(Q) <- - rowSums(Q); Q } # avoid namespace faff
 
 nsubj <- 50; nobspt <- 6
-sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt), x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
+sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt), x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
 set.seed(22061976)
 
 test_that("2 state analytic P matrices",{
@@ -38,7 +38,7 @@ test_that("3 state analytic P matrices",{
 
                                         # 4,5 (== 1,4)
     nsubj <- 500; nobspt <- 6
-    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt),
+    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt),
                          x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
     (three.q <- fixq(rbind(c(0, 0, 0), c(0, 0, exp(-2)), c(exp(-3), 0, 0))))
     sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=three.q, start=rep(2,500))
@@ -49,7 +49,7 @@ test_that("3 state analytic P matrices",{
     ## 1,6
     (three.q <- fixq(rbind(c(0, exp(-3), 0), c(0, 0, 0), c(0, exp(-3), 0))))
     nsubj <- 50; nobspt <- 6
-    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt), x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
+    sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt), x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 2 )
     set.seed(22061976)
     sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=three.q, start=c(rep(3,25),rep(1,25)))
     (sim.mod1 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0, exp(-1), 0), c(0, 0, 0), c(0, exp(-1), 0)), analyticp=TRUE))

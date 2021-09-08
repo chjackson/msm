@@ -35,7 +35,7 @@ qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","norma
             form <- as.formula(paste("~", expsum(seq(nc + 1), coefs)))
             lform <- as.formula(paste("~", lsum(seq(nc + 1), coefs)))
             ## indices into estimates vector of all intens/miscs, intens covs / misc covs
-            inds <- seq(length=x$qmodel$npars + x$qcmodel$npars)
+            inds <- seq(length.out=x$qmodel$npars + x$qcmodel$npars)
             for (i in 1 : ni){
                 ## indices into estimates vector of all intens/miscs, intens covs / misc covs for that particular fromstate-tostate.
                 parinds <- inds[seq(i, (nc * ni + i), ni)]
@@ -268,11 +268,11 @@ p.se.msm <- function(x, covariates)
         nir <- sum(hmodel$parstate[hmodel$plabs=="p"] == i) # number of independent misc probs for current state
         if (nir > 0){  # might be perfect misclassification
             p.inds <- which(hmodel$plabs=="p" & hmodel$parstate==i) # indices into HMM parameter vector of logit baseline p for that state
-            cov.inds <- sum(hmodel$npars) + (cur.i-1)*nc + seq(length=(nc*nir)) # indices into HMM parameter vector of corresp cov effects
+            cov.inds <- sum(hmodel$npars) + (cur.i-1)*nc + seq(length.out=(nc*nir)) # indices into HMM parameter vector of corresp cov effects
             parinds <- numeric(); formstr <- character(nir)
             for (j in 1:nir) {
                 formstr[j] <- expsum(1:((nc+1)*nir), coefs) # string of form exp(1*x1+beta1*x2*beta2*x3), exp(x4+beta*x5+...)
-                parinds <- c(parinds, p.inds[j], cov.inds[(j-1)*nc + seq(length=nc)]) # indices into HMM par vector corresp to x1,x2,x3,...
+                parinds <- c(parinds, p.inds[j], cov.inds[(j-1)*nc + seq(length.out=nc)]) # indices into HMM par vector corresp to x1,x2,x3,...
             }
             sumstr <- paste(formstr, collapse = " + ") # "parinds" are
             formstr <- paste("1 / (1 + ", sumstr, ")")
@@ -312,9 +312,9 @@ qratio.se.msm <- function(x, ind1, ind2, covariates, cl=0.95)
     covlist <- msm.parse.covariates(x, covariates, x$qcmodel)    
     nc <- length(covlist)
     indmat <- t(x$qmodel$imatrix)
-    indmat[indmat == 1] <- seq(length = x$qmodel$npars)
+    indmat[indmat == 1] <- seq(length.out = x$qmodel$npars)
     indmat <- t(indmat) # matrix of indices of estimate vector
-    inds <- seq(length = x$qmodel$npars+x$qcmodel$npars) # identifiers for q and beta parameters
+    inds <- seq(length.out = x$qmodel$npars+x$qcmodel$npars) # identifiers for q and beta parameters
     coefs <- as.numeric(c(1, unlist(covlist)))
     parinds <- numeric()
     indmatrow.n <- indmat[ind1[1],-ind1[1]]
@@ -390,9 +390,9 @@ qmatrix.diagse.msm <- function(x, covlist, sojourn, ni, ivector, nc)
     nst <- x$qmodel$nstates
     diagse <- diaglse <- sojse <- sojlse <- numeric(nst)
     indmat <- matrix(ivector, nst, nst)
-    indmat[indmat==1] <- seq(length = ni)
+    indmat[indmat==1] <- seq(length.out = ni)
     indmat <- t(indmat) # matrix of indices of estimate vector
-    inds <- seq(length = ni + ni*nc)
+    inds <- seq(length.out = ni + ni*nc)
     cur.i <- 1
     coefs <- as.numeric(c(1, unlist(covlist)))
     for (i in 1:nst){
@@ -445,7 +445,7 @@ msm.fill.pci.covs <- function(x, covariates="mean"){
     covlistlist <- vector(ncut+1, mode="list")
     names(covlistlist) <- levels(x$data$mf$timeperiod)
     covlistlist[[1]] <- covlist
-    for (i in seq(length=ncut)){
+    for (i in seq(length.out=ncut)){
         covlistlist[[i+1]] <- covlist
         covlistlist[[i+1]][[ti[i]]] <- 1
     }
@@ -532,7 +532,7 @@ msm.form.qoutput <- function(x, covariates="mean", cl=0.95, digits=4, ...){
     rownames(fres) <- rownames(y)
     fres[,1] <- format.ci(y[,1],y[,2],y[,3],y[,4],digits=digits,...)
     im <- t(x$qmodel$imatrix); diag(im) <- -colSums(im); nd <- which(im[im!=0]==1)
-    for (i in seq(length=x$qcmodel$ncovs)){
+    for (i in seq(length.out=x$qcmodel$ncovs)){
         nm <- x$qcmodel$covlabels[[i]]
         hrs <- mattotrans(x, x$Qmatrices[[nm]], x$QmatricesL[[nm]], x$QmatricesU[[nm]], x$QmatricesFixed[[nm]], keep.diag=FALSE)
         hrs[,1:3] <- exp(hrs[,1:3])
@@ -556,7 +556,7 @@ msm.form.eoutput <- function(x, covariates="mean", cl=0.95, digits=4, ...){
     rownames(frese) <- rownames(y)
     frese[,1] <- format.ci(y[,1],y[,2],y[,3],y[,4],digits=digits,...)
     im <- t(x$emodel$imatrix); diag(im) <- -colSums(im); nd <- which(im[im!=0]==1)
-    for (i in seq(length=x$ecmodel$ncovs)){
+    for (i in seq(length.out=x$ecmodel$ncovs)){
         nm <- x$ecmodel$covlabels[[i]]
         ors <- mattotrans(x, x$Ematrices[[nm]], x$EmatricesL[[nm]], x$EmatricesU[[nm]], x$EmatricesFixed[[nm]], keep.diag=FALSE, intmisc="misc")
         ors[,1:3] <- exp(ors[,1:3])
@@ -775,15 +775,15 @@ surface.msm <- function(x, params=c(1,2), np=10, type=c("contour","filled.contou
     if (is.null(xrange)) {
         pmin <- point[i1] - 2*se[i1]
         pmax <- point[i1] + 2*se[i1]
-        p1 <- seq(pmin, pmax, length=np)
+        p1 <- seq(pmin, pmax, length.out=np)
     }
-    else p1 <- seq(xrange[1], xrange[2], length=np)
+    else p1 <- seq(xrange[1], xrange[2], length.out=np)
     if (is.null(yrange)){
         pmin <- point[i2] - 2*se[i2]
         pmax <- point[i2] + 2*se[i2]
-        p2 <- seq(pmin, pmax, length=np)
+        p2 <- seq(pmin, pmax, length.out=np)
     }
-    else p2 <- seq(yrange[1], yrange[2], length=np)
+    else p2 <- seq(yrange[1], yrange[2], length.out=np)
 
     z <- matrix(nrow=np, ncol=np)
     for (i in 1:np) {
@@ -1500,7 +1500,7 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
             j <- j+1
         }
     }
-    obstab <- t(apply(states.expand, 2, function(y) table(factor(y, levels=seq(length=x$qmodel$nstates)))))
+    obstab <- t(apply(states.expand, 2, function(y) table(factor(y, levels=seq(length.out=x$qmodel$nstates)))))
     obsperc <- 100*obstab / rep(rowSums(obstab), ncol(obstab))
     dimnames(obstab) <- dimnames(obsperc) <- list(times, paste("State", 1:x$qmodel$nstates))
     obstab <- cbind(obstab, Total=rowSums(obstab))
@@ -1512,7 +1512,7 @@ observed.msm <- function(x, times=NULL, interp=c("start","midpoint"), censtime=I
     risk <- matrix(nrow=length(times), ncol=length(unique(covcat)), dimnames = list(times, unique(covhist$hist)))
     for (i in seq_along(unique(covcat))) {
         obst <- t(apply(states.expand[covcat==unique(covcat)[i],,drop=FALSE], 2,
-                        function(y) table(factor(y, levels=seq(length=x$qmodel$nstates)))))
+                        function(y) table(factor(y, levels=seq(length.out=x$qmodel$nstates)))))
         risk[,i] <- rowSums(obst)
     }
 
@@ -1655,11 +1655,11 @@ plot.prevalence.msm <- function(x, mintime=NULL, maxtime=NULL, timezero=NULL, in
     time <- model.extract(x$data$mf, "time")
     if (is.null(mintime)) mintime <- min(time)
     if (is.null(maxtime)) maxtime <- max(time)
-    t <- seq(mintime, maxtime, length=100)
+    t <- seq(mintime, maxtime, length.out=100)
     obs <- observed.msm(x, t, interp, censtime, subset)
     expec <- expected.msm(x, t, timezero=timezero, initstates=initstates, covariates=covariates, misccovariates=misccovariates,
                           piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, risk=obs$risk, subset=subset, ci="none")[[2]]
-    states <- seq(length=x$qmodel$nstates)
+    states <- seq(length.out=x$qmodel$nstates)
     S <- length(states)
     ncols <- ceiling(sqrt(S))
     nrows <- if (floor(sqrt(S))^2 < S && S <= floor(sqrt(S))*ceiling(sqrt(S))) floor(sqrt(S)) else ceiling(sqrt(S))

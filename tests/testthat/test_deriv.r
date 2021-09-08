@@ -143,13 +143,13 @@ test_that("Information matrix",{
 
 set.seed(22061976)
 nsubj <- 100; nobspt <- 6
-sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt),
+sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt),
                      x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 20)
 three.q <- rbind(c(0, exp(-6), exp(-9)), c(0, 0, exp(-6)), c(0, 0, 0))
 
 set.seed(22061976)
 nsubj <- 100; nobspt <- 6
-sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length=nobspt),
+sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 20, length.out=nobspt),
                      x = rnorm(nsubj*nobspt), y = rnorm(nsubj*nobspt)* 5 + 20)
 
 test_that("poisson",{
