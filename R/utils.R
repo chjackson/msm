@@ -132,7 +132,7 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     upper <- rep(upper, length=n)
     lower <- (lower - mean) / sd ## Algorithm works on mean 0, sd 1 scale
     upper <- (upper - mean) / sd
-    ind <- seq(length=n)
+    ind <- seq(length.out=n)
     ret <- numeric(n)
     nas <- is.na(mean) | is.na(sd) | is.na(lower) | is.na(upper)
     if (any(nas)) warning("NAs produced")

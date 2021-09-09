@@ -3,7 +3,7 @@ context("HMMs with multivariate responses: model fitting")
 ## Simulate data from a Markov model 
 nsubj <- 30; nobspt <- 5
 sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
-                     time = seq(0, 20, length=nobspt))
+                     time = seq(0, 20, length.out=nobspt))
 set.seed(1)
 two.q <- rbind(c(-0.1, 0.1), c(0, 0))
 dat <- simmulti.msm(sim.df[,1:2], qmatrix=two.q, drop.absorb=FALSE)

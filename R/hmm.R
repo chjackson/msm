@@ -268,7 +268,7 @@ msm.misccovinits2hcovinits <- function(misccovinits, hcovariates, emodel, ecmode
 
 msm.econstr2hconstr <- function(econstr, hmodel)
   {
-      constr <- seq(length=hmodel$totpars)
+      constr <- seq(length.out=hmodel$totpars)
       for (i in unique(econstr)) {
           constr[hmodel$plabs == "p"][econstr == i] <-
             min(constr[hmodel$plabs == "p"][econstr == i])
@@ -345,7 +345,7 @@ print.hmmcat <- function(x, i, j=NULL, mv=FALSE)
     inds <- if (mv) x$parstate==i & x$parout==j else x$parstate==i
     pars <- x$pars[inds]
     res <- matrix(pars[3:(2+pars[1])], ncol=1)
-    rownames(res) <- paste("P(",seq(length=pars[1]),")",sep="")
+    rownames(res) <- paste("P(",seq(length.out=pars[1]),")",sep="")
     if (x$fitted && x$foundse) {
         ci <- matrix(x$ci[inds,], ncol=2)
         res <- cbind(res,  ci[3:(2+pars[1]),])
@@ -377,7 +377,7 @@ msm.form.hconstraint <- function(constraint, hmodel)
 
 msm.form.hcovconstraint <- function(constraint, hmodel)
   {
-      constr <- seq(length=hmodel$ncoveffs)
+      constr <- seq(length.out=hmodel$ncoveffs)
       for (con in names(constraint)) {
           if ( ! (con %in% c(hmodel$plabs, hmodel$covlabels)))
             stop("parameter \"", con, "\" in hconstraint unknown")

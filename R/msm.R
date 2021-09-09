@@ -473,7 +473,7 @@ msm.form.emodel <- function(ematrix, econstraint=NULL, initprobs=NULL, est.initp
         constr <- match(econstraint, unique(econstraint))
     }
     else
-        constr <- seq(length=npars)
+        constr <- seq(length.out=npars)
     ndpars <- if(npars>0) max(constr) else 0
 
     nomisc <- isTRUE(all.equal(as.vector(diag(ematrix)),rep(1,nrow(ematrix)))) # degenerate ematrix with no misclassification: all 1 on diagonal
@@ -1086,8 +1086,8 @@ msm.form.params <- function(qmodel, qcmodel, emodel, hmodel, fixedpars)
                 if(is.null(qcmodel$constr)) NULL else (ni + abs(qcmodel$constr))*sign(qcmodel$constr),
                 ni + nc + hmodel$constr,
                 ni + nc + nh + hmodel$covconstr,
-                ni + nc + nh + nhc + seq(length=nip),
-                ni + nc + nh + nhc + nip + seq(length=nipc))
+                ni + nc + nh + nhc + seq(length.out=nip),
+                ni + nc + nh + nhc + nip + seq(length.out=nipc))
     constr <- match(abs(constr), unique(abs(constr)))*sign(constr)
     ## parameters which are always fixed and not included in user-supplied fixedpars
     auxpars <- which(plabs %in% .msm.AUXPARS)
@@ -1098,7 +1098,7 @@ msm.form.params <- function(qmodel, qcmodel, emodel, hmodel, fixedpars)
     nshortpars <- nrealpars - sum(qcmodel$cri[!duplicated(qcmodel$constr)]==0)
     if (is.logical(fixedpars))
         fixedpars <- if (fixedpars == TRUE) seq(nshortpars) else numeric()
-    if (any(! (fixedpars %in% seq(length=nshortpars))))
+    if (any(! (fixedpars %in% seq(length.out=nshortpars))))
         stop ( "Elements of fixedpars should be in 1, ..., ", nshortpars)
     if (!is.null(qcmodel$cri)) {
         ## Convert user-supplied fixedpars indexing transition-specific covariates
@@ -1106,7 +1106,7 @@ msm.form.params <- function(qmodel, qcmodel, emodel, hmodel, fixedpars)
         inds <- rep(1, nrealpars)
         inds[qmodel$ndpars + qcmodel$constr[!duplicated(qcmodel$constr)]] <-
             qcmodel$cri[!duplicated(qcmodel$constr)]
-        inds[inds==1] <- seq(length=nshortpars)
+        inds[inds==1] <- seq(length.out=nshortpars)
         fixedpars <- match(fixedpars, inds)
         ## fix covariate effects not included in model to zero
         fixedpars <- sort(c(fixedpars, which(inds==0)))
@@ -1803,7 +1803,7 @@ msm.check.covlist <- function(covlist, qemodel) {
     tm <- if(inherits(qemodel,"msmqmodel")) "transition" else "misclassification"
     qe <- if(inherits(qemodel,"msmqmodel")) "qmatrix" else "ematrix"
     imat <- qemodel$imatrix
-    for (i in seq(length=ncol(trans))){
+    for (i in seq(length.out=ncol(trans))){
         if (imat[trans[1,i],trans[2,i]] != 1)
             stop("covariates on ", names(covlist)[i], " ", tm, " requested, but this is not permitted by the ", qe, ".")
     }
