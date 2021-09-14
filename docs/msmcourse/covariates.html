@@ -389,10 +389,10 @@ formula (instead of a list of formulae).</p>
 <p>Low sedimentation rate is protective (lower transition probabilities for <code>ollwsdrt=1</code>), while high effusion is a risk factor for progression (higher transition probabilities for <code>hieffusn=1</code>)</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="covariates.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">hieffusn =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ollwsdrt=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), p_14)</span></code></pre></div>
 <pre><code>##      hieffusn ollwsdrt estimate  lower upper
-## [1,]        0        0    0.205 0.1464 0.269
-## [2,]        0        1    0.120 0.0667 0.185
-## [3,]        1        0    0.484 0.2946 0.663
-## [4,]        1        1    0.324 0.1977 0.503</code></pre>
+## [1,]        0        0    0.205 0.1532 0.273
+## [2,]        0        1    0.120 0.0776 0.187
+## [3,]        1        0    0.484 0.3088 0.701
+## [4,]        1        1    0.324 0.1761 0.520</code></pre>
 </div>
 <div id="exercises-2" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> Exercises</h2>
@@ -480,10 +480,10 @@ formula (instead of a list of formulae).</p>
 <p>The expected times from state 1 to death (<code>tostate=4</code>) in the two groups can be compared as follows. These are shorter for people who have had IHD.</p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="covariates.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">efpt.msm</span>(cavcov1.msm, <span class="at">tostate=</span><span class="dv">4</span>, <span class="at">covariates=</span><span class="fu">list</span>(<span class="at">IHD=</span><span class="dv">0</span>), <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>)[,<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>##   est  2.5% 97.5% 
-##  14.8  12.4  17.0</code></pre>
+##  14.8  12.5  16.9</code></pre>
 <div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="covariates.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">efpt.msm</span>(cavcov1.msm, <span class="at">tostate=</span><span class="dv">4</span>, <span class="at">covariates=</span><span class="fu">list</span>(<span class="at">IHD=</span><span class="dv">1</span>), <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>)[,<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>##   est  2.5% 97.5% 
-##  11.3   9.6  12.6</code></pre>
+## 11.26  9.74 12.60</code></pre>
 <p>Let’s also compare the observed and expected prevalences. Note the use of the <code>subset</code> argument to restrict the observed prevalences to those observed in the indicated set of patient IDs.</p>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="covariates.html#cb97-1" aria-hidden="true" tabindex="-1"></a>notihd_pts <span class="ot">&lt;-</span> <span class="fu">unique</span>(cav<span class="sc">$</span>PTNUM[cav<span class="sc">$</span>IHD<span class="sc">==</span><span class="dv">0</span>])</span>
 <span id="cb97-2"><a href="covariates.html#cb97-2" aria-hidden="true" tabindex="-1"></a>ihd_pts <span class="ot">&lt;-</span> <span class="fu">unique</span>(cav<span class="sc">$</span>PTNUM[cav<span class="sc">$</span>IHD<span class="sc">==</span><span class="dv">1</span>])</span>

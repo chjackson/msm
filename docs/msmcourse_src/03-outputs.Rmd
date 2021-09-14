@@ -1,0 +1,173 @@
+# Prediction from multi-state models {#outputs}
+
+Previously we fitted a multi-state model and presented the estimated transition intensities. 
+
+Multi-state models describe a process evolving over time.  Given that fitted model, we usually want to *predict* what will happen to a person who follows that model.   
+
+This section of the course describes various "predictive" quantities that we could estimate, which are functions of the intensities in the model. 
+
+
+## Mean sojourn time
+
+The _mean sojourn time_ in a state $r$ is the expected length of one period spent in that state.  Recall it is defined as $-1 / q_{rr}$.  Given a fitted model, estimates of the mean sojourn times can be easily extracted using `sojourn.msm`, with standard errors and confidence intervals. 
+
+```{r}
+options(digits=3)
+sojourn.msm(psor.msm)
+```
+
+## Transition probability matrix 
+
+_Transition probabilities_ $P = Exp(t Q)$ over any time interval $t$ can be calculated, given a fitted model, using `pmatrix.msm`.  
+
+These are continuous-time models, so we have to specify the interval $t$ we want to predict over.  The default is $t=1$, but this may not be interest.   In the psoriatic arthritis example, note how the chance of occupying state 4 goes up rapidly from $t=1$ to $t=10$, for every starting state.
+
+```{r}
+pmatrix.msm(psor.msm, t=1)
+pmatrix.msm(psor.msm, t=10)
+```
+
+But where are the standard errors or confidence intervals? 
+
+
+## Characterising uncertainty about functions of intensities 
+
+Getting confidence intervals and standard errors for transition probabilites and related quantities is not trivial computationally.  Two ways in `msm`: 
+
+1. `ci="normal"`.
+
+    Repeatedly draw from the asymptotic sampling distribution of the estimates, which is a multivariate normal with mean defined by the maximum likelihood estimates, and covariance defined by the (inverse) Hessian at the maximised log likelihood.  
+
+    Compute the P matrix for each draw, and obtain the confidence interval from the quantiles of $B$ samples. 
+
+    ```{r}
+    pmatrix.msm(psor.msm, ci="normal", B=100)
+    ```
+
+2. `ci="boot"`. 
+
+    Repeatedly draw bootstrap resamples of the data, refit the model for each sample, and summarise the estimates over the repeated samples (slower but more accurate, as avoids asymptotic normal approximation)
+    ```{r,eval=FALSE}
+    pmatrix.msm(psor.msm, ci="boot", B=100)
+    ```
+
+In either method, it is sensible to check $B$ is large enough, by computing for larger values of $B$ and checking if the result is stable. 
+
+
+## Total length of stay in states
+
+For someone in state $r$ now, over the next $t=10$ years they are expected to spend a total of:
+
+* ? years in state 1
+
+* ? years in state 2 ... 
+
+Defined as $\int_{0}^{t} P(u)_{rs} du$, for each $s$, and computed in `msm` by the `totlos.msm` function
+
+```{r}
+totlos.msm(psor.msm, t=10)
+```
+
+Note the difference from the mean sojourn time, which only refers to the time of a single period in the _current_ state.
+
+Total length of stay adds up _all periods_ that a person is predicted to spend in a state, both now and in the _future._ 
+
+
+## Expected first passage time 
+
+The expectation of the time until someone currently in state $r$ next enters a particular state (the "passage" time or "hitting" time) can be computed with `efpt.msm`.   See `help(efpt.msm)` for the theory behind this. 
+
+Here, for people currently in state 1, 2, 3 and 4 respectively, the expected time to state 4 is: 
+
+```{r}
+efpt.msm(psor.msm, tostate=4)
+```
+Obviously under this model, the expected time to the severest state, state 4, decreases as the starting state  becomes more severe.
+
+
+## Predicting the prevalence of states over time
+
+"Expected" prevalence of state $s$ at time $t$ defined by the transition probabilities from state $r$ to state $s$, averaged by the proportion who start in each state $r$. 
+
+Model fit can be checked by comparing the expected prevalence with the _observed_ proportion in the data occupying each state at each time. 
+
+```{r}
+plot.prevalence.msm(psor.msm)
+```
+
+Note that observed prevalence at time $t$ is not known if people are not all measured at time $t$, so `msm` has to estimate this by interpolation.  So this check of fit is rough.
+
+
+## Passage probabilities 
+
+For a person in state $r$ now, this is the probability that before time $t$, they will visit state $s$ at least once.  Calculated in `msm` using `ppass.msm`. 
+
+This function works by defining a new model equivalent to the original model, except that state $s$ is an absorbing state. The passage probability is defined by the transition probabilities to state $s$ in the new model.  
+
+```{r}
+ppass.msm(psor.msm, tot=10)
+```
+
+For people in state 1, there is a 1 in 3 chance of experiencing progression to state 3 or worse by 10 years. 
+
+In this model, we could have got the same result by adding up the transition probabilities.  For example, the passage probability from state 1 to state 3 by 10 years is equal to $P(t=10)_{13} + P(t=10)_{14}$, since the event _"went through state 3 before 10 years"_ is equivalent to _"is in state 3 or state 4 at 10 years"_.  However that reasoning would not work for a model that allowed transitions back from state 3 to state 2. 
+
+```{r}
+P <- pmatrix.msm(psor.msm, t=10)
+P[1,3] + P[1,4]
+```
+
+## Exercises
+
+1. Using the CAV model that you fitted in the exercises from the previous chapter, investigate how the survival probability depends on the state of CAV. 
+
+2. For a new heart transplant recipient, how likely is it that someone will experience severe CAV before dying? 
+
+3. Does the model appear to fit the data?
+
+    Note that if death times are known, you could also check the fit of an `msm` model by comparing estimated survival probabilities with Kaplan-Meier estimates (in addition to comparing observed and expected prevalence).  `msm` has a shortcut function to check fitted survival probabilities, called as `plot.survfit.msm(x, from=1)`, where `x` is your fitted model, and `from` indicates the starting state from which to forecast survival.    Look at the help page for this function, and customise the plot to your liking. 
+
+    Note also that in this example, some aspects of the goodness-of-fit checks are misleading - see the solution for an explanation why. 
+
+
+## Solutions 
+
+1.  Picking a range of prediction times covering those in the data (1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.
+
+    ```{r}
+    pmatrix.msm(cav.msm, ci="normal", t=1)[,4]
+    pmatrix.msm(cav.msm, ci="normal", t=5)[,4]
+    pmatrix.msm(cav.msm, ci="normal", t=10)[,4]
+    ```
+    
+    At each time, the risk of death by this time increases sharply with the severity of CAV. 
+
+    These risks are high, but note that the data only include outcomes without treatment.   In practice, people who are diagnosed with CAV will get treatment (e.g. coronary artery revascularisation).  Outcomes after treatment were excluded from the `cav` data. 
+
+2.  We can calculate the passage probability from state 1 (no CAV) to state 3 (severe CAV) for a very high time interval, and check that the result does not change if an even higher time interval is supplied.  (a finite number must be supplied -- `tot=Inf` will not work)
+
+    ```{r}
+    ppass.msm(cav.msm, tot=100)["State 1","State 3"]
+    ppass.msm(cav.msm, tot=1000)["State 1","State 3"]
+    pp <- ppass.msm(cav.msm, tot=100, ci="normal")
+    pp[1,3]
+    ```
+
+
+3.  Judging from the comparison of observed and predicted prevalences, and comparing with the Kaplan-Meier survival estimates, the model appears to underestimate the probability of death at later times. 
+
+    ```{r}
+    plot.prevalence.msm(cav.msm)
+    ```
+
+    ```{r}
+    plot.survfit.msm(cav.msm, from=1, 
+                     ylab="Survival probability", 
+                     xlab="Time after transplant", 
+                     col="red",
+                     col.surv="black")
+    ```
+ 
+    In fact, this is an artefactual finding resulting from people in the data being followed up for different lengths of time.  To calculate the probability at each time, `msm` uses a denominator defined by the number of people whose state we know at this time.   This overestimates the probability of death, because the people whose state we know at later times are more likely to be the people who have died.  We don't know the state at later times for people whose outcomes were censored at the end of the study when they were still alive. 
+
+    We could correct for this bias if we impose an "end of study" time for every person, and exclude people from the denominator after this time, even people who we know to have died.    These can be supplied as the `censtime` argument to `plot.prevalence.msm`, but these times are not available in the `cav` dataset supplied with `msm`. 

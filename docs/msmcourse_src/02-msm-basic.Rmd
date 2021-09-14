@@ -1,0 +1,386 @@
+# Using msm for a basic model {#msmbasic}
+
+Model the progression through time of joint damage in psoriatic arthritis 
+
+Estimate, e.g. 
+
+  - probability that someone with no damaged joints (state 1) will have 10 or more damaged joints (state 4) 5 years from now.  
+
+  - Total time expected to spend over the next 10 years with 10 or more damaged joints. 
+
+No covariates for the moment - these will be introduced in [Chapter 4](#covariates).
+
+```{tikz, fig.cap = "Psoriatic arthritis", fig.ext = 'png', echo=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+\begin{tikzpicture}[]
+\node [state] (state1) {1. 0-1 damaged joints};
+\node [state, right=of state1] (state2) {2. 1-4 damaged joints};
+\node [state, right=of state2] (state3) {3. 5-9 damaged joints};
+\node [state, right=of state3] (state4) {4. 10+ damaged joints};
+\draw[->] ($(state1.east)+(0cm,0.1cm)$) -- ($(state2.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state2.east)+(0cm,0.1cm)$) -- ($(state3.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state3.east)-(0cm,0.1cm)$) -- ($(state4.west)-(0cm,0.1cm)$) node [] {}; 
+\end{tikzpicture}
+```
+
+## Basic requirements for a msm model 
+
+At minimum, need to specify
+
+* The dataset, and which columns indicate the state, time (and patient) 
+  
+  - States should be numbers, 1, 2, 3, etc.   
+  
+  - Time should be increasing within each patient 
+  
+  - Patients should be grouped together in the data
+
+* The **transition structure** of the model 
+
+
+## Summarising the data  
+
+Example `psor` dataset in the package 
+
+```{r}
+library(msm)
+head(psor, 5)
+```
+
+* `ptnum`: subject / patient ID 
+* `months`: months of follow up 
+* `state`: state of joint damage 
+
+Other columns are covariates, to be discussed later. 
+
+A simple summary of the data is a count of the number of _transitions over visit intervals_, i.e. the number of people observed in one state at one visit, and each other state at the next visit.   
+
+```{r}
+statetable.msm(state, ptnum, data=psor)
+```
+
+```{r, echo=FALSE}
+stab <- statetable.msm(state, ptnum, data=psor)
+```
+
+For example, `r stab[1,3]` people were in state 1 (0-1 damaged joints) at one visit followed by state 3 (5-9 damaged joints) at the next visit. 
+
+We also want some idea of the time scale, so we summarise the time variable.  
+
+```{r}
+summary(psor$months)
+```
+
+The inter-visit times, and number of observations per patient, may also be interesting to summarise. 
+
+## Specifying the transition structure 
+
+We now define in R which transitions are allowed in **continuous time** 
+
+Define a matrix with $r$, $s$ entry
+
+* 0 where the $r$,$s$ transition is disallowed 
+
+* 1 where the transition is allowed (actually this can be any non-zero positive number)
+
+In this example we allow transitions from state 1 to state 2, from 2 to 3, and from 3 to 4.
+
+```{r}
+Q <- rbind(c(0, 1, 0, 0),
+           c(0, 0, 1, 0),
+           c(0, 0, 0, 1),
+           c(0, 0, 0, 0)) 
+```
+
+The diagonal entries of this matrix do not matter.
+
+
+## Transition structure is for the continuous time process
+
+Note that when we used `statetable.msm` to summarise the transitions over visit intervals we counted `r stab[1,3]` people in state 3 at the next visit after being observed in state 1. 
+
+So why do we not allow a State 1 to State 3 transition? 
+
+Because these 1-3 transitions happened _over a time interval_, not in _continuous time_
+
+These `r stab[1,3]` people must have gone through state 2 (unobserved) in between their visits 
+
+```{tikz,echo=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shapes.misc}
+\tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},
+  % default radius will be 1pt.
+cross/.default={10pt}}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+\begin{tikzpicture}[]
+\node [state] (state1) {1. 0-1 damaged joints};
+\node [state, right=of state1] (state2) {2. 1-4 damaged joints};
+\node [state, right=of state2] (state3) {3. 5-9 damaged joints};
+\node [state, right=of state3] (state4) {4. 10+ damaged joints};
+\draw[->] ($(state1.east)+(0cm,0.1cm)$) -- ($(state2.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state2.east)+(0cm,0.1cm)$) -- ($(state3.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state3.east)-(0cm,0.1cm)$) -- ($(state4.west)-(0cm,0.1cm)$) node [] {}; 
+\draw[->,color=red,dashed,thick] ($(state1.east)+(0cm,0.1cm)$) to[out=40,in=140] ($(state3.west)+(0cm,0.1cm)$) node [] {};
+\draw (4,0.95) node[cross,red,thick] {};
+\end{tikzpicture}
+```
+
+Multi-state models are commonly used in situations like this, for **ordered states of disease severity**, e.g. with states derived by discretising a continuous variable.  Transitions should then only be allowed between **adjacent states** in continuous time. 
+
+The transition structure `Q` should not be chosen based on which elements of the `statetable.msm` output are non-zero!
+
+Instead, draw a diagram of allowed _continuous-time_ transitions, and choose `Q` to describe the structure of this diagram.
+
+
+## Maximum likelihood estimation
+
+Now we invoke the `msm` function to fit the multi-state model to the data: estimating the transition
+intensities.
+
+This uses `optim` to find the minimum of the minus log likelihood.  It has to start this search from plausible _initial values_ for the parameters.   Two ways to do this:  
+
+- Easiest way that usually works: tell `msm` to auto-generate initial values with the argument `gen.inits=TRUE`.  
+    
+    ```{r}
+    psor.msm <- msm(state ~ months,
+                    subject = ptnum,
+                    data = psor, 
+                    qmatrix = Q,
+                    gen.inits=TRUE)
+    ```
+
+- Alternatively: supply initial values yourself in the `qmatrix`, instead of 1s, in the positions corresponding to the transitions.  
+    
+  If you do this for different initial values, and it converges to the same answer, that gives reassurance that the answer is the true maximum likelihood estimate. 
+
+    ```{r}
+    Q <- rbind(c(0, 0.1, 0, 0),
+               c(0, 0, 0.1, 0),
+               c(0, 0, 0, 0.1),
+               c(0, 0, 0, 0)) 
+    psor.msm <- msm(state ~ months,
+                    subject = ptnum,
+                    data = psor, 
+                    qmatrix = Q,
+                    gen.inits=TRUE)
+    ```
+
+But if we supply our own initial values, where would we get them from? 
+
+
+## Intuition for what transition intensities mean
+
+The _mean sojourn time_ $E(T_r)$ is the average time spent in state $r$ before
+moving to another state
+
+If the intensities $q_{rs}$ are constant over time, then $E(T_r) = -1/q_{rr}$ where $q_{rr} = -\sum_{s!=r} q_{rs}$
+  
+So we might guess that someone spends an average of 
+
+* 10 months in state 1 before moving to state 2 : $q_{12} = 0.1$
+
+* 10 months in state 2 before moving to state 3 : $q_{23} = 0.1$ 
+
+* 10 months in state 3 before moving to state 4 : $q_{23} = 0.1$ 
+
+and use these as initial values to start the search for the maximum likelihood estimates.   Initial values do not usually need to be very close to the true estimates, just within an order of magnitude. 
+
+See the exercises for a slightly harder example, where there is more than one state $s$ we can transition to from state $r$...
+
+
+## `msm` default output
+
+When the optimisation has converged, `msm` returns an object containing list of information about the fitted model (see `help(msm.object)` for the list structure). 
+
+Printing this object gives the estimated transition intensities and their confidence intervals.
+
+```{r}
+psor.msm
+```
+
+How was our initial guess that people spent 10 years in each state? 
+
+
+
+
+## Alternative observation schemes {#obstype}
+
+### Exact death times: `deathexact` 
+
+In medical research, we usually know the day when someone dies. 
+
+In contrast, the entry time into _states of disease_ is not known in the applications here --- we only know the state at intermittent observation times. 
+
+Hence, if one of the states is _death_, then we need to tell `msm` that the entry time into this state is known exactly, but the state at the previous instant is unknown.   Likelihood is obtained by summing over the unknown state (see the [vignette, page 9](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf)). 
+
+```{r,eval=FALSE}
+msm(..., deathexact=TRUE, ...)
+```
+
+### General observation schemes: `obstype`
+
+More generally, each row of the data could represent a different type of observation, indicated by an extra variable in the dataset, whose name is supplied as the `obstype` argument to `msm`.  The values of this variable can be 1, 2 or 3, e.g. 
+
+1. an intermittent observation of a state (`obstype=1`).  This is the default. 
+
+2. known time of transition out of the previously-observed state (`obstype=2`).   Not considered in this course.  If all observations are of this type, this is equivalent to time-to-event data where the state is known at all times. 
+
+3. entry time observed exactly but state at previous instant unknown (`obstype=3`).  If death states always have `obtype=3`, this is equivalent to `deathexact=TRUE`. 
+
+Here is an artificial example: 
+```{r,echo=FALSE}
+cav_obstype <- cav[1:7,c("PTNUM","years","state")]
+cav_obstype$obstype <- c(1,1,1,2,1,2,3)
+cav_obstype
+```
+
+```{r,eval=FALSE}
+msm(state ~ years, obstype=obstype, ...)
+```
+
+
+
+##  Exercises
+
+From the CAV dataset `cav` in the package, write R code to: 
+
+1. Summarise the transitions over an interval 
+
+2. Define a matrix of 1s and 0s indicating the allowed transitions in continuous time.  Assume for the moment that people can move to any adjacent disease state, to both more severe or less severe states, and die from any state. 
+
+3. From the May workshop notes, remind yourself of how the transition intensities are related to the probabilities governing the state that someone will move to on leaving the current state.    
+
+    a. From your data summary, make a guess at what these might be.
+
+    b. Likewise, roughly guess what the mean sojourn times might be.  
+
+    c. Use those guesses to construct a matrix of plausible initial values for the intensities. 
+  
+    Note that there is no "right answer" for these initial guesses.  The learning objective is to be able to convert between transition intensities and more easily-understood quantities.
+
+4. Call `msm` to fit the multi-state model, using 
+
+    a. auto-generated initial values from (2) and
+
+    b. the manually-generated values in (3).
+
+    Death times should be assumed to be known. 
+
+    Check that the results from different initial values agree with each other, and see how close the true maximum likelihoods are to your initial guess.  
+
+5. Interpret the maximum likelihood transition intensities in easily-understood terms. 
+
+
+
+
+
+## Solutions 
+
+1. 
+    ```{r}
+    statetable.msm(state, PTNUM, data=cav)
+    ```
+
+2. 
+    ```{r}
+    Q_cav <- rbind(c(0, 1, 0, 1), 
+                   c(1, 0, 1, 1), 
+                   c(0, 1, 0, 1), 
+                   c(0, 0, 0, 0))
+    ```
+
+3. For someone in state $r$, the probability that the next state that they will move to is state $s$ is $-q_{rs} / q_{rr}$.   Row $r$ of the transition intensity matrix corresponds to the transitions out of state $r$.  
+
+    We can set initial values for this row by first guessing the mean sojourn time $T_r$, and setting the diagonal entry $q_{rr} = -1/T_{r}$. 
+
+    We then set the remaining, off-diagonal values $q_{rs}, s!=r$ according to guesses of the probability $\pi_{rs}$ that the next state will be $s$, and deducing that since $\pi_{rs} = $-q_{rs} / q_{rr}$, we can initialise $q_{rs} = \pi_{rs} T_r$.   
+
+    ```{r}
+    summary(cav$years)
+    ```
+
+    Looking at the range of observation times in the data, we might guess that the mean sojourn time is 2 years (or within an order of magnitude of this), hence the diagonal entries of the Q matrix are all -0.5. 
+
+    Then we might guess that there is an equal chance of moving to each of the permitted next states, and set  
+
+    ```{r}
+    Q_cav2 <- rbind(c(-0.5,   0.25,  0,     0.25), 
+                  c( 0.166, -0.5,   0.166, 0.166), 
+                   c( 0,      0.25, -0.5,   0.25), 
+                   c( 0,      0,     0,     0))
+    ```
+
+    so that the rows add up to zero.  The output of `statetable.msm` suggests that while this guess might not be true, it could be within an order of magnitude of the truth, so is likely to be an acceptable as an initial value for optimisation. 
+
+4. 
+    ```{r}
+    cav.msm <- msm(state ~ years, subject=PTNUM, data=cav, deathexact=TRUE, 
+                   gen.inits = TRUE, qmatrix=Q_cav)
+    cav2.msm <- msm(state ~ years, subject=PTNUM, data=cav, deathexact=TRUE, 
+                    qmatrix=Q_cav2)
+    cav.msm
+    cav2.msm
+    ```
+
+    There are negligible differences in the estimates and maximised log-likelihood between the fits starting from different initial values.    
+
+    In practice, if the results disagree, the one with the lowest minus 2 x log likelihood is (by definition) closest to the desired maximum likelihood. 
+
+
+5. 
+People in state 1 are around three times as likely to transition next to state 2 (CAV), compared to state 4 (death) (from comparing an intensity of 0.12 with 0.04).  The expected time until this transition is -1/0.17 = 6 years. 
+
+    People in state 2 have similar probabilities of transitioning to state 1 and state 3 next, while death is much less likely than a transition to either state 1 or state 3.    
+
+    People in state 3 are twice as likely to die as regress to state 2.   
+
+    Periods in state 2 or state 3 last around 2 years on average. 
+
+
+
+## Postscript: What if it doesn't converge? 
+
+A risk of the kinds of models used here is that they may be weakly identifiable from the data.  Often the optimisation will not converge, or converge to an answer that its not sensible. 
+
+A common message is 
+
+`Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.`
+
+Another common symptom is very large confidence intervals for certain parameters, e.g. 
+```{r}
+## Transition intensities
+##                   Baseline                    
+## State 1 - State 2  0.1 ( 1e-12, 1e+12)
+```
+
+The optimiser claims to have found the maximum likelihood, but the answer is not very useful, because the data contain no information about that parameter, hence the likelihood is flat with respect to that parameter.   
+
+In this case the model should be simplified, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (`qconstraint` option to `msm`) or constraining covariate effects (see the [chapter on covariates](#covariates))
+
+In some circumstances, numerical overflow/underflow can occur during optimisation, giving messages like
+
+```{r}
+## numerical overflow in calculating likelihood
+```
+
+In these cases we may be able to control the optimisation and help it find the solution. 
+
+* Normalising the time variable and covariate values can help (e.g. working with years rather than days, so the time variable takes values around 0-10 rather than 0-4000)
+
+* We can pass arguments to control R's `optim` function that `msm` uses for optimisation, as the `control` argument to `msm`.  A common trick is to use e.g. `msm(..., control=list(fnscale=4000), ...)` so that msm will maximise 1/4000 times the log-likelihood, instead of maximising the log-likelihood, if the likelihood takes values of around 4000, say.   This ensures that optimisation is done on a normalised scale, helping to avoid numerical computation problems. 
+
+But often the problem is that the model is too complicated for the data! 

@@ -1,0 +1,8 @@
+book_filename: "msmcourse"
+rmd_files: 
+#  html: ["index.Rmd","01-intro.Rmd","02-msm-basic.Rmd","03-outputs.Rmd","04-covariates.Rmd","05-timedep.Rmd","06-advanced.Rmd"]
+language:
+  ui:
+    chapter_name: "Part "
+delete_merged_file: true
+output_dir: "../msmcourse"

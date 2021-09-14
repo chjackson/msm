@@ -1,0 +1,277 @@
+# msm models with covariates {#covariates}
+
+```{r,echo=FALSE}
+## repeat this to allow knit button in rstudio to work
+library(msm)
+Q <- rbind(c(0, 1, 0, 0),
+           c(0, 0, 1, 0),
+           c(0, 0, 0, 1),
+           c(0, 0, 0, 0)) 
+```
+
+
+
+## Reminder of covariates in multi-state models
+
+The intensity for each $r-s$ transition can be expressed as a log-linear function of covariates, denoted as a vector $\mathbf{z}$.
+
+$$q_{rs} = q_{rs}^{(0)} \exp(\boldsymbol{\beta}_{rs}^{\prime} \mathbf{z})$$
+Psoriatic arthritis example: investigate risk factors for joint damage 
+
+`psor` data contains two covariates: 
+
+- `hieffusn`: Five or more effused joints 
+
+- `ollwsdrt`: Low erythrocyte sedimentation rate (less than 15 mm/h)  
+
+Each row of the data contains value for that person at study entry (people just diagnosed), so covariate values are the same throughout each person's follow-up.
+
+```{r}
+head(psor, 5)
+```
+
+
+## Choices for modelling covariates
+
+Most general model for the psoriatic arthritis data 
+
+```{tikz, fig.cap = "Psoriatic arthritis", fig.ext = 'png', echo=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+\begin{tikzpicture}[]
+\node [state] (state1) {1. 0-1 damaged joints};
+\node [state, right=of state1] (state2) {2. 1-4 damaged joints};
+\node [state, right=of state2] (state3) {3. 5-9 damaged joints};
+\node [state, right=of state3] (state4) {4. 10+ damaged joints};
+\draw[->] ($(state1.east)+(0cm,0.1cm)$) -- ($(state2.west)+(0cm,0.1cm)$) node [midway,above=2em] {$q_{12}^{(0)} \exp(\boldsymbol{\beta}_{12}^{\prime} \mathbf{z})$};
+\draw[->] ($(state2.east)+(0cm,0.1cm)$) -- ($(state3.west)+(0cm,0.1cm)$) node [midway,above=2em] {$q_{23}^{(0)} \exp(\boldsymbol{\beta}_{23}^{\prime} \mathbf{z})$};
+\draw[->] ($(state3.east)-(0cm,0.1cm)$) -- ($(state4.west)-(0cm,0.1cm)$) node [midway,above=2em] {$q_{34}^{(0)} \exp(\boldsymbol{\beta}_{34}^{\prime} \mathbf{z})$}; 
+\end{tikzpicture}
+```
+
+Consider which transitions may be affected by which covariates.  Don't just put all covariates on all transitions without thinking --- you may not have enough data informing transitions out of particular states. 
+
+```{r}
+statetable.msm(state, ptnum, data=psor)
+```
+
+With 37 transitions, for example, unlikely to get usefully-precise effect estimates for 10 covariates on the State 3 - State 4 transition rate, but 3 covariates may be feasible. 
+
+No shrinkage / penalized likelihood methods implemented in `msm` unfortunately, but standard variable selection methods, e.g. AIC, are simple to implement, as we will see.  
+
+
+
+## msm syntax: covariates on rates of specific transitions
+
+Use the `covariates` argument to `msm` to place covariates on transition intensities. 
+
+Set `covariates` to a list of linear model formulae, named by the transition, to specify which intensities get which covariates. 
+
+```{r}
+psorc_spec.msm <- msm(state ~ months,
+                  subject = ptnum,
+                  data = psor, 
+                  qmatrix = Q,
+                  covariates = list("1-2" = ~ hieffusn,
+                                    "2-3" = ~ hieffusn + ollwsdrt), 
+                  gen.inits=TRUE)
+``` 
+
+
+## Covariates on all transition rates
+
+To put the same covariates on _all_ the transition rates, can set the `covariates` argument to a single 
+formula (instead of a list of formulae).
+
+```{r}
+psorc_all.msm <- msm(state ~ months,
+                     subject = ptnum,
+                     data = psor, 
+                     qmatrix = Q,
+                     covariates = ~ hieffusn + ollwsdrt, 
+                     gen.inits=TRUE)
+```
+
+
+## Identical effects of same covariate on different transitions 
+
+`constraint` argument: a list with one named element for each covariate with constrained effects, so that the hazard ratio for that covariate is the same for different transitions.  
+
+Each list element is a vector of integers, of same length as the number of transition rates.
+
+Which elements of this vector are the same determines which covariate effects are assumed to be equal. 
+
+In this model, the effect of `hieffusn` is the same for the first two transition rates, i.e. the progression rates from State 1 to 2 and from State 2 to 3, but different for the State 3 - 4 rate 
+
+```{r}
+psorc_cons.msm <- msm(state ~ months,
+                subject = ptnum,
+                data = psor, 
+                qmatrix = Q,
+                covariates = ~ hieffusn + ollwsdrt, 
+                constraint = list(hieffusn = c(1,1,2)), 
+                gen.inits=TRUE)
+```
+
+
+## Covariate selection 
+
+Compare the three different models above using Akaike's information criterion (AIC = -2$\times$log likelihood + 2*df), where "df" is the number of estimated parameters (degrees of freedom).   AIC is an approximate measure of the predictive ability of a model. 
+
+There is not much difference, but the model with the lowest AIC is `psorc_spec.msm` with different predictors on specific transitions.  
+
+```{r}
+logliks <- c(logLik(psorc_spec.msm), logLik(psorc_cons.msm), logLik(psorc_all.msm))
+AICs <- AIC(psorc_spec.msm, psorc_cons.msm, psorc_all.msm)
+cbind(logliks, AICs)
+```
+
+Most complex model `psorc_all.msm` has highest log-likelihood, but the extra parameters do not lead to better  predictive performance
+
+Given the AICs and the estimates from the full model, it seems sufficient to assume that `hieffusn` is a predictor of the 1-2 and 2-3 transitions, and `ollwsdrt` is a predictor of the 2-3 transition.
+
+
+## Interpretation of the hazard ratio
+
+Hazard ratios represent how the _instantaneous risk_ of making a particular transition is modified by the covariate.  Here, someone in state 1, with 5 or more effused joints (`hieffusn=1`), is at over twice the risk of progression to state 2, at any time, compared to someone with 4 or fewer (`hieffusn=0`). 
+
+```{r}
+print(psorc_all.msm, digits=2)
+```
+
+Can also extract with 
+
+```{r}
+hazard.msm(psorc_all.msm)
+```
+
+
+## Outputs for different covariate values 
+
+Comparing **absolute outcomes** between groups can be easier to interpret than hazard ratios.
+
+Most of `msm`'s prediction functions (`totlos.msm`, `ppass.msm`, etc.) take an argument called `covariates`, a list that defines the covariate values to calculate the output for. 
+
+Example: probability of transition from state 1 to severest state 4 by 10 years, compared between combinations of risk factors
+
+`covariates` argument indicates the covariate values $\mathbf{z}$ to calculate the transition probabilities for.
+
+`msm` will calculate $P(t | \hat{q}, \hat\beta, \mathbf{z})$ where $\hat{q},\hat\beta$ are the fitted baseline intensities and covariate effects.
+
+```{r}
+p00 <- pmatrix.msm(psorc_spec.msm, t=10, covariates=list(hieffusn=0,ollwsdrt=0), 
+                   ci="normal", B=100)
+p01 <- pmatrix.msm(psorc_spec.msm, t=10, covariates=list(hieffusn=0,ollwsdrt=1), 
+                   ci="normal", B=100)
+p10 <- pmatrix.msm(psorc_spec.msm, t=10, covariates=list(hieffusn=1,ollwsdrt=0), 
+                   ci="normal", B=100)
+p11 <- pmatrix.msm(psorc_spec.msm, t=10, covariates=list(hieffusn=1,ollwsdrt=1), 
+                   ci="normal", B=100)
+p_14 <- rbind(p00[1,4], p01[1,4], p10[1,4], p11[1,4])
+```
+
+Low sedimentation rate is protective (lower transition probabilities for `ollwsdrt=1`), while high effusion is a risk factor for progression (higher transition probabilities for `hieffusn=1`)
+
+```{r}
+cbind(hieffusn = c(0,0,1,1), ollwsdrt=c(0,1,0,1), p_14)
+```
+
+
+
+
+## Exercises 
+
+We want to investigate whether heart transplant recipients who have previously had ischaemic heart disease are more at risk of CAV, which is a similar condition.  The "primary diagnosis" (reason for having a heart transplant) is included in the CAV data in the categorical variable `pdiag`, which takes the value `IHD` for ischaemic heart disease.    
+
+1. Convert this to a binary variable, and develop a multi-state model like the one you built in the previous chapters, including this binary covariate on all transitions.  
+
+2. Adapt the model appropriately so that the covariate is only included on transitions which the covariate is predictive of. 
+
+3. Investigate and compare with a model where the effect of this covariate is constrained to be the same between different transitions. 
+
+4. Compare the clinical prognosis for people with and without pre-transplant IHD, using outcomes similar to those calculated in the previous chapter. 
+
+    (Note: if calculating the observed and expected prevalences for a subset of patients, then a `subset` argument to `plot.prevalence.msm` should be specified.  This should be set to a vector of the unique patient IDs included in the appropriate subset.)
+
+
+## Solutions
+
+1. First we start with the full model where the covariate affects all transitions, and examine the hazard ratios under this model. 
+
+    ```{r,cache=TRUE}
+    cav$IHD <- as.numeric(cav$pdiag == "IHD")
+    cavcov.msm <- msm(state ~ years, subject=PTNUM, data=cav, covariates = ~IHD, 
+                      deathexact = TRUE, gen.inits = TRUE, qmatrix=Q_cav)
+    cavcov.msm 
+    ```
+
+
+    We see that the pre-transplant IHD is associated with an increased risk of CAV onset (state 1 - state 2) and death before CAV onset (state 1 - state 4).    The confidence intervals for the hazard ratios of IHD on the other transition rates are wide and include the null 1.
+
+
+2.  Hence we build a simplified model, in which IHD only affects the transition rates out of State 1.  This model has an improved AIC compared to the bigger model, despite having 5 fewer parameters (`df`).  
+
+    ```{r,cache=TRUE}
+    cavcov1.msm <- msm(state ~ years, subject=PTNUM, data=cav, 
+                       covariates = list("1-2"=~IHD, "1-4"=~IHD), 
+                       deathexact = TRUE, gen.inits = TRUE, qmatrix=Q_cav)
+    AIC(cavcov.msm, cavcov1.msm)
+    ```
+
+
+3. The hazard ratios for IHD on the risk of CAV onset and pre-CAV death appear to be similar, so we might constrain them to be equal, as follows.   The AIC is slightly smaller than for the model where these effects are different.
+
+    ```{r}
+    cavcov2.msm <- msm(state ~ years, subject=PTNUM, data=cav, 
+                       covariates = list("1-2"=~IHD, "1-4"=~IHD), 
+                       constraint = list(IHD = c(1,1)),
+                       deathexact = TRUE, gen.inits = TRUE, qmatrix=Q_cav)
+    AIC(cavcov2.msm)
+    ```
+    
+    However despite the statistical improvement, this model would not be clinically meaningful if pre-transplant IHD affects the risk of CAV onset and death after CAV through different mechanisms.   We would then prefer to acknowledge that the true effects might be different. 
+
+
+4.  We could compare the transition probabilities at a future time (e.g. 5 years after transplant) for people with and without pre-transplant IHD.  The risk of occupying any of the CAV states at this time, and the risk of death by this time, is about 50\% more for people with previous IHD, while the chance of being CAV-free (state 1) is correspondingly lower. 
+
+    ```{r}
+    pmatrix.msm(cavcov.msm, t=5, covariates=list(IHD=0))
+    pmatrix.msm(cavcov.msm, t=5, covariates=list(IHD=1))
+    ```
+
+    The passage probability to severe CAV (which we computed in the previous chapter) is similar between both groups of people (`IHD=0`) and (`IHD=1`), though people who have had IHD are estimated to be slightly more likely to go through the "severe CAV" state before they die.
+
+    ```{r}
+    ppass.msm(cavcov1.msm, tot=100, covariates=list(IHD=0))["State 1","State 3"]
+    ppass.msm(cavcov1.msm, tot=100, covariates=list(IHD=1))["State 1","State 3"]
+    ```
+    
+    We might also compare the total length of stay in each state over a long time horizon (e.g. 20 years), finding that people who had IHD are expected to spend longer periods of time in the CAV states (2 and 3) and die sooner. 
+
+    ```{r}
+    totlos.msm(cavcov1.msm, tot=20, covariates=list(IHD=0))
+    totlos.msm(cavcov1.msm, tot=20, covariates=list(IHD=1))
+    ```
+    
+    The expected times from state 1 to death (`tostate=4`) in the two groups can be compared as follows.   These are shorter for people who have had IHD. 
+
+    ```{r,cache=TRUE}
+    efpt.msm(cavcov1.msm, tostate=4, covariates=list(IHD=0), ci="normal")[,1]
+    efpt.msm(cavcov1.msm, tostate=4, covariates=list(IHD=1), ci="normal")[,1]
+    ```
+
+
+    Let's also compare the observed and expected prevalences.  Note the use of the `subset` argument to restrict the observed prevalences to those observed in the indicated set of patient IDs. 
+
+
+    ```{r}
+    notihd_pts <- unique(cav$PTNUM[cav$IHD==0])
+    ihd_pts <- unique(cav$PTNUM[cav$IHD==1])
+    plot.prevalence.msm(cavcov.msm, covariates=list(IHD=0), subset=notihd_pts)
+    plot.prevalence.msm(cavcov.msm, covariates=list(IHD=1), subset=ihd_pts)
+    ```
+
+    If desired, the function `prevalence.msm` could be used to extract the numbers behind the plots shown by `plot.prevalence.msm`, to enable multiple groups to be shown on the same plot, or to produce other customised plots. 

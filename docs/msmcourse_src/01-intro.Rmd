@@ -1,0 +1,189 @@
+# Multi-state modelling theory:  recap {#theory}
+
+Multi-state models for intermittently-observed data 
+
+* [Slides from the introductory workshop in May 2021](https://chjackson.github.io/msm/msmcourse/cjackson_bordeaux2020.pdf)
+
+More information about the `msm` package in 
+
+* [the msm package vignette](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf) 
+
+* [the Journal of Statistical Software paper](http://www.jstatsoft.org/v38/i08/)
+
+A more in-depth treatment about this kind of modelling can be found in 
+
+* [van den Hout (2017)](https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569)
+  
+  - applications in life-course / ageing epidemiology 
+
+* [Cook and Lawless (2018)](https://www.routledge.com/Multistate-Models-for-the-Analysis-of-Life-History-Data/Cook-Lawless/p/book/9780367571726)
+
+  - more advanced mathematically, greater variety of models
+
+
+## Multi-state processes
+
+Multi-state models represent processes that can be described as **discrete states** that change through **time**.
+
+The `msm` package can be used for any state and transition structure.
+
+Examples in the course represent stages of a disease. 
+
+```{tikz, tikz-header, echo=FALSE, eval=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+```
+
+For example, a progressive disease with death from any state (CAV after heart transplantation, from [Sharples et al.](https://doi.org/10.1097/01.TP.0000071200.37399.1D) )
+
+```{tikz, cav-model, echo=FALSE, fig.width=5}
+<<tikz-header>>
+\begin{tikzpicture}[]
+\node [state] (well) {1. No CAV};
+\node [state, right=of well] (mild) {2. Mild CAV};
+\node [state, right=of mild] (severe) {3. Severe CAV};
+\node [state, below=of mild] (death) {4. Death};
+\draw[->] ($(well.east)+(0cm,0.1cm)$) -- ($(mild.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild.west)-(0cm,0.1cm)$) -- ($(well.east)-(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild.east)+(0cm,0.1cm)$) -- ($(severe.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(severe.west)-(0cm,0.1cm)$) -- ($(mild.east)-(0cm,0.1cm)$) node [] {}; 
+\draw[->] (mild) -- (death) node [midway] {};
+\draw[->] (well) -- (death) node [midway, left] {};
+\draw[->] (severe) -- (death) node [midway, right] {};
+\end{tikzpicture}
+```
+
+Progression through stages of an irreversible non-fatal condition (psoriatic arthritis, from [Gladman and Farewell](https://pubmed.ncbi.nlm.nih.gov/10555902/))
+
+```{tikz, psor-model, echo=FALSE}
+<<tikz-header>>
+\begin{tikzpicture}[]
+\node [state] (state1) {1. 0-1 damaged joints};
+\node [state, right=of state1] (state2) {2. 1-4 damaged joints};
+\node [state, right=of state2] (state3) {3. 5-9 damaged joints};
+\node [state, right=of state3] (state4) {4. 10+ damaged joints};
+\draw[->] ($(state1.east)+(0cm,0.1cm)$) -- ($(state2.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state2.east)+(0cm,0.1cm)$) -- ($(state3.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(state3.east)-(0cm,0.1cm)$) -- ($(state4.west)-(0cm,0.1cm)$) node [] {}; 
+\end{tikzpicture}
+```
+
+A relapsing-remitting condition with no "final" state (also in psoriatic arthritis, from [Jackson et al.](https://doi.org/10.1002/acr.22687))
+
+```{tikz, echo=FALSE, fig.width=5}
+<<tikz-header>>
+\begin{tikzpicture}[]
+\node [state] (nomda) {1. Disease activity};
+\node [state, right=of nomda] (mda) {2. Minimal disease activity};
+\draw[->] ($(nomda.east)+(0cm,0.1cm)$) -- ($(mda.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mda.west)-(0cm,0.1cm)$) -- ($(nomda.east)-(0cm,0.1cm)$) node [] {};
+\end{tikzpicture}
+```
+
+
+
+
+## `msm` models work in continuous time
+
+Model represents movement between **discrete states** in **continuous time**
+
+### Transition intensities 
+
+**Continuous-time** Markov models are defined by _transition intensities_ $q_{rs}(t)$ between pairs of states $r,s$.
+
+Transition intensity matrix $Q$ with diagonals $q_{rr}(t) = -\sum_{s!=r} q_{rs}(t)$.  
+
+### Transition probabilities 
+
+If $Q(t) = Q$ is constant over time, we can compute the _transition probability matrix_ over _any time unit_ as $P(t) = Exp(tQ)$ where Exp is the matrix exponential.  
+
+Entries $p_{rs}(t)$ define the probability someone in state $r$ now is in state $s$ at a time $t$ years from now. 
+
+**Discrete-time models** (not covered in this course) are defined by transition probabilities $p_{rs}$ over _one unit_ of time.   Less common than continuous-time models in medical applications, since data are not generally on a regular discrete-time grid. 
+
+Be careful of these distinctions!
+
+
+## Intermittently-observed data 
+
+`msm` is mainly designed for data that are **intermittently observed**
+
+```{r echo=FALSE}
+changetimes <- c(1,4,6,8,10)
+obstimes <- c(0, 1.5, 3.5, 5, 9)
+states <- c(1,2,1,3,4)
+
+nst <- 4
+maxtime <- 10
+par(lwd=2, cex=1.2, mgp=c(2,1,0), mar=c(3,4,1,1))
+plot(0,0, xlim=c(0,maxtime), ylim=c(0.7,nst+1.0), type="n", axes=F, xlab="Years after transplant", ylab="")
+axis(2, at = c(1,2,3,4), labels = c("State 1","State 2","State 3","State 4"), tick=F, las=1)
+
+axis(1, at=c(0, 1.5, 3.5, 5, 9), lwd=1)
+
+arrows(0,states[1], changetimes[1], states[1], length=0.1, col="red")
+for (i in seq(along=changetimes))
+  arrows(changetimes[i], states[i+1], changetimes[i+1], states[i+1], length=0.1, col="red")
+for (i in seq(along=changetimes))
+  lines(c(changetimes[i], changetimes[i]), c(states[i], states[i+1]), col="red")
+
+for (i in seq(along=obstimes))
+  segments(obstimes, 0, obstimes, nst, lty=2)
+
+legend("topright", col=c("red","black"), lty=c(1, 2), lwd=c(2,2), c("Underlying process", "Observation times"), bty="n")
+```
+
+and [variants of this format](#obstype).
+
+
+
+## Time-to-event data (not covered in this course)
+
+In multi-state _time-to-event_ data, we know the exact times of transitions between all states, potentially with right-censoring 
+
+| Patient | Months | Event |
+| -----   | ---- | ----  | 
+| 1       | 0   | Start of follow up | 
+| 1       | 50  | Disease diagnosis 
+| 1       | 60  | Death | 
+
+_Competing risks_ analyses are a special case: e.g. survival data with one "alive" state and multiple "death" states for different causes of death.
+
+`msm` can be used for this kind of data, but relies on strong assumptions:
+
+* intensites are _piecewise constant_, i.e. constant over a series of time intervals, or a step function of time. 
+* models are _Markov_
+
+Other R packages are better designed for multi-state time-to-event data:
+
+* [`flexsurv`](https://CRAN.R-project.org/package=flexsurv) for arbitrarily flexible, fully parametric models
+
+* [`survival`](https://CRAN.R-project.org/package=survival) and [`mstate`](https://CRAN.R-project.org/package=mstate) for semiparametric (Cox-type) models
+
+
+## Examples used for illustration
+
+
+### Psoriatic arthritis 
+
+```{tikz, fig.cap = "Psoriatic arthritis", fig.ext = 'png', echo=FALSE}
+<<psor-model>>
+```
+
+Factors governing progression of joint damage, an irreversible condition. 
+
+Available as `psor` in the `msm` package. 
+
+
+### Cardiac allograft vasculopathy after heart transplantation
+
+```{tikz, fig.cap = "CAV after heart transplantation", fig.ext = 'png', echo=FALSE}
+<<cav-model>>
+```
+
+A condition similar to coronary artery disease that occurs in people who have had heart transplants.  Clinically irreversible, but _measured_ state (diagnosed by angiography) can go backwards or forwards
+
+Available as `cav` in the `msm` package. 

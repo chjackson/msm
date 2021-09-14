@@ -1,0 +1,114 @@
+# Advanced topics {#advanced}
+
+## Misclassified states
+
+In the CAV example, the true state of disease is measured with error.  We allowed backwards transitions to less severe disease states, though those are artefacts of misclassification and not clinically plausible. 
+
+`msm` can fit a Markov model to the latent true states, while estimating the error rates of the screening test that measures the disease state.   This enables a more plausible model to be fitted which does not allow backwards transitions. 
+
+See `ematrix` argument to `msm`.  For further details and worked examples, see the [package vignette](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf), Sections 1.6 and 2.14.
+
+```{tikz, fig.cap = "Hidden Markov model", fig.ext = 'png', echo=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+\tikzstyle{obsstate}=[state]
+\tikzstyle{hidstate}=[state, fill=gray!20]
+\tikzstyle{miscarrow}=[dotted,draw=gray,line width=1mm]
+\begin{tikzpicture}[]
+\node [hidstate] (well) {1. No disease};
+\node [hidstate, right=of well] (mild) {2. Mild disease};
+\node [hidstate, right=of mild] (severe) {3. Severe disease};
+\node [obsstate, below=of mild] (death) {4. Death};
+\draw[->] (well) -- (mild) node [] {};
+\draw[->] (mild) -- (severe) node [] {};
+\node [obsstate, above=of well] (obswell) {Observed ``well''};
+\node [obsstate, above=of mild] (obsmild) {Observed ``mild''};
+\node [obsstate, above=of severe] (obssev) {Observed ``severe''};
+\draw[miscarrow] (well) -- (obswell);
+\draw[miscarrow] (well) -- (obsmild);
+\draw[miscarrow] (mild) -- (obswell);
+\draw[miscarrow] (mild) -- (obsmild);
+\draw[miscarrow] (mild) -- (obssev);
+\draw[miscarrow] (severe) -- (obsmild);
+\draw[miscarrow] (severe) -- (obssev);
+\draw[->] (well) -- (death) node [midway, left] {};
+\draw[->] (mild) -- (death) node [midway] {};
+\draw[->] (severe) -- (death) node [midway, right] {};
+\end{tikzpicture}
+```
+
+## General hidden Markov models
+
+In `msm` we can have an outcome of any kind that is generated conditionally on a hidden disease state.  We specify 
+
+- a continuous-time Markov model for the hidden state
+
+- a model for the distribution of the outcome given the hidden state (e.g. normal, binomial, Poisson...).  We can even have multiple outcomes generated conditionally independently given the same hidden state. 
+
+Examples: one or more symptoms of a disease are observed intermittently, which together indicate clinically-meaningful presence/absence of a disease. 
+
+See `hmodel` argument to the `msm` function.  
+
+For further details and worked examples, see the [package vignette](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf), Sections 1.6 and 2.18. 
+
+For an example with multiple outcomes in psoriatic arthritis, see. e.g. [Jackson et al.](https://doi.org/10.1002/acr.22687).
+
+ 
+## Semi-Markov models
+
+In a Markov model, the time to the next state does not depend on how long you have spent in that state.  Relaxing that assumption is tricky if the data are intermittently observed, because the time of state entry is unknown. 
+
+### "phase-type" semi-Markov model 
+
+To relax the Markov assumption for a specific state, split up that state into hidden "phases" and define a Markov model on a state space defined by the phases and the remaining states.  Transition time between the phases is unknown. 
+
+```{tikz, fig.cap = "Phase-type semi-Markov model", fig.ext = 'png', echo=FALSE}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\definecolor{deepskyblue}{rgb}{0, 0.75, 1}
+\tikzstyle{state}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue]
+\tikzstyle{phasestate}=[minimum size = 0.8cm, draw, rounded corners, fill=deepskyblue!10]
+\begin{tikzpicture}[]
+\node [state] (well) {1. No CAV};
+\node [phasestate, right=of well] (mild1) {2: Phase a};
+\node [phasestate, right=of mild1] (mild2) {2: Phase b};
+\coordinate (mid) at ($(mild1.east)!0.5!(mild2.west)$);
+\node [state, right=of mild2] (severe) {3. Severe CAV};
+\node [state, below=of mid] (death) {4. Death};
+\draw[->] ($(well.east)+(0cm,0.1cm)$) -- ($(mild1.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild1.west)-(0cm,0.1cm)$) -- ($(well.east)-(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild1.east)+(0cm,0.1cm)$) -- ($(mild2.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild2.west)-(0cm,0.1cm)$) -- ($(mild1.east)-(0cm,0.1cm)$) node [] {};
+\draw[->] ($(mild2.east)+(0cm,0.1cm)$) -- ($(severe.west)+(0cm,0.1cm)$) node [] {};
+\draw[->] ($(severe.west)-(0cm,0.1cm)$) -- ($(mild2.east)-(0cm,0.1cm)$) node [] {}; 
+\draw[->] (mild1) -- (death) node [midway] {};
+\draw[->] (mild2) -- (death) node [midway] {};
+\draw[->] (well) -- (death) node [midway, left] {};
+\draw[->] (severe) -- (death) node [midway, right] {};
+\end{tikzpicture}
+```
+
+This is a (partially) hidden Markov model, hence can be implemented in `msm`.
+
+See the `phase.states` option to the `msm` function. 
+
+The idea is from [Titman and Sharples](https://doi.org/10.1111/j.1541-0420.2009.01339.x), but it hasn't been applied much in practice. 
+
+
+## Some things that `msm` can't do 
+
+**Random effects** (frailty) multi-state models for _intermittently-observed_ data
+
+- Theoretically possible in [JAGS](https://mcmc-jags.sourceforge.io/), [Stan](http://mc-stan.org) or [BUGS](http://mrc-bsu.cam.ac.uk/software/bugs) (Bayesian approach), though requires writing out a model likelihood in the program's own language.  Some examples in [van den Hout (2017)](https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569).
+
+- Several R packages available for random effects models with _time-to-event_ data - see the [CRAN task view](https://cran.r-project.org/web/views/Survival.html).
+
+Models with **informative sampling times** (e.g. person is more likely to be observed at times when their disease is more severe.)  See e.g. 
+
+- [Cook and Lawless](https://doi.org/10.1093/biostatistics/kxz047)
+
+- [Lange et al](https://doi.org/10.1111/biom.12252) have some R code

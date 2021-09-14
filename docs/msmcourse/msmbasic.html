@@ -398,7 +398,7 @@ moving to another state</p>
 <h3><span class="header-section-number">2.8.1</span> Exact death times: <code>deathexact</code></h3>
 <p>In medical research, we usually know the day when someone dies.</p>
 <p>In contrast, the entry time into <em>states of disease</em> is not known in the applications here — we only know the state at intermittent observation times.</p>
-<p>Hence, if one of the states is <em>death</em>, then we need to tell <code>msm</code> that the entry time into this state is known exactly, but the state at the previous instant is unknown. Likelihood is obtained by summing over the unknown state (see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">vignette, page 9</a>)).</p>
+<p>Hence, if one of the states is <em>death</em>, then we need to tell <code>msm</code> that the entry time into this state is known exactly, but the state at the previous instant is unknown. Likelihood is obtained by summing over the unknown state (see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">vignette, page 9</a>).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="msmbasic.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">msm</span>(..., <span class="at">deathexact=</span><span class="cn">TRUE</span>, ...)</span></code></pre></div>
 </div>
 <div id="general-observation-schemes-obstype" class="section level3" number="2.8.2">
@@ -470,9 +470,11 @@ moving to another state</p>
 <span id="cb20-3"><a href="msmbasic.html#cb20-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>( <span class="dv">0</span>,      <span class="fl">0.25</span>, <span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.25</span>), </span>
 <span id="cb20-4"><a href="msmbasic.html#cb20-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>( <span class="dv">0</span>,      <span class="dv">0</span>,     <span class="dv">0</span>,     <span class="dv">0</span>))</span></code></pre></div>
 <p>so that the rows add up to zero. The output of <code>statetable.msm</code> suggests that while this guess might not be true, it could be within an order of magnitude of the truth, so is likely to be an acceptable as an initial value for optimisation.</p></li>
-<li><div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="msmbasic.html#cb21-1" aria-hidden="true" tabindex="-1"></a>cav.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav)</span>
-<span id="cb21-2"><a href="msmbasic.html#cb21-2" aria-hidden="true" tabindex="-1"></a>cav2.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav2)</span>
-<span id="cb21-3"><a href="msmbasic.html#cb21-3" aria-hidden="true" tabindex="-1"></a>cav.msm</span></code></pre></div>
+<li><div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="msmbasic.html#cb21-1" aria-hidden="true" tabindex="-1"></a>cav.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, </span>
+<span id="cb21-2"><a href="msmbasic.html#cb21-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav)</span>
+<span id="cb21-3"><a href="msmbasic.html#cb21-3" aria-hidden="true" tabindex="-1"></a>cav2.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, </span>
+<span id="cb21-4"><a href="msmbasic.html#cb21-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">qmatrix=</span>Q_cav2)</span>
+<span id="cb21-5"><a href="msmbasic.html#cb21-5" aria-hidden="true" tabindex="-1"></a>cav.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, deathexact = TRUE)
@@ -518,7 +520,7 @@ moving to another state</p>
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
 <p>There are negligible differences in the estimates and maximised log-likelihood between the fits starting from different initial values.</p>
 <p>In practice, if the results disagree, the one with the lowest minus 2 x log likelihood is (by definition) closest to the desired maximum likelihood.</p></li>
-<li><p>People in state 1 are around three times as likely to transition next to state 2 (CAV), compared to state 4 (death) (from comparing an intensity of 0.12 with 0.04). The expected time until this transition is -1/0.174 = 6 years.</p>
+<li><p>People in state 1 are around three times as likely to transition next to state 2 (CAV), compared to state 4 (death) (from comparing an intensity of 0.12 with 0.04). The expected time until this transition is -1/0.17 = 6 years.</p>
 <p>People in state 2 have similar probabilities of transitioning to state 1 and state 3 next, while death is much less likely than a transition to either state 1 or state 3.</p>
 <p>People in state 3 are twice as likely to die as regress to state 2.</p>
 <p>Periods in state 2 or state 3 last around 2 years on average.</p></li>

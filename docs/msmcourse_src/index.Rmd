@@ -1,0 +1,85 @@
+--- 
+title: "Multi-state modelling with msm: a practical course"
+author: "Christopher Jackson\n  (MRC Biostatistics Unit, University of Cambridge)\n <chris.jackson@mrc-bsu.cam.ac.uk>"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+header-includes:
+    - \usepackage{bm}
+rmd_files: 
+  html: ["index.Rmd","01-intro.Rmd","02-msm-basic.Rmd","03-outputs.Rmd","04-covariates.Rmd","05-timedep.Rmd","06-advanced.Rmd"]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "A practical course on multi-state modelling of intermittently-observed data using the msm package for R"
+knit: (function(input, ...) {
+    bookdown::preview_chapter(
+      input,
+      "bookdown::gitbook",
+      output_file = paste0(
+        xfun::sans_ext(input), '-', Sys.Date(), '.html'
+      ),
+      envir = globalenv()
+    )
+  })
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+options(digits=3)
+```
+
+# Course overview {-}
+
+9.30 to 12.30 French time (8.30 to 11.30 UK time)
+
+Balance of lectures and practical exercises 
+
+All the course material is available at 
+
+[http://chjackson.github.io/msm/msmcourse](http://chjackson.github.io/msm/msmcourse)
+
+so you can follow along at your own pace, and finish exercises in your own time. 
+
+
+* 9.30 - 10.15 
+    - [Part 1. Multistate modelling theory review](#theory)
+    - [Part 2. Basic use of `msm`](#msmbasic)
+    - Exercises
+    
+* 10.15 - 10.50 
+    - [Part 3. Prediction from models with `msm`](#outputs)
+    - Exercises
+    
+* 10.50 - 11.40
+    - [Part 4. `msm` models with covariates](#covariates)
+    - Exercises
+
+* 11.40 - 12.30
+    - [Part 5. `msm` models with time-dependent covariates](#timedep)
+    - Exercises 
+    
+* [Part 6. Advanced topics](#advanced) (for reference, but may not be time)
+
+
+## Prerequisites {-}
+
+Laptop with R and the `msm` package installed 
+
+Basic knowledge of R 
+
+Basic statistics / probability, ideally from a medical / biostatistics perspective.  
+
+Some knowledge of survival analysis would help. 
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+
+## Licence {-}
+
+The material in this course is freely available and redistributable under the terms of the [CC-BY](https://creativecommons.org/licenses/) licence.
