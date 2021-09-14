@@ -12,3 +12,9 @@ pre {
 pre code {
   white-space: inherit;
 }
+em {
+  color: #A020F0;
+}
+strong {
+  color: #064d0f;
+}

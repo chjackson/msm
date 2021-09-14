@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Part 7 Advanced topics | Multi-state modelling with msm: a practical course</title>
+  <title>Part 6 Advanced topics | Multi-state modelling with msm: a practical course</title>
   <meta name="description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Part 7 Advanced topics | Multi-state modelling with msm: a practical course" />
+  <meta property="og:title" content="Part 6 Advanced topics | Multi-state modelling with msm: a practical course" />
   <meta property="og:type" content="book" />
   
   
@@ -16,15 +16,14 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Part 7 Advanced topics | Multi-state modelling with msm: a practical course" />
+  <meta name="twitter:title" content="Part 6 Advanced topics | Multi-state modelling with msm: a practical course" />
   
   <meta name="twitter:description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
   
 
-<meta name="author" content="Christopher Jackson" />
+<meta name="author" content="Christopher Jackson (MRC Biostatistics Unit, University of Cambridge) chris.jackson@mrc-bsu.cam.ac.uk" />
 
 
-<meta name="date" content="2021-08-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,7 +33,8 @@
 <link rel="prev" href="timedep.html"/>
 
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +42,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -137,87 +136,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Multi-state modelling with msm</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Course overview</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>2</b> Multi-state modelling theory: recap</a>
+<li class="chapter" data-level="1" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>1</b> Multi-state modelling theory: recap</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>2.1</b> Multi-state processes</a></li>
-<li class="chapter" data-level="2.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>2.2</b> <code>msm</code> models work in continuous time</a>
+<li class="chapter" data-level="1.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>1.1</b> Multi-state processes</a></li>
+<li class="chapter" data-level="1.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>1.2</b> <code>msm</code> models work in continuous time</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>2.2.1</b> Transition intensities</a></li>
-<li class="chapter" data-level="2.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>2.2.2</b> Transition probabilities</a></li>
+<li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
+<li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>2.3</b> Intermittently-observed data</a></li>
-<li class="chapter" data-level="2.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>2.4</b> Time-to-event data (not covered in this course)</a></li>
-<li class="chapter" data-level="2.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>2.5</b> Examples used for illustration</a>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
+<li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
-<li class="chapter" data-level="2.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>2.5.1</b> Psoriatic arthritis</a></li>
-<li class="chapter" data-level="2.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>2.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
+<li class="chapter" data-level="1.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>1.5.1</b> Psoriatic arthritis</a></li>
+<li class="chapter" data-level="1.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>1.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>3</b> Using msm for a basic model</a>
+<li class="chapter" data-level="2" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>2</b> Using msm for a basic model</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>3.1</b> Basic requirements for a msm model</a></li>
-<li class="chapter" data-level="3.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>3.2</b> Summarising the data</a></li>
-<li class="chapter" data-level="3.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>3.3</b> Specifying the transition structure</a></li>
-<li class="chapter" data-level="3.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>3.4</b> Transition structure is for the continuous time process</a></li>
-<li class="chapter" data-level="3.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>3.5</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="3.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>3.6</b> Intuition for what transition intensities mean</a></li>
-<li class="chapter" data-level="3.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>3.7</b> <code>msm</code> default output</a></li>
-<li class="chapter" data-level="3.8" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times"><i class="fa fa-check"></i><b>3.8</b> Exact death times</a></li>
-<li class="chapter" data-level="3.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>3.9</b> Exercises</a></li>
-<li class="chapter" data-level="3.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>3.10</b> Solutions</a></li>
-<li class="chapter" data-level="3.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>3.11</b> Postscript: What if it doesn’t converge?</a></li>
+<li class="chapter" data-level="2.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>2.1</b> Basic requirements for a msm model</a></li>
+<li class="chapter" data-level="2.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>2.2</b> Summarising the data</a></li>
+<li class="chapter" data-level="2.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>2.3</b> Specifying the transition structure</a></li>
+<li class="chapter" data-level="2.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>2.4</b> Transition structure is for the continuous time process</a></li>
+<li class="chapter" data-level="2.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>2.5</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="2.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>2.6</b> Intuition for what transition intensities mean</a></li>
+<li class="chapter" data-level="2.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>2.7</b> <code>msm</code> default output</a></li>
+<li class="chapter" data-level="2.8" data-path="msmbasic.html"><a href="msmbasic.html#obstype"><i class="fa fa-check"></i><b>2.8</b> Alternative observation schemes</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times-deathexact"><i class="fa fa-check"></i><b>2.8.1</b> Exact death times: <code>deathexact</code></a></li>
+<li class="chapter" data-level="2.8.2" data-path="msmbasic.html"><a href="msmbasic.html#general-observation-schemes-obstype"><i class="fa fa-check"></i><b>2.8.2</b> General observation schemes: <code>obstype</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>4</b> Prediction from multi-state models</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time-transition-probability-matrix"><i class="fa fa-check"></i><b>4.1</b> Mean sojourn time, transition probability matrix</a></li>
-<li class="chapter" data-level="4.2" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>4.2</b> Characterising uncertainty about functions of intensities</a></li>
-<li class="chapter" data-level="4.3" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>4.3</b> Total length of stay in states</a></li>
-<li class="chapter" data-level="4.4" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>4.4</b> Predicting the prevalence of states over time</a></li>
-<li class="chapter" data-level="4.5" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>4.5</b> Passage probabilities</a></li>
-<li class="chapter" data-level="4.6" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>4.6</b> Exercises</a></li>
-<li class="chapter" data-level="4.7" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>4.7</b> Solutions</a></li>
+<li class="chapter" data-level="2.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+<li class="chapter" data-level="2.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>2.10</b> Solutions</a></li>
+<li class="chapter" data-level="2.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>2.11</b> Postscript: What if it doesn’t converge?</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>5</b> msm models with covariates</a>
+<li class="chapter" data-level="3" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>3</b> Prediction from multi-state models</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>5.1</b> Reminder of covariates in multi-state models</a></li>
-<li class="chapter" data-level="5.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>5.2</b> Choices for modelling covariates</a></li>
-<li class="chapter" data-level="5.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>5.3</b> msm syntax: covariates on rates of specific transitions</a></li>
-<li class="chapter" data-level="5.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>5.4</b> Covariates on all transition rates</a></li>
-<li class="chapter" data-level="5.5" data-path="covariates.html"><a href="covariates.html#identical-covariate-effects-on-different-transitions"><i class="fa fa-check"></i><b>5.5</b> Identical covariate effects on different transitions</a></li>
-<li class="chapter" data-level="5.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>5.6</b> Covariate selection</a></li>
-<li class="chapter" data-level="5.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>5.7</b> Interpretation of the hazard ratio</a></li>
-<li class="chapter" data-level="5.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>5.8</b> Outputs for different covariate values</a></li>
-<li class="chapter" data-level="5.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
-<li class="chapter" data-level="5.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
+<li class="chapter" data-level="3.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time"><i class="fa fa-check"></i><b>3.1</b> Mean sojourn time</a></li>
+<li class="chapter" data-level="3.2" data-path="outputs.html"><a href="outputs.html#transition-probability-matrix"><i class="fa fa-check"></i><b>3.2</b> Transition probability matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>3.3</b> Characterising uncertainty about functions of intensities</a></li>
+<li class="chapter" data-level="3.4" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>3.4</b> Total length of stay in states</a></li>
+<li class="chapter" data-level="3.5" data-path="outputs.html"><a href="outputs.html#expected-first-passage-time"><i class="fa fa-check"></i><b>3.5</b> Expected first passage time</a></li>
+<li class="chapter" data-level="3.6" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>3.6</b> Predicting the prevalence of states over time</a></li>
+<li class="chapter" data-level="3.7" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>3.7</b> Passage probabilities</a></li>
+<li class="chapter" data-level="3.8" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>3.8</b> Exercises</a></li>
+<li class="chapter" data-level="3.9" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>3.9</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>6</b> <code>msm</code> models with time-dependent covariates</a>
+<li class="chapter" data-level="4" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>4</b> msm models with covariates</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>6.1</b> Predicting from models with time dependent covariates</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>6.1.1</b> Predicting when we know the covariate value in advance</a></li>
-<li class="chapter" data-level="6.1.2" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>6.1.2</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="4.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>4.1</b> Reminder of covariates in multi-state models</a></li>
+<li class="chapter" data-level="4.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>4.2</b> Choices for modelling covariates</a></li>
+<li class="chapter" data-level="4.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>4.3</b> msm syntax: covariates on rates of specific transitions</a></li>
+<li class="chapter" data-level="4.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>4.4</b> Covariates on all transition rates</a></li>
+<li class="chapter" data-level="4.5" data-path="covariates.html"><a href="covariates.html#identical-effects-of-same-covariate-on-different-transitions"><i class="fa fa-check"></i><b>4.5</b> Identical effects of same covariate on different transitions</a></li>
+<li class="chapter" data-level="4.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>4.6</b> Covariate selection</a></li>
+<li class="chapter" data-level="4.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>4.7</b> Interpretation of the hazard ratio</a></li>
+<li class="chapter" data-level="4.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>4.8</b> Outputs for different covariate values</a></li>
+<li class="chapter" data-level="4.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
+<li class="chapter" data-level="4.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>4.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>6.2</b> Time itself as a covariate</a></li>
-<li class="chapter" data-level="6.3" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>6.3</b> Partially-known states</a></li>
-<li class="chapter" data-level="6.4" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>6.4</b> Shorthand for defining this model in <code>msm</code></a></li>
-<li class="chapter" data-level="6.5" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>6.5</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="6.6" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>6.6</b> Variants of pci models</a></li>
-<li class="chapter" data-level="6.7" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>6.7</b> Exercises</a></li>
-<li class="chapter" data-level="6.8" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>6.8</b> Solutions</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>7</b> Advanced topics</a>
+<li class="chapter" data-level="5" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>5</b> <code>msm</code> models with time-dependent covariates</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>7.1</b> Misclassified states</a></li>
-<li class="chapter" data-level="7.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>7.2</b> General hidden Markov models</a></li>
-<li class="chapter" data-level="7.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>7.3</b> Semi-Markov models</a>
-<ul>
-<li class="chapter" data-level="7.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>7.3.1</b> “phase-type” semi-Markov model</a></li>
+<li class="chapter" data-level="5.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>5.1</b> Predicting from models with time dependent covariates</a></li>
+<li class="chapter" data-level="5.2" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>5.2</b> Predicting when we know the covariate value in advance</a></li>
+<li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
+<li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
+<li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="advanced.html"><a href="advanced.html#msm-cant-do"><i class="fa fa-check"></i><b>7.4</b> msm can’t do</a></li>
+<li class="chapter" data-level="6" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>6</b> Advanced topics</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>6.1</b> Misclassified states</a></li>
+<li class="chapter" data-level="6.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>6.2</b> General hidden Markov models</a></li>
+<li class="chapter" data-level="6.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>6.3</b> Semi-Markov models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>6.3.1</b> “phase-type” semi-Markov model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="advanced.html"><a href="advanced.html#some-things-that-msm-cant-do"><i class="fa fa-check"></i><b>6.4</b> Some things that <code>msm</code> can’t do</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -239,22 +243,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="advanced" class="section level1" number="7">
-<h1><span class="header-section-number">Part 7</span> Advanced topics</h1>
-<div id="misclassified-states" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Misclassified states</h2>
+<div id="advanced" class="section level1" number="6">
+<h1><span class="header-section-number">Part 6</span> Advanced topics</h1>
+<div id="misclassified-states" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Misclassified states</h2>
 <p>In the CAV example, the true state of disease is measured with error. We allowed backwards transitions to less severe disease states, though those are artefacts of misclassification and not clinically plausible.</p>
 <p><code>msm</code> can fit a Markov model to the latent true states, while estimating the error rates of the screening test that measures the disease state. This enables a more plausible model to be fitted which does not allow backwards transitions.</p>
-<p>See <code>ematrix</code> argument to <code>msm</code>. A worked example is in the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">package vignette</a>.</p>
-<div class="figure"><span id="fig:unnamed-chunk-76"></span>
-<img src="msmcourse_files/figure-html/unnamed-chunk-76-1.png" alt="Hidden Markov model" width="672" />
+<p>See <code>ematrix</code> argument to <code>msm</code>. For further details and worked examples, see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">package vignette</a>, Sections 1.6 and 2.14.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-77"></span>
+<img src="msmcourse_files/figure-html/unnamed-chunk-77-1.png" alt="Hidden Markov model" width="672" />
 <p class="caption">
-Figure 7.1: Hidden Markov model
+Figure 6.1: Hidden Markov model
 </p>
 </div>
 </div>
-<div id="general-hidden-markov-models" class="section level2" number="7.2">
-<h2><span class="header-section-number">7.2</span> General hidden Markov models</h2>
+<div id="general-hidden-markov-models" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> General hidden Markov models</h2>
 <p>In <code>msm</code> we can have an outcome of any kind that is generated conditionally on a hidden disease state. We specify</p>
 <ul>
 <li><p>a continuous-time Markov model for the hidden state</p></li>
@@ -262,31 +266,32 @@ Figure 7.1: Hidden Markov model
 </ul>
 <p>Examples: one or more symptoms of a disease are observed intermittently, which together indicate clinically-meaningful presence/absence of a disease.</p>
 <p>See <code>hmodel</code> argument to the <code>msm</code> function.</p>
-<p>A worked example is in the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">package vignette</a>.msm` function.</p>
-<p>For a multivariate example in psoriatic arthritis, see. e.g. <a href="https://doi.org/10.1002/acr.22687">Jackson et al.</a>.</p>
+<p>For further details and worked examples, see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">package vignette</a>, Sections 1.6 and 2.18.</p>
+<p>For an example with multiple outcomes in psoriatic arthritis, see. e.g. <a href="https://doi.org/10.1002/acr.22687">Jackson et al.</a>.</p>
 </div>
-<div id="semi-markov-models" class="section level2" number="7.3">
-<h2><span class="header-section-number">7.3</span> Semi-Markov models</h2>
+<div id="semi-markov-models" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Semi-Markov models</h2>
 <p>In a Markov model, the time to the next state does not depend on how long you have spent in that state. Relaxing that assumption is tricky if the data are intermittently observed, because the time of state entry is unknown.</p>
-<div id="phase-type-semi-markov-model" class="section level3" number="7.3.1">
-<h3><span class="header-section-number">7.3.1</span> “phase-type” semi-Markov model</h3>
+<div id="phase-type-semi-markov-model" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> “phase-type” semi-Markov model</h3>
 <p>To relax the Markov assumption for a specific state, split up that state into hidden “phases” and define a Markov model on a state space defined by the phases and the remaining states. Transition time between the phases is unknown.</p>
-<div class="figure"><span id="fig:unnamed-chunk-77"></span>
-<img src="msmcourse_files/figure-html/unnamed-chunk-77-1.png" alt="Phase-type semi-Markov model" width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-78"></span>
+<img src="msmcourse_files/figure-html/unnamed-chunk-78-1.png" alt="Phase-type semi-Markov model" width="672" />
 <p class="caption">
-Figure 7.2: Phase-type semi-Markov model
+Figure 6.2: Phase-type semi-Markov model
 </p>
 </div>
 <p>This is a (partially) hidden Markov model, hence can be implemented in <code>msm</code>.</p>
 <p>See the <code>phase.states</code> option to the <code>msm</code> function.</p>
-<p>Idea from <a href="https://doi.org/10.1111/j.1541-0420.2009.01339.x">Titman and Sharples</a></p>
+<p>The idea is from <a href="https://doi.org/10.1111/j.1541-0420.2009.01339.x">Titman and Sharples</a>, but it hasn’t been applied much in practice.</p>
 </div>
 </div>
-<div id="msm-cant-do" class="section level2" number="7.4">
-<h2><span class="header-section-number">7.4</span> msm can’t do</h2>
-<p><strong>Random effects</strong> (frailty) multi-state models.</p>
+<div id="some-things-that-msm-cant-do" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Some things that <code>msm</code> can’t do</h2>
+<p><strong>Random effects</strong> (frailty) multi-state models for <em>intermittently-observed</em> data</p>
 <ul>
-<li>Theoretically possible in JAGS or Stan (Bayesian approach) but unaware of any worked examples.</li>
+<li><p>Theoretically possible in <a href="https://mcmc-jags.sourceforge.io/">JAGS</a>, <a href="http://mc-stan.org">Stan</a> or <a href="http://mrc-bsu.cam.ac.uk/software/bugs">BUGS</a> (Bayesian approach), though requires writing out a model likelihood in the program’s own language. Some examples in <a href="https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569">van den Hout (2017)</a>.</p></li>
+<li><p>Several R packages available for random effects models with <em>time-to-event</em> data - see the <a href="https://cran.r-project.org/web/views/Survival.html">CRAN task view</a>.</p></li>
 </ul>
 <p>Models with <strong>informative sampling times</strong> (e.g. person is more likely to be observed at times when their disease is more severe.) See e.g. </p>
 <ul>
@@ -306,7 +311,6 @@ Figure 7.2: Phase-type semi-Markov model
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -346,6 +350,10 @@ gitbook.start({
 "text": null
 },
 "download": ["msmcourse.pdf", "msmcourse.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

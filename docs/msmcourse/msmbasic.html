@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Part 3 Using msm for a basic model | Multi-state modelling with msm: a practical course</title>
+  <title>Part 2 Using msm for a basic model | Multi-state modelling with msm: a practical course</title>
   <meta name="description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Part 3 Using msm for a basic model | Multi-state modelling with msm: a practical course" />
+  <meta property="og:title" content="Part 2 Using msm for a basic model | Multi-state modelling with msm: a practical course" />
   <meta property="og:type" content="book" />
   
   
@@ -16,15 +16,14 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Part 3 Using msm for a basic model | Multi-state modelling with msm: a practical course" />
+  <meta name="twitter:title" content="Part 2 Using msm for a basic model | Multi-state modelling with msm: a practical course" />
   
   <meta name="twitter:description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
   
 
-<meta name="author" content="Christopher Jackson" />
+<meta name="author" content="Christopher Jackson (MRC Biostatistics Unit, University of Cambridge) chris.jackson@mrc-bsu.cam.ac.uk" />
 
 
-<meta name="date" content="2021-08-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,7 +33,8 @@
 <link rel="prev" href="theory.html"/>
 <link rel="next" href="outputs.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +42,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -137,87 +136,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Multi-state modelling with msm</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Course overview</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>2</b> Multi-state modelling theory: recap</a>
+<li class="chapter" data-level="1" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>1</b> Multi-state modelling theory: recap</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>2.1</b> Multi-state processes</a></li>
-<li class="chapter" data-level="2.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>2.2</b> <code>msm</code> models work in continuous time</a>
+<li class="chapter" data-level="1.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>1.1</b> Multi-state processes</a></li>
+<li class="chapter" data-level="1.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>1.2</b> <code>msm</code> models work in continuous time</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>2.2.1</b> Transition intensities</a></li>
-<li class="chapter" data-level="2.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>2.2.2</b> Transition probabilities</a></li>
+<li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
+<li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>2.3</b> Intermittently-observed data</a></li>
-<li class="chapter" data-level="2.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>2.4</b> Time-to-event data (not covered in this course)</a></li>
-<li class="chapter" data-level="2.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>2.5</b> Examples used for illustration</a>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
+<li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
-<li class="chapter" data-level="2.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>2.5.1</b> Psoriatic arthritis</a></li>
-<li class="chapter" data-level="2.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>2.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
+<li class="chapter" data-level="1.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>1.5.1</b> Psoriatic arthritis</a></li>
+<li class="chapter" data-level="1.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>1.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>3</b> Using msm for a basic model</a>
+<li class="chapter" data-level="2" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>2</b> Using msm for a basic model</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>3.1</b> Basic requirements for a msm model</a></li>
-<li class="chapter" data-level="3.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>3.2</b> Summarising the data</a></li>
-<li class="chapter" data-level="3.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>3.3</b> Specifying the transition structure</a></li>
-<li class="chapter" data-level="3.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>3.4</b> Transition structure is for the continuous time process</a></li>
-<li class="chapter" data-level="3.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>3.5</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="3.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>3.6</b> Intuition for what transition intensities mean</a></li>
-<li class="chapter" data-level="3.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>3.7</b> <code>msm</code> default output</a></li>
-<li class="chapter" data-level="3.8" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times"><i class="fa fa-check"></i><b>3.8</b> Exact death times</a></li>
-<li class="chapter" data-level="3.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>3.9</b> Exercises</a></li>
-<li class="chapter" data-level="3.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>3.10</b> Solutions</a></li>
-<li class="chapter" data-level="3.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>3.11</b> Postscript: What if it doesn’t converge?</a></li>
+<li class="chapter" data-level="2.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>2.1</b> Basic requirements for a msm model</a></li>
+<li class="chapter" data-level="2.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>2.2</b> Summarising the data</a></li>
+<li class="chapter" data-level="2.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>2.3</b> Specifying the transition structure</a></li>
+<li class="chapter" data-level="2.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>2.4</b> Transition structure is for the continuous time process</a></li>
+<li class="chapter" data-level="2.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>2.5</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="2.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>2.6</b> Intuition for what transition intensities mean</a></li>
+<li class="chapter" data-level="2.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>2.7</b> <code>msm</code> default output</a></li>
+<li class="chapter" data-level="2.8" data-path="msmbasic.html"><a href="msmbasic.html#obstype"><i class="fa fa-check"></i><b>2.8</b> Alternative observation schemes</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times-deathexact"><i class="fa fa-check"></i><b>2.8.1</b> Exact death times: <code>deathexact</code></a></li>
+<li class="chapter" data-level="2.8.2" data-path="msmbasic.html"><a href="msmbasic.html#general-observation-schemes-obstype"><i class="fa fa-check"></i><b>2.8.2</b> General observation schemes: <code>obstype</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>4</b> Prediction from multi-state models</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time-transition-probability-matrix"><i class="fa fa-check"></i><b>4.1</b> Mean sojourn time, transition probability matrix</a></li>
-<li class="chapter" data-level="4.2" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>4.2</b> Characterising uncertainty about functions of intensities</a></li>
-<li class="chapter" data-level="4.3" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>4.3</b> Total length of stay in states</a></li>
-<li class="chapter" data-level="4.4" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>4.4</b> Predicting the prevalence of states over time</a></li>
-<li class="chapter" data-level="4.5" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>4.5</b> Passage probabilities</a></li>
-<li class="chapter" data-level="4.6" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>4.6</b> Exercises</a></li>
-<li class="chapter" data-level="4.7" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>4.7</b> Solutions</a></li>
+<li class="chapter" data-level="2.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+<li class="chapter" data-level="2.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>2.10</b> Solutions</a></li>
+<li class="chapter" data-level="2.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>2.11</b> Postscript: What if it doesn’t converge?</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>5</b> msm models with covariates</a>
+<li class="chapter" data-level="3" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>3</b> Prediction from multi-state models</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>5.1</b> Reminder of covariates in multi-state models</a></li>
-<li class="chapter" data-level="5.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>5.2</b> Choices for modelling covariates</a></li>
-<li class="chapter" data-level="5.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>5.3</b> msm syntax: covariates on rates of specific transitions</a></li>
-<li class="chapter" data-level="5.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>5.4</b> Covariates on all transition rates</a></li>
-<li class="chapter" data-level="5.5" data-path="covariates.html"><a href="covariates.html#identical-covariate-effects-on-different-transitions"><i class="fa fa-check"></i><b>5.5</b> Identical covariate effects on different transitions</a></li>
-<li class="chapter" data-level="5.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>5.6</b> Covariate selection</a></li>
-<li class="chapter" data-level="5.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>5.7</b> Interpretation of the hazard ratio</a></li>
-<li class="chapter" data-level="5.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>5.8</b> Outputs for different covariate values</a></li>
-<li class="chapter" data-level="5.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
-<li class="chapter" data-level="5.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
+<li class="chapter" data-level="3.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time"><i class="fa fa-check"></i><b>3.1</b> Mean sojourn time</a></li>
+<li class="chapter" data-level="3.2" data-path="outputs.html"><a href="outputs.html#transition-probability-matrix"><i class="fa fa-check"></i><b>3.2</b> Transition probability matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>3.3</b> Characterising uncertainty about functions of intensities</a></li>
+<li class="chapter" data-level="3.4" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>3.4</b> Total length of stay in states</a></li>
+<li class="chapter" data-level="3.5" data-path="outputs.html"><a href="outputs.html#expected-first-passage-time"><i class="fa fa-check"></i><b>3.5</b> Expected first passage time</a></li>
+<li class="chapter" data-level="3.6" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>3.6</b> Predicting the prevalence of states over time</a></li>
+<li class="chapter" data-level="3.7" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>3.7</b> Passage probabilities</a></li>
+<li class="chapter" data-level="3.8" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>3.8</b> Exercises</a></li>
+<li class="chapter" data-level="3.9" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>3.9</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>6</b> <code>msm</code> models with time-dependent covariates</a>
+<li class="chapter" data-level="4" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>4</b> msm models with covariates</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>6.1</b> Predicting from models with time dependent covariates</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>6.1.1</b> Predicting when we know the covariate value in advance</a></li>
-<li class="chapter" data-level="6.1.2" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>6.1.2</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="4.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>4.1</b> Reminder of covariates in multi-state models</a></li>
+<li class="chapter" data-level="4.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>4.2</b> Choices for modelling covariates</a></li>
+<li class="chapter" data-level="4.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>4.3</b> msm syntax: covariates on rates of specific transitions</a></li>
+<li class="chapter" data-level="4.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>4.4</b> Covariates on all transition rates</a></li>
+<li class="chapter" data-level="4.5" data-path="covariates.html"><a href="covariates.html#identical-effects-of-same-covariate-on-different-transitions"><i class="fa fa-check"></i><b>4.5</b> Identical effects of same covariate on different transitions</a></li>
+<li class="chapter" data-level="4.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>4.6</b> Covariate selection</a></li>
+<li class="chapter" data-level="4.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>4.7</b> Interpretation of the hazard ratio</a></li>
+<li class="chapter" data-level="4.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>4.8</b> Outputs for different covariate values</a></li>
+<li class="chapter" data-level="4.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
+<li class="chapter" data-level="4.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>4.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>6.2</b> Time itself as a covariate</a></li>
-<li class="chapter" data-level="6.3" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>6.3</b> Partially-known states</a></li>
-<li class="chapter" data-level="6.4" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>6.4</b> Shorthand for defining this model in <code>msm</code></a></li>
-<li class="chapter" data-level="6.5" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>6.5</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="6.6" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>6.6</b> Variants of pci models</a></li>
-<li class="chapter" data-level="6.7" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>6.7</b> Exercises</a></li>
-<li class="chapter" data-level="6.8" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>6.8</b> Solutions</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>7</b> Advanced topics</a>
+<li class="chapter" data-level="5" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>5</b> <code>msm</code> models with time-dependent covariates</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>7.1</b> Misclassified states</a></li>
-<li class="chapter" data-level="7.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>7.2</b> General hidden Markov models</a></li>
-<li class="chapter" data-level="7.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>7.3</b> Semi-Markov models</a>
-<ul>
-<li class="chapter" data-level="7.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>7.3.1</b> “phase-type” semi-Markov model</a></li>
+<li class="chapter" data-level="5.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>5.1</b> Predicting from models with time dependent covariates</a></li>
+<li class="chapter" data-level="5.2" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>5.2</b> Predicting when we know the covariate value in advance</a></li>
+<li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
+<li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
+<li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="advanced.html"><a href="advanced.html#msm-cant-do"><i class="fa fa-check"></i><b>7.4</b> msm can’t do</a></li>
+<li class="chapter" data-level="6" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>6</b> Advanced topics</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>6.1</b> Misclassified states</a></li>
+<li class="chapter" data-level="6.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>6.2</b> General hidden Markov models</a></li>
+<li class="chapter" data-level="6.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>6.3</b> Semi-Markov models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>6.3.1</b> “phase-type” semi-Markov model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="advanced.html"><a href="advanced.html#some-things-that-msm-cant-do"><i class="fa fa-check"></i><b>6.4</b> Some things that <code>msm</code> can’t do</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -239,23 +243,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="msmbasic" class="section level1" number="3">
-<h1><span class="header-section-number">Part 3</span> Using msm for a basic model</h1>
+<div id="msmbasic" class="section level1" number="2">
+<h1><span class="header-section-number">Part 2</span> Using msm for a basic model</h1>
 <p>Model the progression through time of joint damage in psoriatic arthritis</p>
 <p>Estimate, e.g. </p>
 <ul>
-<li><p>probability that someone with no damaged joints will have 10 or more damaged joints 5 years from now.</p></li>
+<li><p>probability that someone with no damaged joints (state 1) will have 10 or more damaged joints (state 4) 5 years from now.</p></li>
 <li><p>Total time expected to spend over the next 10 years with 10 or more damaged joints.</p></li>
 </ul>
-<p>No covariates for the moment.</p>
-<div class="figure"><span id="fig:unnamed-chunk-6"></span>
+<p>No covariates for the moment - these will be introduced in <a href="covariates.html#covariates">Chapter 4</a>.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
 <img src="msmcourse_files/figure-html/unnamed-chunk-6-1.png" alt="Psoriatic arthritis" width="672" />
 <p class="caption">
-Figure 3.1: Psoriatic arthritis
+Figure 2.1: Psoriatic arthritis
 </p>
 </div>
-<div id="basic-requirements-for-a-msm-model" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Basic requirements for a msm model</h2>
+<div id="basic-requirements-for-a-msm-model" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Basic requirements for a msm model</h2>
 <p>At minimum, need to specify</p>
 <ul>
 <li><p>The dataset, and which columns indicate the state, time (and patient)</p>
@@ -267,22 +271,23 @@ Figure 3.1: Psoriatic arthritis
 <li><p>The <strong>transition structure</strong> of the model</p></li>
 </ul>
 </div>
-<div id="summarising-the-data" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Summarising the data</h2>
+<div id="summarising-the-data" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Summarising the data</h2>
 <p>Example <code>psor</code> dataset in the package</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="msmbasic.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(msm)</span>
 <span id="cb1-2"><a href="msmbasic.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor, <span class="dv">5</span>)</span></code></pre></div>
-<pre><code>##   ptnum  months state hieffusn ollwsdrt
-## 1     1  6.4606     1        0        1
-## 2     1 17.0780     1        0        1
-## 3     2 26.3217     1        0        0
-## 4     2 29.4839     3        0        0
-## 5     2 30.5763     4        0        0</code></pre>
+<pre><code>##   ptnum months state hieffusn ollwsdrt
+## 1     1   6.46     1        0        1
+## 2     1  17.08     1        0        1
+## 3     2  26.32     1        0        0
+## 4     2  29.48     3        0        0
+## 5     2  30.58     4        0        0</code></pre>
 <ul>
 <li><code>ptnum</code>: subject / patient ID</li>
 <li><code>months</code>: months of follow up</li>
 <li><code>state</code>: state of joint damage</li>
 </ul>
+<p>Other columns are covariates, to be discussed later.</p>
 <p>A simple summary of the data is a count of the number of <em>transitions over visit intervals</em>, i.e. the number of people observed in one state at one visit, and each other state at the next visit.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="msmbasic.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, ptnum, <span class="at">data=</span>psor)</span></code></pre></div>
 <pre><code>##     to
@@ -294,11 +299,11 @@ Figure 3.1: Psoriatic arthritis
 <p>We also want some idea of the time scale, so we summarise the time variable.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="msmbasic.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(psor<span class="sc">$</span>months)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.0712  3.5004  7.3341  9.9557 13.1340 57.0602</code></pre>
+##     0.1     3.5     7.3    10.0    13.1    57.1</code></pre>
 <p>The inter-visit times, and number of observations per patient, may also be interesting to summarise.</p>
 </div>
-<div id="specifying-the-transition-structure" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Specifying the transition structure</h2>
+<div id="specifying-the-transition-structure" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Specifying the transition structure</h2>
 <p>We now define in R which transitions are allowed in <strong>continuous time</strong></p>
 <p>Define a matrix with <span class="math inline">\(r\)</span>, <span class="math inline">\(s\)</span> entry</p>
 <ul>
@@ -312,17 +317,19 @@ Figure 3.1: Psoriatic arthritis
 <span id="cb7-4"><a href="msmbasic.html#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)) </span></code></pre></div>
 <p>The diagonal entries of this matrix do not matter.</p>
 </div>
-<div id="transition-structure-is-for-the-continuous-time-process" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> Transition structure is for the continuous time process</h2>
-<p>Note that when we summarised the transitions over visit intervals we counted 16 people in state 3 at the next visit after being observed in state 1.</p>
+<div id="transition-structure-is-for-the-continuous-time-process" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Transition structure is for the continuous time process</h2>
+<p>Note that when we used <code>statetable.msm</code> to summarise the transitions over visit intervals we counted 16 people in state 3 at the next visit after being observed in state 1.</p>
 <p>So why do we not allow a State 1 to State 3 transition?</p>
 <p>Because these 1-3 transitions happened <em>over a time interval</em>, not in <em>continuous time</em></p>
 <p>These 16 people must have gone through state 2 (unobserved) in between their visits</p>
 <p><img src="msmcourse_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>Multi-state models are commonly used in situations like this, for <strong>ordered states of disease severity</strong>, e.g. with states derived by discretising a continuous variable. Transitions should then only be allowed between <strong>adjacent states</strong> in continuous time.</p>
+<p>The transition structure <code>Q</code> should not be chosen based on which elements of the <code>statetable.msm</code> output are non-zero!</p>
+<p>Instead, draw a diagram of allowed <em>continuous-time</em> transitions, and choose <code>Q</code> to describe the structure of this diagram.</p>
 </div>
-<div id="maximum-likelihood-estimation" class="section level2" number="3.5">
-<h2><span class="header-section-number">3.5</span> Maximum likelihood estimation</h2>
+<div id="maximum-likelihood-estimation" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Maximum likelihood estimation</h2>
 <p>Now we invoke the <code>msm</code> function to fit the multi-state model to the data: estimating the transition
 intensities.</p>
 <p>This uses <code>optim</code> to find the minimum of the minus log likelihood. It has to start this search from plausible <em>initial values</em> for the parameters. Two ways to do this:</p>
@@ -345,10 +352,10 @@ intensities.</p>
 <span id="cb9-8"><a href="msmbasic.html#cb9-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">qmatrix =</span> Q,</span>
 <span id="cb9-9"><a href="msmbasic.html#cb9-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">gen.inits=</span><span class="cn">TRUE</span>)</span></code></pre></div></li>
 </ul>
-<p>But where do we get the initial values from?</p>
+<p>But if we supply our own initial values, where would we get them from?</p>
 </div>
-<div id="intuition-for-what-transition-intensities-mean" class="section level2" number="3.6">
-<h2><span class="header-section-number">3.6</span> Intuition for what transition intensities mean</h2>
+<div id="intuition-for-what-transition-intensities-mean" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Intuition for what transition intensities mean</h2>
 <p>The <em>mean sojourn time</em> <span class="math inline">\(E(T_r)\)</span> is the average time spent in state <span class="math inline">\(r\)</span> before
 moving to another state</p>
 <p>If the intensities <span class="math inline">\(q_{rs}\)</span> are constant over time, then <span class="math inline">\(E(T_r) = -1/q_{rr}\)</span> where <span class="math inline">\(q_{rr} = -\sum_{s!=r} q_{rs}\)</span></p>
@@ -358,11 +365,11 @@ moving to another state</p>
 <li><p>10 months in state 2 before moving to state 3 : <span class="math inline">\(q_{23} = 0.1\)</span></p></li>
 <li><p>10 months in state 3 before moving to state 4 : <span class="math inline">\(q_{23} = 0.1\)</span></p></li>
 </ul>
-<p>and use these as initial values to start the search for the maximum likelihood estimates. Initial values do not usually need to be close to the true estimates, just within an order of magnitude.</p>
-<p>See the exercise for a slightly harder example…</p>
+<p>and use these as initial values to start the search for the maximum likelihood estimates. Initial values do not usually need to be very close to the true estimates, just within an order of magnitude.</p>
+<p>See the exercises for a slightly harder example, where there is more than one state <span class="math inline">\(s\)</span> we can transition to from state <span class="math inline">\(r\)</span>…</p>
 </div>
-<div id="msm-default-output" class="section level2" number="3.7">
-<h2><span class="header-section-number">3.7</span> <code>msm</code> default output</h2>
+<div id="msm-default-output" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> <code>msm</code> default output</h2>
 <p>When the optimisation has converged, <code>msm</code> returns an object containing list of information about the fitted model (see <code>help(msm.object)</code> for the list structure).</p>
 <p>Printing this object gives the estimated transition intensities and their confidence intervals.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="msmbasic.html#cb10-1" aria-hidden="true" tabindex="-1"></a>psor.msm</span></code></pre></div>
@@ -381,16 +388,21 @@ moving to another state</p>
 ## State 3 - State 3 -0.25982 (-0.33538,-0.20129)
 ## State 3 - State 4  0.25982 ( 0.20129, 0.33538)
 ## 
-## -2 * log-likelihood:  1246.015 
+## -2 * log-likelihood:  1246 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
 <p>How was our initial guess that people spent 10 years in each state?</p>
 </div>
-<div id="exact-death-times" class="section level2" number="3.8">
-<h2><span class="header-section-number">3.8</span> Exact death times</h2>
+<div id="obstype" class="section level2" number="2.8">
+<h2><span class="header-section-number">2.8</span> Alternative observation schemes</h2>
+<div id="exact-death-times-deathexact" class="section level3" number="2.8.1">
+<h3><span class="header-section-number">2.8.1</span> Exact death times: <code>deathexact</code></h3>
 <p>In medical research, we usually know the day when someone dies.</p>
 <p>In contrast, the entry time into <em>states of disease</em> is not known in the applications here — we only know the state at intermittent observation times.</p>
-<p>Hence, if one of the states is death, then we need to tell <code>msm</code> that the entry time into this state is known exactly, but the state at the previous instant is unknown.</p>
+<p>Hence, if one of the states is <em>death</em>, then we need to tell <code>msm</code> that the entry time into this state is known exactly, but the state at the previous instant is unknown. Likelihood is obtained by summing over the unknown state (see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">vignette, page 9</a>)).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="msmbasic.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">msm</span>(..., <span class="at">deathexact=</span><span class="cn">TRUE</span>, ...)</span></code></pre></div>
+</div>
+<div id="general-observation-schemes-obstype" class="section level3" number="2.8.2">
+<h3><span class="header-section-number">2.8.2</span> General observation schemes: <code>obstype</code></h3>
 <p>More generally, each row of the data could represent a different type of observation, indicated by an extra variable in the dataset, whose name is supplied as the <code>obstype</code> argument to <code>msm</code>. The values of this variable can be 1, 2 or 3, e.g. </p>
 <ol style="list-style-type: decimal">
 <li><p>an intermittent observation of a state (<code>obstype=1</code>). This is the default.</p></li>
@@ -398,18 +410,19 @@ moving to another state</p>
 <li><p>entry time observed exactly but state at previous instant unknown (<code>obstype=3</code>). If death states always have <code>obtype=3</code>, this is equivalent to <code>deathexact=TRUE</code>.</p></li>
 </ol>
 <p>Here is an artificial example:</p>
-<pre><code>##    PTNUM    years state obstype
-## 1 100002 0.000000     1       1
-## 2 100002 1.002740     1       1
-## 3 100002 2.002740     2       1
-## 4 100002 3.093151     2       2
-## 5 100002 4.000000     2       1
-## 6 100002 4.997260     3       2
-## 7 100002 5.854795     4       3</code></pre>
+<pre><code>##    PTNUM years state obstype
+## 1 100002  0.00     1       1
+## 2 100002  1.00     1       1
+## 3 100002  2.00     2       1
+## 4 100002  3.09     2       2
+## 5 100002  4.00     2       1
+## 6 100002  5.00     3       2
+## 7 100002  5.85     4       3</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="msmbasic.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">obstype=</span>obstype, ...)</span></code></pre></div>
 </div>
-<div id="exercises" class="section level2" number="3.9">
-<h2><span class="header-section-number">3.9</span> Exercises</h2>
+</div>
+<div id="exercises" class="section level2" number="2.9">
+<h2><span class="header-section-number">2.9</span> Exercises</h2>
 <p>From the CAV dataset <code>cav</code> in the package, write R code to:</p>
 <ol style="list-style-type: decimal">
 <li><p>Summarise the transitions over an interval</p></li>
@@ -431,98 +444,88 @@ moving to another state</p>
 <li><p>Interpret the maximum likelihood transition intensities in easily-understood terms.</p></li>
 </ol>
 </div>
-<div id="solutions" class="section level2" number="3.10">
-<h2><span class="header-section-number">3.10</span> Solutions</h2>
+<div id="solutions" class="section level2" number="2.10">
+<h2><span class="header-section-number">2.10</span> Solutions</h2>
 <ol style="list-style-type: decimal">
-<li></li>
-</ol>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="msmbasic.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, PTNUM, <span class="at">data=</span>cav)</span></code></pre></div>
+<li><div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="msmbasic.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, PTNUM, <span class="at">data=</span>cav)</span></code></pre></div>
 <pre><code>##     to
 ## from    1    2    3    4
 ##    1 1367  204   44  148
 ##    2   46  134   54   48
-##    3    4   13  107   55</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li></li>
-</ol>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="msmbasic.html#cb17-1" aria-hidden="true" tabindex="-1"></a>Q_cav <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), </span>
+##    3    4   13  107   55</code></pre></li>
+<li><div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="msmbasic.html#cb17-1" aria-hidden="true" tabindex="-1"></a>Q_cav <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), </span>
 <span id="cb17-2"><a href="msmbasic.html#cb17-2" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), </span>
 <span id="cb17-3"><a href="msmbasic.html#cb17-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), </span>
-<span id="cb17-4"><a href="msmbasic.html#cb17-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li>For someone in state <span class="math inline">\(r\)</span>, the probability that the next state that they will move to is state <span class="math inline">\(s\)</span> is <span class="math inline">\(-q_{rs} / q_{rr}\)</span>. Row <span class="math inline">\(r\)</span> of the transition intensity matrix corresponds to the transitions out of state <span class="math inline">\(r\)</span>.</li>
-</ol>
+<span id="cb17-4"><a href="msmbasic.html#cb17-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code></pre></div></li>
+<li><p>For someone in state <span class="math inline">\(r\)</span>, the probability that the next state that they will move to is state <span class="math inline">\(s\)</span> is <span class="math inline">\(-q_{rs} / q_{rr}\)</span>. Row <span class="math inline">\(r\)</span> of the transition intensity matrix corresponds to the transitions out of state <span class="math inline">\(r\)</span>.</p>
 <p>We can set initial values for this row by first guessing the mean sojourn time <span class="math inline">\(T_r\)</span>, and setting the diagonal entry <span class="math inline">\(q_{rr} = -1/T_{r}\)</span>.</p>
 <p>We then set the remaining, off-diagonal values <span class="math inline">\(q_{rs}, s!=r\)</span> according to guesses of the probability <span class="math inline">\(\pi_{rs}\)</span> that the next state will be <span class="math inline">\(s\)</span>, and deducing that since $_{rs} = <span class="math inline">\(-q_{rs} / q_{rr}\)</span>, we can initialise <span class="math inline">\(q_{rs} = \pi_{rs} T_r\)</span>.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="msmbasic.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cav<span class="sc">$</span>years)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   1.014   3.893   3.845   5.997  19.460</code></pre>
+##    0.00    1.01    3.89    3.85    6.00   19.46</code></pre>
 <p>Looking at the range of observation times in the data, we might guess that the mean sojourn time is 2 years (or within an order of magnitude of this), hence the diagonal entries of the Q matrix are all -0.5.</p>
 <p>Then we might guess that there is an equal chance of moving to each of the permitted next states, and set</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="msmbasic.html#cb20-1" aria-hidden="true" tabindex="-1"></a>Q_cav2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.25</span>,  <span class="dv">0</span>,     <span class="fl">0.25</span>), </span>
-<span id="cb20-2"><a href="msmbasic.html#cb20-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>( <span class="fl">0.166</span>, <span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.166</span>, <span class="fl">0.166</span>), </span>
-<span id="cb20-3"><a href="msmbasic.html#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>( <span class="dv">0</span>,      <span class="fl">0.25</span>, <span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.25</span>), </span>
-<span id="cb20-4"><a href="msmbasic.html#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>( <span class="dv">0</span>,      <span class="dv">0</span>,     <span class="dv">0</span>,     <span class="dv">0</span>))</span></code></pre></div>
-<p>The output of <code>statetable.msm</code> suggests that while this might not be true, it could be within an order of magnitude of the truth, so is likely to be an acceptable as an initial value for optimisation.</p>
-<ol start="4" style="list-style-type: decimal">
-<li></li>
-</ol>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="msmbasic.html#cb21-1" aria-hidden="true" tabindex="-1"></a>cav.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav)</span>
-<span id="cb21-2"><a href="msmbasic.html#cb21-2" aria-hidden="true" tabindex="-1"></a>cav2.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">qmatrix=</span>Q_cav2)</span>
+<span id="cb20-2"><a href="msmbasic.html#cb20-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">c</span>( <span class="fl">0.166</span>, <span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.166</span>, <span class="fl">0.166</span>), </span>
+<span id="cb20-3"><a href="msmbasic.html#cb20-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>( <span class="dv">0</span>,      <span class="fl">0.25</span>, <span class="sc">-</span><span class="fl">0.5</span>,   <span class="fl">0.25</span>), </span>
+<span id="cb20-4"><a href="msmbasic.html#cb20-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>( <span class="dv">0</span>,      <span class="dv">0</span>,     <span class="dv">0</span>,     <span class="dv">0</span>))</span></code></pre></div>
+<p>so that the rows add up to zero. The output of <code>statetable.msm</code> suggests that while this guess might not be true, it could be within an order of magnitude of the truth, so is likely to be an acceptable as an initial value for optimisation.</p></li>
+<li><div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="msmbasic.html#cb21-1" aria-hidden="true" tabindex="-1"></a>cav.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav)</span>
+<span id="cb21-2"><a href="msmbasic.html#cb21-2" aria-hidden="true" tabindex="-1"></a>cav2.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav2)</span>
 <span id="cb21-3"><a href="msmbasic.html#cb21-3" aria-hidden="true" tabindex="-1"></a>cav.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE)
+## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, deathexact = TRUE)
 ## 
 ## Maximum likelihood estimates
 ## 
 ## Transition intensities
 ##                   Baseline                    
-## State 1 - State 1 -0.17471 (-0.19506,-0.15649)
-## State 1 - State 2  0.12607 ( 0.10968, 0.14491)
-## State 1 - State 4  0.04864 ( 0.04008, 0.05903)
-## State 2 - State 1  0.23789 ( 0.17790, 0.31810)
-## State 2 - State 2 -0.61885 (-0.72334,-0.52945)
-## State 2 - State 3  0.30508 ( 0.24457, 0.38056)
-## State 2 - State 4  0.07588 ( 0.04289, 0.13427)
-## State 3 - State 2  0.15067 ( 0.09222, 0.24616)
-## State 3 - State 3 -0.48506 (-0.61548,-0.38227)
-## State 3 - State 4  0.33439 ( 0.25533, 0.43794)
+## State 1 - State 1 -0.17036 (-0.19026,-0.15255)
+## State 1 - State 2  0.12788 ( 0.11136, 0.14684)
+## State 1 - State 4  0.04249 ( 0.03410, 0.05293)
+## State 2 - State 1  0.22511 ( 0.16754, 0.30246)
+## State 2 - State 2 -0.60797 (-0.70884,-0.52146)
+## State 2 - State 3  0.34260 ( 0.27317, 0.42967)
+## State 2 - State 4  0.04026 ( 0.01133, 0.14313)
+## State 3 - State 2  0.13062 ( 0.07952, 0.21458)
+## State 3 - State 3 -0.43708 (-0.55289,-0.34554)
+## State 3 - State 4  0.30646 ( 0.23821, 0.39426)
 ## 
-## -2 * log-likelihood:  3986.087 
+## -2 * log-likelihood:  3969 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="msmbasic.html#cb23-1" aria-hidden="true" tabindex="-1"></a>cav2.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav2)
+## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav2,     deathexact = TRUE)
 ## 
 ## Maximum likelihood estimates
 ## 
 ## Transition intensities
 ##                   Baseline                    
-## State 1 - State 1 -0.17472 (-0.19507,-0.15650)
-## State 1 - State 2  0.12608 ( 0.10969, 0.14492)
-## State 1 - State 4  0.04864 ( 0.04008, 0.05903)
-## State 2 - State 1  0.23788 ( 0.17789, 0.31809)
-## State 2 - State 2 -0.61881 (-0.72330,-0.52942)
-## State 2 - State 3  0.30509 ( 0.24458, 0.38057)
-## State 2 - State 4  0.07585 ( 0.04285, 0.13425)
-## State 3 - State 2  0.15063 ( 0.09220, 0.24612)
-## State 3 - State 3 -0.48505 (-0.61548,-0.38227)
-## State 3 - State 4  0.33442 ( 0.25535, 0.43798)
+## State 1 - State 1 -0.17037 (-0.19027,-0.15255)
+## State 1 - State 2  0.12787 ( 0.11135, 0.14684)
+## State 1 - State 4  0.04250 ( 0.03412, 0.05294)
+## State 2 - State 1  0.22512 ( 0.16755, 0.30247)
+## State 2 - State 2 -0.60794 (-0.70880,-0.52143)
+## State 2 - State 3  0.34261 ( 0.27317, 0.42970)
+## State 2 - State 4  0.04021 ( 0.01129, 0.14324)
+## State 3 - State 2  0.13062 ( 0.07952, 0.21457)
+## State 3 - State 3 -0.43710 (-0.55292,-0.34554)
+## State 3 - State 4  0.30648 ( 0.23822, 0.39429)
 ## 
-## -2 * log-likelihood:  3986.087 
+## -2 * log-likelihood:  3969 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
-<p>Negligible differences in the estimates and maximised log-likelihood. In practice if the results disagree, the one with the lowest minus 2 x log likelihood is (by definition) closest to the desired maximum likelihood.</p>
-<ol start="5" style="list-style-type: decimal">
-<li>People in state 1 are around three times as likely to transition next to state 2 (CAV), compared to state 4 (death) (from comparing an intensity of 0.12 with 0.04). The expected time until this transition is -1/0.174 = 6 years.</li>
-</ol>
+<p>There are negligible differences in the estimates and maximised log-likelihood between the fits starting from different initial values.</p>
+<p>In practice, if the results disagree, the one with the lowest minus 2 x log likelihood is (by definition) closest to the desired maximum likelihood.</p></li>
+<li><p>People in state 1 are around three times as likely to transition next to state 2 (CAV), compared to state 4 (death) (from comparing an intensity of 0.12 with 0.04). The expected time until this transition is -1/0.174 = 6 years.</p>
 <p>People in state 2 have similar probabilities of transitioning to state 1 and state 3 next, while death is much less likely than a transition to either state 1 or state 3.</p>
 <p>People in state 3 are twice as likely to die as regress to state 2.</p>
-<p>Periods in state 2 or state 3 last around 2 years on average.</p>
+<p>Periods in state 2 or state 3 last around 2 years on average.</p></li>
+</ol>
 </div>
-<div id="postscript-what-if-it-doesnt-converge" class="section level2" number="3.11">
-<h2><span class="header-section-number">3.11</span> Postscript: What if it doesn’t converge?</h2>
+<div id="postscript-what-if-it-doesnt-converge" class="section level2" number="2.11">
+<h2><span class="header-section-number">2.11</span> Postscript: What if it doesn’t converge?</h2>
 <p>A risk of the kinds of models used here is that they may be weakly identifiable from the data. Often the optimisation will not converge, or converge to an answer that its not sensible.</p>
 <p>A common message is</p>
 <p><code>Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.</code></p>
@@ -530,8 +533,8 @@ moving to another state</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="msmbasic.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Transition intensities</span></span>
 <span id="cb25-2"><a href="msmbasic.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Baseline                    </span></span>
 <span id="cb25-3"><a href="msmbasic.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">## State 1 - State 2  0.1 ( 1e-12, 1e+12)</span></span></code></pre></div>
-<p>The optimiser claims to have found the maximum likelihood, but the answer is not very useful, because the data contain no information about that parameter, hence the likelihood is flat with respect to that parameters.</p>
-<p>In this case the model should be simplified, e.g. by combining states, constraining intensities to be equal to each other, removing covariates or constraining covariate effects (see the next chapter on covariates…)</p>
+<p>The optimiser claims to have found the maximum likelihood, but the answer is not very useful, because the data contain no information about that parameter, hence the likelihood is flat with respect to that parameter.</p>
+<p>In this case the model should be simplified, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (<code>qconstraint</code> option to <code>msm</code>) or constraining covariate effects (see the <a href="covariates.html#covariates">chapter on covariates</a>)</p>
 <p>In some circumstances, numerical overflow/underflow can occur during optimisation, giving messages like</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="msmbasic.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## numerical overflow in calculating likelihood</span></span></code></pre></div>
 <p>In these cases we may be able to control the optimisation and help it find the solution.</p>
@@ -553,7 +556,6 @@ moving to another state</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -593,6 +595,10 @@ gitbook.start({
 "text": null
 },
 "download": ["msmcourse.pdf", "msmcourse.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

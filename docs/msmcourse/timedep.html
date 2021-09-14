@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Part 6 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course</title>
+  <title>Part 5 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course</title>
   <meta name="description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Part 6 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course" />
+  <meta property="og:title" content="Part 5 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course" />
   <meta property="og:type" content="book" />
   
   
@@ -16,15 +16,14 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Part 6 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course" />
+  <meta name="twitter:title" content="Part 5 msm models with time-dependent covariates | Multi-state modelling with msm: a practical course" />
   
   <meta name="twitter:description" content="A practical course on multi-state modelling of intermittently-observed data using the msm package for R" />
   
 
-<meta name="author" content="Christopher Jackson" />
+<meta name="author" content="Christopher Jackson (MRC Biostatistics Unit, University of Cambridge) chris.jackson@mrc-bsu.cam.ac.uk" />
 
 
-<meta name="date" content="2021-08-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,7 +33,8 @@
 <link rel="prev" href="covariates.html"/>
 <link rel="next" href="advanced.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +42,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -137,87 +136,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Multi-state modelling with msm</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Course overview</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>2</b> Multi-state modelling theory: recap</a>
+<li class="chapter" data-level="1" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>1</b> Multi-state modelling theory: recap</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>2.1</b> Multi-state processes</a></li>
-<li class="chapter" data-level="2.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>2.2</b> <code>msm</code> models work in continuous time</a>
+<li class="chapter" data-level="1.1" data-path="theory.html"><a href="theory.html#multi-state-processes"><i class="fa fa-check"></i><b>1.1</b> Multi-state processes</a></li>
+<li class="chapter" data-level="1.2" data-path="theory.html"><a href="theory.html#msm-models-work-in-continuous-time"><i class="fa fa-check"></i><b>1.2</b> <code>msm</code> models work in continuous time</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>2.2.1</b> Transition intensities</a></li>
-<li class="chapter" data-level="2.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>2.2.2</b> Transition probabilities</a></li>
+<li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
+<li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>2.3</b> Intermittently-observed data</a></li>
-<li class="chapter" data-level="2.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>2.4</b> Time-to-event data (not covered in this course)</a></li>
-<li class="chapter" data-level="2.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>2.5</b> Examples used for illustration</a>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
+<li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
-<li class="chapter" data-level="2.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>2.5.1</b> Psoriatic arthritis</a></li>
-<li class="chapter" data-level="2.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>2.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
+<li class="chapter" data-level="1.5.1" data-path="theory.html"><a href="theory.html#psoriatic-arthritis"><i class="fa fa-check"></i><b>1.5.1</b> Psoriatic arthritis</a></li>
+<li class="chapter" data-level="1.5.2" data-path="theory.html"><a href="theory.html#cardiac-allograft-vasculopathy-after-heart-transplantation"><i class="fa fa-check"></i><b>1.5.2</b> Cardiac allograft vasculopathy after heart transplantation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>3</b> Using msm for a basic model</a>
+<li class="chapter" data-level="2" data-path="msmbasic.html"><a href="msmbasic.html"><i class="fa fa-check"></i><b>2</b> Using msm for a basic model</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>3.1</b> Basic requirements for a msm model</a></li>
-<li class="chapter" data-level="3.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>3.2</b> Summarising the data</a></li>
-<li class="chapter" data-level="3.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>3.3</b> Specifying the transition structure</a></li>
-<li class="chapter" data-level="3.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>3.4</b> Transition structure is for the continuous time process</a></li>
-<li class="chapter" data-level="3.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>3.5</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="3.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>3.6</b> Intuition for what transition intensities mean</a></li>
-<li class="chapter" data-level="3.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>3.7</b> <code>msm</code> default output</a></li>
-<li class="chapter" data-level="3.8" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times"><i class="fa fa-check"></i><b>3.8</b> Exact death times</a></li>
-<li class="chapter" data-level="3.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>3.9</b> Exercises</a></li>
-<li class="chapter" data-level="3.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>3.10</b> Solutions</a></li>
-<li class="chapter" data-level="3.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>3.11</b> Postscript: What if it doesn’t converge?</a></li>
+<li class="chapter" data-level="2.1" data-path="msmbasic.html"><a href="msmbasic.html#basic-requirements-for-a-msm-model"><i class="fa fa-check"></i><b>2.1</b> Basic requirements for a msm model</a></li>
+<li class="chapter" data-level="2.2" data-path="msmbasic.html"><a href="msmbasic.html#summarising-the-data"><i class="fa fa-check"></i><b>2.2</b> Summarising the data</a></li>
+<li class="chapter" data-level="2.3" data-path="msmbasic.html"><a href="msmbasic.html#specifying-the-transition-structure"><i class="fa fa-check"></i><b>2.3</b> Specifying the transition structure</a></li>
+<li class="chapter" data-level="2.4" data-path="msmbasic.html"><a href="msmbasic.html#transition-structure-is-for-the-continuous-time-process"><i class="fa fa-check"></i><b>2.4</b> Transition structure is for the continuous time process</a></li>
+<li class="chapter" data-level="2.5" data-path="msmbasic.html"><a href="msmbasic.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>2.5</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="2.6" data-path="msmbasic.html"><a href="msmbasic.html#intuition-for-what-transition-intensities-mean"><i class="fa fa-check"></i><b>2.6</b> Intuition for what transition intensities mean</a></li>
+<li class="chapter" data-level="2.7" data-path="msmbasic.html"><a href="msmbasic.html#msm-default-output"><i class="fa fa-check"></i><b>2.7</b> <code>msm</code> default output</a></li>
+<li class="chapter" data-level="2.8" data-path="msmbasic.html"><a href="msmbasic.html#obstype"><i class="fa fa-check"></i><b>2.8</b> Alternative observation schemes</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="msmbasic.html"><a href="msmbasic.html#exact-death-times-deathexact"><i class="fa fa-check"></i><b>2.8.1</b> Exact death times: <code>deathexact</code></a></li>
+<li class="chapter" data-level="2.8.2" data-path="msmbasic.html"><a href="msmbasic.html#general-observation-schemes-obstype"><i class="fa fa-check"></i><b>2.8.2</b> General observation schemes: <code>obstype</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>4</b> Prediction from multi-state models</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time-transition-probability-matrix"><i class="fa fa-check"></i><b>4.1</b> Mean sojourn time, transition probability matrix</a></li>
-<li class="chapter" data-level="4.2" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>4.2</b> Characterising uncertainty about functions of intensities</a></li>
-<li class="chapter" data-level="4.3" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>4.3</b> Total length of stay in states</a></li>
-<li class="chapter" data-level="4.4" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>4.4</b> Predicting the prevalence of states over time</a></li>
-<li class="chapter" data-level="4.5" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>4.5</b> Passage probabilities</a></li>
-<li class="chapter" data-level="4.6" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>4.6</b> Exercises</a></li>
-<li class="chapter" data-level="4.7" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>4.7</b> Solutions</a></li>
+<li class="chapter" data-level="2.9" data-path="msmbasic.html"><a href="msmbasic.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+<li class="chapter" data-level="2.10" data-path="msmbasic.html"><a href="msmbasic.html#solutions"><i class="fa fa-check"></i><b>2.10</b> Solutions</a></li>
+<li class="chapter" data-level="2.11" data-path="msmbasic.html"><a href="msmbasic.html#postscript-what-if-it-doesnt-converge"><i class="fa fa-check"></i><b>2.11</b> Postscript: What if it doesn’t converge?</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>5</b> msm models with covariates</a>
+<li class="chapter" data-level="3" data-path="outputs.html"><a href="outputs.html"><i class="fa fa-check"></i><b>3</b> Prediction from multi-state models</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>5.1</b> Reminder of covariates in multi-state models</a></li>
-<li class="chapter" data-level="5.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>5.2</b> Choices for modelling covariates</a></li>
-<li class="chapter" data-level="5.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>5.3</b> msm syntax: covariates on rates of specific transitions</a></li>
-<li class="chapter" data-level="5.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>5.4</b> Covariates on all transition rates</a></li>
-<li class="chapter" data-level="5.5" data-path="covariates.html"><a href="covariates.html#identical-covariate-effects-on-different-transitions"><i class="fa fa-check"></i><b>5.5</b> Identical covariate effects on different transitions</a></li>
-<li class="chapter" data-level="5.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>5.6</b> Covariate selection</a></li>
-<li class="chapter" data-level="5.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>5.7</b> Interpretation of the hazard ratio</a></li>
-<li class="chapter" data-level="5.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>5.8</b> Outputs for different covariate values</a></li>
-<li class="chapter" data-level="5.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
-<li class="chapter" data-level="5.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
+<li class="chapter" data-level="3.1" data-path="outputs.html"><a href="outputs.html#mean-sojourn-time"><i class="fa fa-check"></i><b>3.1</b> Mean sojourn time</a></li>
+<li class="chapter" data-level="3.2" data-path="outputs.html"><a href="outputs.html#transition-probability-matrix"><i class="fa fa-check"></i><b>3.2</b> Transition probability matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="outputs.html"><a href="outputs.html#characterising-uncertainty-about-functions-of-intensities"><i class="fa fa-check"></i><b>3.3</b> Characterising uncertainty about functions of intensities</a></li>
+<li class="chapter" data-level="3.4" data-path="outputs.html"><a href="outputs.html#total-length-of-stay-in-states"><i class="fa fa-check"></i><b>3.4</b> Total length of stay in states</a></li>
+<li class="chapter" data-level="3.5" data-path="outputs.html"><a href="outputs.html#expected-first-passage-time"><i class="fa fa-check"></i><b>3.5</b> Expected first passage time</a></li>
+<li class="chapter" data-level="3.6" data-path="outputs.html"><a href="outputs.html#predicting-the-prevalence-of-states-over-time"><i class="fa fa-check"></i><b>3.6</b> Predicting the prevalence of states over time</a></li>
+<li class="chapter" data-level="3.7" data-path="outputs.html"><a href="outputs.html#passage-probabilities"><i class="fa fa-check"></i><b>3.7</b> Passage probabilities</a></li>
+<li class="chapter" data-level="3.8" data-path="outputs.html"><a href="outputs.html#exercises-1"><i class="fa fa-check"></i><b>3.8</b> Exercises</a></li>
+<li class="chapter" data-level="3.9" data-path="outputs.html"><a href="outputs.html#solutions-1"><i class="fa fa-check"></i><b>3.9</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>6</b> <code>msm</code> models with time-dependent covariates</a>
+<li class="chapter" data-level="4" data-path="covariates.html"><a href="covariates.html"><i class="fa fa-check"></i><b>4</b> msm models with covariates</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>6.1</b> Predicting from models with time dependent covariates</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>6.1.1</b> Predicting when we know the covariate value in advance</a></li>
-<li class="chapter" data-level="6.1.2" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>6.1.2</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="4.1" data-path="covariates.html"><a href="covariates.html#reminder-of-covariates-in-multi-state-models"><i class="fa fa-check"></i><b>4.1</b> Reminder of covariates in multi-state models</a></li>
+<li class="chapter" data-level="4.2" data-path="covariates.html"><a href="covariates.html#choices-for-modelling-covariates"><i class="fa fa-check"></i><b>4.2</b> Choices for modelling covariates</a></li>
+<li class="chapter" data-level="4.3" data-path="covariates.html"><a href="covariates.html#msm-syntax-covariates-on-rates-of-specific-transitions"><i class="fa fa-check"></i><b>4.3</b> msm syntax: covariates on rates of specific transitions</a></li>
+<li class="chapter" data-level="4.4" data-path="covariates.html"><a href="covariates.html#covariates-on-all-transition-rates"><i class="fa fa-check"></i><b>4.4</b> Covariates on all transition rates</a></li>
+<li class="chapter" data-level="4.5" data-path="covariates.html"><a href="covariates.html#identical-effects-of-same-covariate-on-different-transitions"><i class="fa fa-check"></i><b>4.5</b> Identical effects of same covariate on different transitions</a></li>
+<li class="chapter" data-level="4.6" data-path="covariates.html"><a href="covariates.html#covariate-selection"><i class="fa fa-check"></i><b>4.6</b> Covariate selection</a></li>
+<li class="chapter" data-level="4.7" data-path="covariates.html"><a href="covariates.html#interpretation-of-the-hazard-ratio"><i class="fa fa-check"></i><b>4.7</b> Interpretation of the hazard ratio</a></li>
+<li class="chapter" data-level="4.8" data-path="covariates.html"><a href="covariates.html#outputs-for-different-covariate-values"><i class="fa fa-check"></i><b>4.8</b> Outputs for different covariate values</a></li>
+<li class="chapter" data-level="4.9" data-path="covariates.html"><a href="covariates.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
+<li class="chapter" data-level="4.10" data-path="covariates.html"><a href="covariates.html#solutions-2"><i class="fa fa-check"></i><b>4.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>6.2</b> Time itself as a covariate</a></li>
-<li class="chapter" data-level="6.3" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>6.3</b> Partially-known states</a></li>
-<li class="chapter" data-level="6.4" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>6.4</b> Shorthand for defining this model in <code>msm</code></a></li>
-<li class="chapter" data-level="6.5" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>6.5</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="6.6" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>6.6</b> Variants of pci models</a></li>
-<li class="chapter" data-level="6.7" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>6.7</b> Exercises</a></li>
-<li class="chapter" data-level="6.8" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>6.8</b> Solutions</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>7</b> Advanced topics</a>
+<li class="chapter" data-level="5" data-path="timedep.html"><a href="timedep.html"><i class="fa fa-check"></i><b>5</b> <code>msm</code> models with time-dependent covariates</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>7.1</b> Misclassified states</a></li>
-<li class="chapter" data-level="7.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>7.2</b> General hidden Markov models</a></li>
-<li class="chapter" data-level="7.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>7.3</b> Semi-Markov models</a>
-<ul>
-<li class="chapter" data-level="7.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>7.3.1</b> “phase-type” semi-Markov model</a></li>
+<li class="chapter" data-level="5.1" data-path="timedep.html"><a href="timedep.html#predicting-from-models-with-time-dependent-covariates"><i class="fa fa-check"></i><b>5.1</b> Predicting from models with time dependent covariates</a></li>
+<li class="chapter" data-level="5.2" data-path="timedep.html"><a href="timedep.html#predicting-when-we-know-the-covariate-value-in-advance"><i class="fa fa-check"></i><b>5.2</b> Predicting when we know the covariate value in advance</a></li>
+<li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
+<li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
+<li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
+<li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="advanced.html"><a href="advanced.html#msm-cant-do"><i class="fa fa-check"></i><b>7.4</b> msm can’t do</a></li>
+<li class="chapter" data-level="6" data-path="advanced.html"><a href="advanced.html"><i class="fa fa-check"></i><b>6</b> Advanced topics</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="advanced.html"><a href="advanced.html#misclassified-states"><i class="fa fa-check"></i><b>6.1</b> Misclassified states</a></li>
+<li class="chapter" data-level="6.2" data-path="advanced.html"><a href="advanced.html#general-hidden-markov-models"><i class="fa fa-check"></i><b>6.2</b> General hidden Markov models</a></li>
+<li class="chapter" data-level="6.3" data-path="advanced.html"><a href="advanced.html#semi-markov-models"><i class="fa fa-check"></i><b>6.3</b> Semi-Markov models</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="advanced.html"><a href="advanced.html#phase-type-semi-markov-model"><i class="fa fa-check"></i><b>6.3.1</b> “phase-type” semi-Markov model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="advanced.html"><a href="advanced.html#some-things-that-msm-cant-do"><i class="fa fa-check"></i><b>6.4</b> Some things that <code>msm</code> can’t do</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -239,31 +243,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="timedep" class="section level1" number="6">
-<h1><span class="header-section-number">Part 6</span> <code>msm</code> models with time-dependent covariates</h1>
+<div id="timedep" class="section level1" number="5">
+<h1><span class="header-section-number">Part 5</span> <code>msm</code> models with time-dependent covariates</h1>
 <p>Supposing the <code>psor</code> dataset actually measured the clinical risk factors <code>hieffusn</code> and <code>ollwsdrt</code> every time the state is observed, rather than just at the first visit, as in this artificial dataset:</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="timedep.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor2, <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="timedep.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor2, <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##   ptnum months state hieffusn ollwsdrt
 ## 1     1   6.46     1        0        1
 ## 2     1  17.08     1        1        1
 ## 3     2  26.32     1        0        0
 ## 4     2  29.48     3        0        1
 ## 5     2  30.58     4        1        1</code></pre>
-<p>We can specify models with time-dependent covariates using exactly the same syntax as for models with time-constant covariates, as in the previous section.</p>
-<p><code>msm</code> will assume that the covariate value is <em>constant between observations</em>.</p>
+<p>We can specify models with <em>time-dependent covariates</em> using exactly the same syntax as for models with time-constant covariates, as in the previous section.</p>
+<p><strong>Key assumption</strong>: <code>msm</code> will assume that the covariate value is <em>constant between observations</em>.</p>
 <p>This defines a <em>time-inhomogeneous</em> Markov model, with <em>piecewise constant</em> intensities.</p>
-<div id="predicting-from-models-with-time-dependent-covariates" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Predicting from models with time dependent covariates</h2>
-<p>The challenge for <code>msm</code> with time-dependent covariates is not <em>fitting</em>, but <em>prediction</em>.</p>
-<p>To predict, you need to either</p>
+<div id="predicting-from-models-with-time-dependent-covariates" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Predicting from models with time dependent covariates</h2>
+<p>The challenge for <code>msm</code> modelling with time-dependent covariates is not the <em>fitting</em>, but the <em>prediction</em>.</p>
+<p>To predict future outcomes from a model with time-dependent covariates, you need to either</p>
 <ul>
-<li><p>know in advance how the covariates will change (e.g. year of age, time itself),</p></li>
-<li><p>have a <em>joint model</em> for the covariates and the outcome will change together.</p></li>
+<li><p>know in advance how the covariates will change in the future (e.g. year of age, time itself),</p></li>
+<li><p>have a <em>joint model</em> for how the covariates and the outcome will change together.</p></li>
 </ul>
-<div id="predicting-when-we-know-the-covariate-value-in-advance" class="section level3" number="6.1.1">
-<h3><span class="header-section-number">6.1.1</span> Predicting when we know the covariate value in advance</h3>
+</div>
+<div id="predicting-when-we-know-the-covariate-value-in-advance" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Predicting when we know the covariate value in advance</h2>
 <p>Suppose we have fitted a model with age in years (<code>age</code>) as a time-dependent covariate, e.g. using data like</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="timedep.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor3, <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="timedep.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor3, <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>##   ptnum months state  age
 ## 1     1      6     1 50.5
 ## 2     1     17     1 51.4
@@ -271,54 +276,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4     2     29     3 52.4
 ## 5     2     31     4 52.6</code></pre>
 <pre><code>psor_tage.msm &lt;- msm(..., covariates = ~ age)</code></pre>
-<p>This model specifies the log intensity as a linear function of age, and when fitting it we assumed that in the data, people’s ages didn’t change in between their visits.</p>
-<p>Now we want to <em>predict</em> the transition probability matrix for the state 5 years from now, for someone who is currently aged 50. We must assume the intensities for the predicted individual are <em>piecewise constant</em>.</p>
-<p>We can make an approximate prediction using <code>pmatrix.piecewise.msm</code>, specifying</p>
+<p>This model specifies the log intensity as a linear function of age. When fitting it, we assume that in the data, people’s ages don’t change in between their visits.</p>
+<p>Now we want to <em>predict</em> the transition probability matrix that governs the state 5 years from now, for someone who is currently aged 50. We must assume the future intensities for the predicted individual are <em>piecewise constant</em>.</p>
+<p>Then we can make an approximate prediction using the function <code>pmatrix.piecewise.msm</code>. This needs us to specify</p>
 <ul>
 <li><p>times when the age changes (hence when the intensity changes) (<code>times</code>)</p></li>
 <li><p>the values that age takes at these times (<code>covariates</code>)</p></li>
 </ul>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="timedep.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.piecewise.msm</span>(psor_tage.msm, </span>
-<span id="cb100-2"><a href="timedep.html#cb100-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">t1 =</span> <span class="dv">0</span>, </span>
-<span id="cb100-3"><a href="timedep.html#cb100-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">t2 =</span> <span class="dv">5</span>,   <span class="co"># predict 5 years from now </span></span>
-<span id="cb100-4"><a href="timedep.html#cb100-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="co"># times when the covariate changes:</span></span>
-<span id="cb100-5"><a href="timedep.html#cb100-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">covariates =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">age=</span><span class="dv">50</span>), <span class="co"># value at time 0</span></span>
-<span id="cb100-6"><a href="timedep.html#cb100-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">51</span>), <span class="co"># value at time 1</span></span>
-<span id="cb100-7"><a href="timedep.html#cb100-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">52</span>),  <span class="co"># ...</span></span>
-<span id="cb100-8"><a href="timedep.html#cb100-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">53</span>),</span>
-<span id="cb100-9"><a href="timedep.html#cb100-9" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">54</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="timedep.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.piecewise.msm</span>(psor_tage.msm, </span>
+<span id="cb104-2"><a href="timedep.html#cb104-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">t1 =</span> <span class="dv">0</span>, </span>
+<span id="cb104-3"><a href="timedep.html#cb104-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">t2 =</span> <span class="dv">5</span>,   <span class="co"># predict 5 years from now </span></span>
+<span id="cb104-4"><a href="timedep.html#cb104-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="co"># times when the covariate changes:</span></span>
+<span id="cb104-5"><a href="timedep.html#cb104-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">covariates =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">age=</span><span class="dv">50</span>), <span class="co"># value at time 0</span></span>
+<span id="cb104-6"><a href="timedep.html#cb104-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">51</span>), <span class="co"># value at time 1</span></span>
+<span id="cb104-7"><a href="timedep.html#cb104-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">52</span>),  <span class="co"># ...</span></span>
+<span id="cb104-8"><a href="timedep.html#cb104-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">53</span>),</span>
+<span id="cb104-9"><a href="timedep.html#cb104-9" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">list</span>(<span class="at">age=</span><span class="dv">54</span>)))</span></code></pre></div>
 <p>A finer time grid will give a better approximation to a prediction from the ideal model where risk changes <em>continuously</em> with age.</p>
-<p>But remember the fitted model itself was based on an approximation to the data, so we can never get an <em>exact</em> prediction from this ideal model.</p>
+<p>But remember the fitted model itself was based on an approximation to the data, so we can never get an <em>exact</em> prediction from the ideal model.</p>
 <p><code>totlos.msm</code> also accepts <code>piecewise.times</code> and <code>piecewise.covariates</code> arguments of the same form, to handle
-prediction of the total length of stay in states when there are</p>
-<p>but <code>ppass.msm</code> and <code>efpt.msm</code> are not currently supported with time dependent covariates.</p>
+prediction of the total length of stay in states when there are time dependent covariates.</p>
+<p>However, <code>ppass.msm</code> and <code>efpt.msm</code> are not currently supported with time dependent covariates.</p>
 </div>
-<div id="covariates-may-themselves-change-unpredictably" class="section level3" number="6.1.2">
-<h3><span class="header-section-number">6.1.2</span> Covariates may themselves change unpredictably</h3>
-<p>Suppose the risk factors were recorded at every visit, instead of just at baseline, and we want to predict risk based on a model with these risk factors as covariates.</p>
-<p>We can only use <code>pmatrix.piecewise.msm</code> if we specify how the risk factors themselves will change over the prediction interval.</p>
+<div id="covariates-may-themselves-change-unpredictably" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Covariates may themselves change unpredictably</h2>
+<p>In the psoriatic arthritis example, suppose the risk factors <code>hieffusn</code> and <code>ollwsdrt</code> were recorded at every visit, instead of just at baseline, and we want to predict risk based on a model with these risk factors as covariates.</p>
+<p>We can only use <code>pmatrix.piecewise.msm</code> if we specify how the risk factors themselves will change in the future, which will be unknown in practice.</p>
 <p>If we don’t want to condition on a specific future trajectory for the risk factors, we could build a <em>joint model</em> for the clinical state and the risk factors, hence predict both together.</p>
-<p>If the risk factors are <em>discrete</em>, could build a multi-state model with an <em>expanded state space</em>.</p>
-<div class="figure"><span id="fig:unnamed-chunk-62"></span>
-<img src="msmcourse_files/figure-html/unnamed-chunk-62-1.png" alt="Joint model for progression of damage " width="672" />
+<p>If the risk factors are <em>discrete</em>, we could do this in <code>msm</code> by building a multi-state model on an <em>expanded state space</em>.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-64"></span>
+<img src="msmcourse_files/figure-html/unnamed-chunk-64-1.png" alt="Joint model for progression of damage " width="672" />
 <p class="caption">
-Figure 6.1: Joint model for progression of damage
+Figure 5.1: Joint model for progression of damage
 </p>
 </div>
-<p>This kind of model can be tricky to deal due to the large number of parameters - see e.g. <a href="https://doi.org/10.1002/sim.4429">Tom and Farewell</a></p>
+<p>This kind of model can be tricky to deal due to the large number of parameters - see e.g. <a href="https://doi.org/10.1002/sim.4429">Tom and Farewell</a>.</p>
 <p>For identifiability / interpretability, may need to constrain some parameters to equal each other using the <code>qconstraint</code> option to <code>msm()</code></p>
 <ul>
 <li>e.g. might assume the state of damage doesn’t affect transition rates between effusion states, but the effusion state affects the rates of progression of joint damage. Appropriate assumption depends on the clinical application.</li>
 </ul>
 </div>
-</div>
-<div id="time-itself-as-a-covariate" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Time itself as a covariate</h2>
+<div id="time-itself-as-a-covariate" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Time itself as a covariate</h2>
 <p>Could easily fit a model with the time of the observation as a covariate (<code>months</code> in this example), with a linear effect on the log intensities, e.g. </p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="timedep.html#cb101-1" aria-hidden="true" tabindex="-1"></a>psor.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, </span>
-<span id="cb101-2"><a href="timedep.html#cb101-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">covariates =</span> <span class="sc">~</span> months, </span>
-<span id="cb101-3"><a href="timedep.html#cb101-3" aria-hidden="true" tabindex="-1"></a>                ...</span>
-<span id="cb101-4"><a href="timedep.html#cb101-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="timedep.html#cb105-1" aria-hidden="true" tabindex="-1"></a>psor.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, </span>
+<span id="cb105-2"><a href="timedep.html#cb105-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">covariates =</span> <span class="sc">~</span> months, </span>
+<span id="cb105-3"><a href="timedep.html#cb105-3" aria-hidden="true" tabindex="-1"></a>                ...</span>
+<span id="cb105-4"><a href="timedep.html#cb105-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Again this assumes that the <code>months</code> covariate is constant between each person’s visit.</p>
 <p>But we may want to express a model with</p>
 <ul>
@@ -336,22 +340,11 @@ Figure 6.1: Joint model for progression of damage
 ## 14      6     3  13.04   [12,Inf)
 ## 15      6     3  16.78   [12,Inf)
 ## 16      6     4  17.28   [12,Inf)</code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="timedep.html#cb103-1" aria-hidden="true" tabindex="-1"></a>impdata</span></code></pre></div>
-<pre><code>##     ptnum state months timeperiod
-## 10      6     1   3.70   [-Inf,6)
-## 1.6     6    NA   6.00     [6,12)
-## 11      6     1   6.02     [6,12)
-## 12      6     2   6.60     [6,12)
-## 1.7     6    NA  12.00   [12,Inf)
-## 13      6     2  12.52   [12,Inf)
-## 14      6     3  13.04   [12,Inf)
-## 15      6     3  16.78   [12,Inf)
-## 16      6     4  17.28   [12,Inf)</code></pre>
 <p>Problem is that the state is unknown at 6 and 12 years</p>
 <p>We need a new tool to compute the likelihood in this situation…</p>
 </div>
-<div id="partially-known-states" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Partially-known states</h2>
+<div id="partially-known-states" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Partially-known states</h2>
 <p>If a state is unknown at a particular time, <code>msm</code> can compute the likelihood as a <em>sum over the potential values</em> of the likelihood given the unknown state.</p>
 <p>Replace the <code>NA</code> values for the unknown state with a code (99, say), and use the following syntax to tell <code>msm</code> what states this code can represent:</p>
 <pre><code>msm(..., 
@@ -366,13 +359,13 @@ censor.states = c(1,2,3,4) # e.g. if code 99 could mean either state 1, 2, 3 or 
 </ul>
 <p>Footnote: syntax uses the term <code>censor</code>, because a <em>censored</em> random variable is one that is partially observed, but in <code>msm</code> this refers to a partially observed state, not a partially-known event time.</p>
 </div>
-<div id="shorthand-for-defining-this-model-in-msm" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Shorthand for defining this model in <code>msm</code></h2>
-<p>Supply the times when all intensities change in the <code>pci</code> argument.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="timedep.html#cb106-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum,</span>
-<span id="cb106-2"><a href="timedep.html#cb106-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor, <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>,</span>
-<span id="cb106-3"><a href="timedep.html#cb106-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>))</span>
-<span id="cb106-4"><a href="timedep.html#cb106-4" aria-hidden="true" tabindex="-1"></a>psorpci.msm</span></code></pre></div>
+<div id="shorthand-for-defining-this-model-in-msm" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Shorthand for defining this model in <code>msm</code></h2>
+<p>Supply the times when all intensities change in the <code>pci</code> argument. <code>msm</code> will automatically construct a categorical covariate indicating the time period, impute artificial observations at the change times, and construct and fit a <code>censor</code> model to calculate and maximise the correct likelihood.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="timedep.html#cb108-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum,</span>
+<span id="cb108-2"><a href="timedep.html#cb108-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor, <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>,</span>
+<span id="cb108-3"><a href="timedep.html#cb108-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>))</span>
+<span id="cb108-4"><a href="timedep.html#cb108-4" aria-hidden="true" tabindex="-1"></a>psorpci.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## msm(formula = state ~ months, subject = ptnum, data = psor, qmatrix = Q,     gen.inits = TRUE, pci = c(5, 10))
@@ -405,11 +398,11 @@ censor.states = c(1,2,3,4) # e.g. if code 99 could mean either state 1, 2, 3 or 
 </ul>
 <p>No evidence for time dependence in the intensities</p>
 </div>
-<div id="output-functions-for-models-with-pci" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> Output functions for models with <code>pci</code></h2>
+<div id="output-functions-for-models-with-pci" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> Output functions for models with <code>pci</code></h2>
 <p>For models fitted using <code>pci</code>, then the <code>pmatrix.msm</code> and <code>totlos.msm</code> functions will <em>automatically recognise</em> that the model has a covariate representing time since the start of the process.</p>
 <p>Here, when we predict the transition probabilities over 15 years, it will automatically adjust for the intensities changing at 5 and 10 years. So there is no need to use <code>pmatrix.piecewise.msm</code> or supply a <code>covariates</code> argument.</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="timedep.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(psorpci.msm, <span class="at">t=</span><span class="dv">15</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="timedep.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(psorpci.msm, <span class="at">t=</span><span class="dv">15</span>)</span></code></pre></div>
 <pre><code>##         State 1 State 2 State 3 State 4
 ## State 1   0.255  0.2067  0.1443   0.394
 ## State 2   0.000  0.0866  0.1030   0.810
@@ -417,60 +410,58 @@ censor.states = c(1,2,3,4) # e.g. if code 99 could mean either state 1, 2, 3 or 
 ## State 4   0.000  0.0000  0.0000   1.000</code></pre>
 <p><code>ppass.msm</code> and <code>efpt.msm</code> are not currently supported with time dependent covariates.</p>
 </div>
-<div id="variants-of-pci-models" class="section level2" number="6.6">
-<h2><span class="header-section-number">6.6</span> Variants of pci models</h2>
+<div id="variants-of-pci-models" class="section level2" number="5.8">
+<h2><span class="header-section-number">5.8</span> Variants of pci models</h2>
 <p>What if we want to build more detailed models with time-dependence, e.g. </p>
 <ul>
 <li><p>models with a different covariate effect for each time period?</p></li>
 <li><p>models where the time period affects some transition rates but not others?</p></li>
 </ul>
-<div id="construct-the-expanded-dataset" class="section level4" number="6.6.0.1">
-<h4><span class="header-section-number">6.6.0.1</span> Construct the expanded dataset</h4>
+<ol style="list-style-type: decimal">
+<li><p>Construct the expanded dataset</p>
 <p>Fit a standard <code>pci</code> model and then use the <code>model.frame</code> function to extract the expanded dataset constructed by <code>msm</code>, with</p>
 <ul>
 <li><p>extra rows at the time change points, and</p></li>
 <li><p>an automatically-constructed <code>timeperiod</code> covariate</p></li>
 </ul>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="timedep.html#cb110-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, <span class="at">covariates =</span> <span class="sc">~</span>hieffusn, </span>
-<span id="cb110-2"><a href="timedep.html#cb110-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor, <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>,</span>
-<span id="cb110-3"><a href="timedep.html#cb110-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>))</span>
-<span id="cb110-4"><a href="timedep.html#cb110-4" aria-hidden="true" tabindex="-1"></a>psor_pcidata <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(psorpci.msm)[,<span class="fu">c</span>(<span class="st">&quot;(subject)&quot;</span>,<span class="st">&quot;(state)&quot;</span>,<span class="st">&quot;(time)&quot;</span>,<span class="st">&quot;timeperiod&quot;</span>,<span class="st">&quot;hieffusn&quot;</span>)]</span>
-<span id="cb110-5"><a href="timedep.html#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(psor_pcidata)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ptnum&quot;</span>,<span class="st">&quot;state&quot;</span>,<span class="st">&quot;months&quot;</span>)</span>
-<span id="cb110-6"><a href="timedep.html#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor_pcidata)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="timedep.html#cb112-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, <span class="at">covariates =</span> <span class="sc">~</span>hieffusn, </span>
+<span id="cb112-2"><a href="timedep.html#cb112-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor, <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>,</span>
+<span id="cb112-3"><a href="timedep.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>))</span>
+<span id="cb112-4"><a href="timedep.html#cb112-4" aria-hidden="true" tabindex="-1"></a>psor_pcidata <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(psorpci.msm)[,<span class="fu">c</span>(<span class="st">&quot;(subject)&quot;</span>,<span class="st">&quot;(state)&quot;</span>,<span class="st">&quot;(time)&quot;</span>,<span class="st">&quot;timeperiod&quot;</span>,<span class="st">&quot;hieffusn&quot;</span>)]</span>
+<span id="cb112-5"><a href="timedep.html#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(psor_pcidata)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ptnum&quot;</span>,<span class="st">&quot;state&quot;</span>,<span class="st">&quot;months&quot;</span>)</span>
+<span id="cb112-6"><a href="timedep.html#cb112-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(psor_pcidata)</span></code></pre></div>
 <pre><code>##     ptnum state months timeperiod hieffusn
 ## 1       1     1   6.46     [5,10)        0
 ## 1.1     1     5  10.00   [10,Inf)        0
 ## 2       1     1  17.08   [10,Inf)        0
 ## 3       2     1  26.32   [10,Inf)        0
 ## 4       2     3  29.48   [10,Inf)        0
-## 5       2     4  30.58   [10,Inf)        0</code></pre>
-</div>
-<div id="fit-model-to-the-expanded-dataset-using-censor" class="section level4" number="6.6.0.2">
-<h4><span class="header-section-number">6.6.0.2</span> Fit model to the expanded dataset, using <code>censor</code></h4>
+## 5       2     4  30.58   [10,Inf)        0</code></pre></li>
+<li><p>Fit model to the expanded dataset, using <code>censor</code></p>
 <p>Then we can use this dataset for a standard <code>msm</code> fit with <code>timeperiod</code> as a categorical covariate.</p>
 <p>The missing states at the time change points are given a code equal to 1 plus the number of states</p>
 <ul>
 <li>here the code is 5, so call <code>msm</code> with <code>censor = 5</code>.</li>
-</ul>
+</ul></li>
+</ol>
 <p>Example (a): Time period only affects the rate of the 1-2 transition:</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="timedep.html#cb112-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, </span>
-<span id="cb112-2"><a href="timedep.html#cb112-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span> <span class="ot">=</span> <span class="er">~</span> timeperiod), </span>
-<span id="cb112-3"><a href="timedep.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor_pcidata, </span>
-<span id="cb112-4"><a href="timedep.html#cb112-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">censor =</span> <span class="dv">5</span>, </span>
-<span id="cb112-5"><a href="timedep.html#cb112-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="timedep.html#cb114-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, </span>
+<span id="cb114-2"><a href="timedep.html#cb114-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span> <span class="ot">=</span> <span class="er">~</span> timeperiod), </span>
+<span id="cb114-3"><a href="timedep.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor_pcidata, </span>
+<span id="cb114-4"><a href="timedep.html#cb114-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">censor =</span> <span class="dv">5</span>, </span>
+<span id="cb114-5"><a href="timedep.html#cb114-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Example (b): Different effect of <code>hieffusn</code> on 1-2 transition rate in each time period</p>
 <ul>
 <li>use the <code>*</code> operator in the model formula, standard R syntax for interactions in general linear models</li>
 </ul>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="timedep.html#cb113-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, </span>
-<span id="cb113-2"><a href="timedep.html#cb113-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span> <span class="ot">=</span> <span class="er">~</span> timeperiod<span class="sc">*</span>hieffusn), </span>
-<span id="cb113-3"><a href="timedep.html#cb113-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor_pcidata, </span>
-<span id="cb113-4"><a href="timedep.html#cb113-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">censor =</span> <span class="dv">5</span>, </span>
-<span id="cb113-5"><a href="timedep.html#cb113-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="timedep.html#cb115-1" aria-hidden="true" tabindex="-1"></a>psorpci.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> months, <span class="at">subject =</span> ptnum, </span>
+<span id="cb115-2"><a href="timedep.html#cb115-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span> <span class="ot">=</span> <span class="er">~</span> timeperiod<span class="sc">*</span>hieffusn), </span>
+<span id="cb115-3"><a href="timedep.html#cb115-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> psor_pcidata, </span>
+<span id="cb115-4"><a href="timedep.html#cb115-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">censor =</span> <span class="dv">5</span>, </span>
+<span id="cb115-5"><a href="timedep.html#cb115-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">qmatrix =</span> Q, <span class="at">gen.inits=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
-</div>
-<div id="exercises-3" class="section level2" number="6.7">
-<h2><span class="header-section-number">6.7</span> Exercises</h2>
+<div id="exercises-3" class="section level2" number="5.9">
+<h2><span class="header-section-number">5.9</span> Exercises</h2>
 <p>In the CAV example, investigate how the transition intensities depend on time since transplantation. There is no single correct way to approach this problem - some things that could be done include:</p>
 <ol style="list-style-type: decimal">
 <li><p>Include years since transplant as a covariate with a linear effect on the log intensities, using the same techniques as in the previous chapter.</p></li>
@@ -481,133 +472,129 @@ censor.states = c(1,2,3,4) # e.g. if code 99 could mean either state 1, 2, 3 or 
 <p>Note if you get a <code>numerical overflow</code> error, this may be solved by normalising the optimisation using <code>msm(..., control=list(fnscale=4000))</code>, as described at the end of Chapter 2, noting that the -2 log likelihood in this example takes a value of around 4000.</p>
 <p>If you get a “iteration limit exceeded” error, use <code>msm(..., control=list(maxit=10000), ...)</code> or some other large number for <code>maxit</code>. This increases the number of iterations that R’s <code>optim</code> function uses before giving up trying to find the maximum.</p>
 </div>
-<div id="solutions-3" class="section level2" number="6.8">
-<h2><span class="header-section-number">6.8</span> Solutions</h2>
-<p>The following model has a linear effect of time since transplant on all log intensities.
+<div id="solutions-3" class="section level2" number="5.10">
+<h2><span class="header-section-number">5.10</span> Solutions</h2>
+<ol style="list-style-type: decimal">
+<li><p>The following model has a linear effect of time since transplant on all log intensities.
 The hazards of CAV onset, and the hazards of death in the two CAV states, appear to
 increase significantly with time.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="timedep.html#cb114-1" aria-hidden="true" tabindex="-1"></a>cav.time.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, </span>
-<span id="cb114-2"><a href="timedep.html#cb114-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="sc">~</span> years, </span>
-<span id="cb114-3"><a href="timedep.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
-<span id="cb114-4"><a href="timedep.html#cb114-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>))</span>
-<span id="cb114-5"><a href="timedep.html#cb114-5" aria-hidden="true" tabindex="-1"></a>cav.time.msm</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="timedep.html#cb116-1" aria-hidden="true" tabindex="-1"></a>cav.time.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb116-2"><a href="timedep.html#cb116-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="sc">~</span> years, </span>
+<span id="cb116-3"><a href="timedep.html#cb116-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
+<span id="cb116-4"><a href="timedep.html#cb116-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>, <span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb116-5"><a href="timedep.html#cb116-5" aria-hidden="true" tabindex="-1"></a>cav.time.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = ~years, control = list(fnscale = 4000))
+## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = ~years, deathexact = TRUE,     control = list(fnscale = 4000, maxit = 10000))
 ## 
 ## Maximum likelihood estimates
 ## Baselines are with covariates set to their means
 ## 
 ## Transition intensities with hazard ratios for each covariate
-##                   Baseline                     years                
-## State 1 - State 1 -0.18901 (-0.21549,-0.16579)                      
-## State 1 - State 2  0.14273 ( 0.12137, 0.16785) 1.0938 (1.0367,1.154)
-## State 1 - State 4  0.04628 ( 0.03624, 0.05911) 0.9776 (0.8925,1.071)
-## State 2 - State 1  0.29894 ( 0.21330, 0.41895) 0.8895 (0.7828,1.011)
-## State 2 - State 2 -0.64328 (-0.77271,-0.53553)                      
-## State 2 - State 3  0.28957 ( 0.23049, 0.36379) 0.9918 (0.9161,1.074)
-## State 2 - State 4  0.05477 ( 0.02672, 0.11228) 1.2595 (1.0990,1.443)
-## State 3 - State 2  0.12859 ( 0.05976, 0.27667) 1.0878 (0.8466,1.398)
-## State 3 - State 3 -0.33762 (-0.49468,-0.23042)                      
-## State 3 - State 4  0.20903 ( 0.13546, 0.32255) 1.2024 (1.0680,1.354)
+##                   Baseline                     years                 
+## State 1 - State 1 -0.18187 (-0.20833,-0.15877)                       
+## State 1 - State 2  0.14743 ( 0.12546, 0.17325) 1.0984 (1.0444,1.1552)
+## State 1 - State 4  0.03444 ( 0.02384, 0.04975) 0.9044 (0.7945,1.0296)
+## State 2 - State 1  0.28343 ( 0.20185, 0.39798) 0.8698 (0.7662,0.9875)
+## State 2 - State 2 -0.63973 (-0.76405,-0.53564)                       
+## State 2 - State 3  0.31914 ( 0.25390, 0.40115) 0.9940 (0.9180,1.0764)
+## State 2 - State 4  0.03716 ( 0.01064, 0.12981) 1.2981 (1.0772,1.5644)
+## State 3 - State 2  0.10361 ( 0.04616, 0.23253) 1.1543 (0.8678,1.5355)
+## State 3 - State 3 -0.35814 (-0.50226,-0.25538)                       
+## State 3 - State 4  0.25454 ( 0.17571, 0.36872) 1.0525 (0.9439,1.1737)
 ## 
-## -2 * log-likelihood:  3928 
+## -2 * log-likelihood:  3922 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
 <p>We might simplify this model to include only the effects that appeared to be significant.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="timedep.html#cb116-1" aria-hidden="true" tabindex="-1"></a>cav.timei.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, </span>
-<span id="cb116-2"><a href="timedep.html#cb116-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span> years, <span class="st">&quot;2-1&quot;</span> <span class="ot">=</span> <span class="er">~</span>years, <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years), </span>
-<span id="cb116-3"><a href="timedep.html#cb116-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
-<span id="cb116-4"><a href="timedep.html#cb116-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>))</span>
-<span id="cb116-5"><a href="timedep.html#cb116-5" aria-hidden="true" tabindex="-1"></a>cav.timei.msm</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="timedep.html#cb118-1" aria-hidden="true" tabindex="-1"></a>cav.timei.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb118-2"><a href="timedep.html#cb118-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span> years, <span class="st">&quot;2-1&quot;</span> <span class="ot">=</span> <span class="er">~</span>years, <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years), </span>
+<span id="cb118-3"><a href="timedep.html#cb118-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
+<span id="cb118-4"><a href="timedep.html#cb118-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>, <span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb118-5"><a href="timedep.html#cb118-5" aria-hidden="true" tabindex="-1"></a>cav.timei.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = list(`1-2` = ~years, `2-1` = ~years,         `2-4` = ~years, `3-4` = ~years), control = list(fnscale = 4000))
+## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = list(`1-2` = ~years, `2-1` = ~years,         `2-4` = ~years, `3-4` = ~years), deathexact = TRUE, control = list(fnscale = 4000,         maxit = 10000))
 ## 
 ## Maximum likelihood estimates
 ## Baselines are with covariates set to their means
 ## 
 ## Transition intensities with hazard ratios for each covariate
-##                   Baseline                     years                
-## State 1 - State 1 -0.19069 (-0.21699,-0.16759)                      
-## State 1 - State 2  0.14271 ( 0.12135, 0.16783) 1.0896 (1.0331,1.149)
-## State 1 - State 4  0.04799 ( 0.03954, 0.05824) 1.0000               
-## State 2 - State 1  0.30253 ( 0.21614, 0.42343) 0.8874 (0.7809,1.009)
-## State 2 - State 2 -0.64805 (-0.77819,-0.53968)                      
-## State 2 - State 3  0.29110 ( 0.23292, 0.36380) 1.0000               
-## State 2 - State 4  0.05443 ( 0.02660, 0.11138) 1.2410 (1.0801,1.426)
-## State 3 - State 2  0.15551 ( 0.09524, 0.25393) 1.0000               
-## State 3 - State 3 -0.36017 (-0.49622,-0.26142)                      
-## State 3 - State 4  0.20466 ( 0.13231, 0.31655) 1.2134 (1.0816,1.361)
+##                   Baseline                      years                
+## State 1 - State 1 -0.18614 (-0.211964,-0.16346)                      
+## State 1 - State 2  0.14427 ( 0.122891, 0.16936) 1.0891 (1.034,1.1467)
+## State 1 - State 4  0.04187 ( 0.033765, 0.05192) 1.0000               
+## State 2 - State 1  0.29050 ( 0.207070, 0.40753) 0.8757 (0.771,0.9944)
+## State 2 - State 2 -0.64303 (-0.769194,-0.53756)                      
+## State 2 - State 3  0.32637 ( 0.259889, 0.40986) 1.0000               
+## State 2 - State 4  0.02616 ( 0.005242, 0.13058) 1.3016 (1.024,1.6547)
+## State 3 - State 2  0.13773 ( 0.083810, 0.22634) 1.0000               
+## State 3 - State 3 -0.39177 (-0.528195,-0.29058)                      
+## State 3 - State 4  0.25404 ( 0.174921, 0.36895) 1.0639 (0.967,1.1706)
 ## 
-## -2 * log-likelihood:  3929 
+## -2 * log-likelihood:  3927 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
 <p>Or go even further and constrain the hazard ratio for time on death from the two CAV states to be the same, as the mechanism for these effects is plausibly the same.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="timedep.html#cb118-1" aria-hidden="true" tabindex="-1"></a>cav.timec.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, </span>
-<span id="cb118-2"><a href="timedep.html#cb118-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span> years, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years), </span>
-<span id="cb118-3"><a href="timedep.html#cb118-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">constraint =</span> <span class="fu">list</span>(<span class="at">years =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>)),</span>
-<span id="cb118-4"><a href="timedep.html#cb118-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
-<span id="cb118-5"><a href="timedep.html#cb118-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>))</span>
-<span id="cb118-6"><a href="timedep.html#cb118-6" aria-hidden="true" tabindex="-1"></a>cav.timec.msm</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="timedep.html#cb120-1" aria-hidden="true" tabindex="-1"></a>cav.timec.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb120-2"><a href="timedep.html#cb120-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span> years, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years), </span>
+<span id="cb120-3"><a href="timedep.html#cb120-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">constraint =</span> <span class="fu">list</span>(<span class="at">years =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>)),</span>
+<span id="cb120-4"><a href="timedep.html#cb120-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
+<span id="cb120-5"><a href="timedep.html#cb120-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>, <span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb120-6"><a href="timedep.html#cb120-6" aria-hidden="true" tabindex="-1"></a>cav.timec.msm</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = list(`1-2` = ~years, `2-1` = ~years,         `2-4` = ~years, `3-4` = ~years), constraint = list(years = c(1,         2, 3, 3)), control = list(fnscale = 4000))
+## msm(formula = state ~ years, subject = PTNUM, data = cav, qmatrix = Q_cav,     gen.inits = TRUE, covariates = list(`1-2` = ~years, `2-1` = ~years,         `2-4` = ~years, `3-4` = ~years), constraint = list(years = c(1,         2, 3, 3)), deathexact = TRUE, control = list(fnscale = 4000,         maxit = 10000))
 ## 
 ## Maximum likelihood estimates
 ## Baselines are with covariates set to their means
 ## 
 ## Transition intensities with hazard ratios for each covariate
-##                   Baseline                     years                
-## State 1 - State 1 -0.19041 (-0.21659,-0.16739)                      
-## State 1 - State 2  0.14244 ( 0.12116, 0.16747) 1.0899 (1.0334,1.149)
-## State 1 - State 4  0.04797 ( 0.03952, 0.05821) 1.0000               
-## State 2 - State 1  0.30127 ( 0.21519, 0.42180) 0.8881 (0.7814,1.009)
-## State 2 - State 2 -0.64901 (-0.77729,-0.54190)                      
-## State 2 - State 3  0.29126 ( 0.23309, 0.36394) 1.0000               
-## State 2 - State 4  0.05648 ( 0.03243, 0.09838) 1.2257 (1.1384,1.320)
-## State 3 - State 2  0.15532 ( 0.09508, 0.25373) 1.0000               
-## State 3 - State 3 -0.35441 (-0.47270,-0.26572)                      
-## State 3 - State 4  0.19908 ( 0.14019, 0.28272) 1.2257 (1.1384,1.320)
+##                   Baseline                    years                 
+## State 1 - State 1 -0.18557 (-0.21108,-0.1631)                       
+## State 1 - State 2  0.14434 ( 0.12310, 0.1693) 1.0911 (1.0359,1.1491)
+## State 1 - State 4  0.04122 ( 0.03306, 0.0514) 1.0000                
+## State 2 - State 1  0.28628 ( 0.20373, 0.4023) 0.8784 (0.7725,0.9988)
+## State 2 - State 2 -0.65637 (-0.78170,-0.5511)                       
+## State 2 - State 3  0.32038 ( 0.25459, 0.4032) 1.0000                
+## State 2 - State 4  0.04971 ( 0.02258, 0.1095) 1.1209 (1.0441,1.2034)
+## State 3 - State 2  0.14035 ( 0.08532, 0.2309) 1.0000                
+## State 3 - State 3 -0.35431 (-0.47298,-0.2654)                       
+## State 3 - State 4  0.21396 ( 0.15048, 0.3042) 1.1209 (1.0441,1.2034)
 ## 
 ## -2 * log-likelihood:  3929 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="timedep.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(cav.time.msm, cav.timei.msm, cav.timec.msm)</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="timedep.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(cav.time.msm, cav.timei.msm, cav.timec.msm)</span></code></pre></div>
 <pre><code>##               df  AIC
-## cav.time.msm  14 3956
-## cav.timei.msm 11 3951
-## cav.timec.msm 10 3949</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li></li>
-</ol>
-<p>An alternative approach is based on discretising time, and defining different effects in different time
+## cav.time.msm  14 3950
+## cav.timei.msm 11 3949
+## cav.timec.msm 10 3949</code></pre></li>
+<li><p>An alternative approach is based on discretising time, and defining different effects in different time
 periods, e.g. before and after 5 years. We could use <code>pci</code> to fit a model where all intensities have an effect of time period, and then extract the imputed dataset to build more elaborate models of this type.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="timedep.html#cb122-1" aria-hidden="true" tabindex="-1"></a>cav.pci5.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, </span>
-<span id="cb122-2"><a href="timedep.html#cb122-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>), </span>
-<span id="cb122-3"><a href="timedep.html#cb122-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
-<span id="cb122-4"><a href="timedep.html#cb122-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>, <span class="at">maxit=</span><span class="dv">10000</span>))</span>
-<span id="cb122-5"><a href="timedep.html#cb122-5" aria-hidden="true" tabindex="-1"></a>cav_imp <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(cav.pci5.msm)</span>
-<span id="cb122-6"><a href="timedep.html#cb122-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cav_imp)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PTNUM&quot;</span>,<span class="st">&quot;state&quot;</span>,<span class="st">&quot;years&quot;</span>)</span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li></li>
-</ol>
-<p>To the dataset with values of <code>years</code> and <code>timeperiod</code> values imputed at 5 years, we fit two alternative models, both with a covariate effect on the intensities where the effect was significant (from the non-imputed datasets) and with the effects on death constrained to be the same. f One model has a linear effect of a continuous time covariate, and in the other model, this covariate is discretised at 5 years.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="timedep.html#cb123-1" aria-hidden="true" tabindex="-1"></a>cav.imp.linear.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav_imp, </span>
-<span id="cb123-2"><a href="timedep.html#cb123-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>years, </span>
-<span id="cb123-3"><a href="timedep.html#cb123-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years),</span>
-<span id="cb123-4"><a href="timedep.html#cb123-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">censor =</span> <span class="dv">5</span>,  </span>
-<span id="cb123-5"><a href="timedep.html#cb123-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
-<span id="cb123-6"><a href="timedep.html#cb123-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>,<span class="at">maxit=</span><span class="dv">10000</span>))</span>
-<span id="cb123-7"><a href="timedep.html#cb123-7" aria-hidden="true" tabindex="-1"></a>cav.imp.binary.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav_imp, </span>
-<span id="cb123-8"><a href="timedep.html#cb123-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, </span>
-<span id="cb123-9"><a href="timedep.html#cb123-9" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod),</span>
-<span id="cb123-10"><a href="timedep.html#cb123-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">censor =</span> <span class="dv">5</span>,  </span>
-<span id="cb123-11"><a href="timedep.html#cb123-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav,</span>
-<span id="cb123-12"><a href="timedep.html#cb123-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>,<span class="at">maxit=</span><span class="dv">10000</span>))</span>
-<span id="cb123-13"><a href="timedep.html#cb123-13" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(cav.pci5.msm, cav.imp.linear.msm, cav.imp.binary.msm)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="timedep.html#cb124-1" aria-hidden="true" tabindex="-1"></a>cav.pci5.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">deathexact=</span><span class="cn">TRUE</span>, </span>
+<span id="cb124-2"><a href="timedep.html#cb124-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pci =</span> <span class="fu">c</span>(<span class="dv">5</span>), </span>
+<span id="cb124-3"><a href="timedep.html#cb124-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
+<span id="cb124-4"><a href="timedep.html#cb124-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>, <span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb124-5"><a href="timedep.html#cb124-5" aria-hidden="true" tabindex="-1"></a>cav_imp <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(cav.pci5.msm)</span>
+<span id="cb124-6"><a href="timedep.html#cb124-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cav_imp)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PTNUM&quot;</span>,<span class="st">&quot;state&quot;</span>,<span class="st">&quot;years&quot;</span>)</span></code></pre></div></li>
+<li><p>To the dataset with values of <code>years</code> and <code>timeperiod</code> values imputed at 5 years, we fit two alternative models, both with a covariate effect on the intensities where the effect was significant (from the non-imputed datasets) and with the effects on death constrained to be the same. One model has a linear effect of a continuous time covariate, and in the other model, this covariate is discretised at 5 years.</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="timedep.html#cb125-1" aria-hidden="true" tabindex="-1"></a>cav.imp.linear.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav_imp, <span class="at">deathexact=</span><span class="cn">TRUE</span>, </span>
+<span id="cb125-2"><a href="timedep.html#cb125-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>years, </span>
+<span id="cb125-3"><a href="timedep.html#cb125-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>years, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>years),</span>
+<span id="cb125-4"><a href="timedep.html#cb125-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">censor =</span> <span class="dv">5</span>,  <span class="co"># the code that msm used for the hidden state, i.e. &quot;state 5&quot;</span></span>
+<span id="cb125-5"><a href="timedep.html#cb125-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav, </span>
+<span id="cb125-6"><a href="timedep.html#cb125-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>,<span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb125-7"><a href="timedep.html#cb125-7" aria-hidden="true" tabindex="-1"></a>cav.imp.binary.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav_imp, <span class="at">deathexact=</span><span class="cn">TRUE</span>, </span>
+<span id="cb125-8"><a href="timedep.html#cb125-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, <span class="st">&quot;2-1&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, </span>
+<span id="cb125-9"><a href="timedep.html#cb125-9" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;2-4&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod, <span class="st">&quot;3-4&quot;</span><span class="ot">=</span><span class="er">~</span>timeperiod),</span>
+<span id="cb125-10"><a href="timedep.html#cb125-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">censor =</span> <span class="dv">5</span>,  </span>
+<span id="cb125-11"><a href="timedep.html#cb125-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav,</span>
+<span id="cb125-12"><a href="timedep.html#cb125-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale=</span><span class="dv">4000</span>,<span class="at">maxit=</span><span class="dv">10000</span>))</span>
+<span id="cb125-13"><a href="timedep.html#cb125-13" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(cav.pci5.msm, cav.imp.linear.msm, cav.imp.binary.msm)</span></code></pre></div>
 <pre><code>##                    df  AIC
-## cav.pci5.msm       14 3966
-## cav.imp.linear.msm 11 3999
-## cav.imp.binary.msm 11 4000</code></pre>
-<p>It does not make much difference to AIC whether time is treated as a continuous or a binary covariate.</p>
+## cav.pci5.msm       14 3948
+## cav.imp.linear.msm 11 3946
+## cav.imp.binary.msm 11 3943</code></pre>
+<p>The model <code>cav.imp.binary.msm</code> with time period as a binary effect on selected transitions has a slightly improved AIC over the alternative models.</p></li>
+</ol>
 <p>Note that it might be possible to find even better fitting models than these - but with intermittently-observed data, it is difficult to produce exploratory plots that would indicate what the shape of the dependence on time might be, or what cut-points for time periods might be appropriate.</p>
 
 </div>
@@ -622,7 +609,6 @@ periods, e.g. before and after 5 years. We could use <code>pci</code> to fit a 
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -662,6 +648,10 @@ gitbook.start({
 "text": null
 },
 "download": ["msmcourse.pdf", "msmcourse.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
