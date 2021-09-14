@@ -628,7 +628,6 @@ print.msm <- function(x, covariates=NULL, digits=4, ...)
         }
     }
     cat ("\n-2 * log-likelihood: ", x$minus2loglik, "\n")
-    cat("[Note, to obtain old print format, use \"printold.msm\"]\n",sep="")
     invisible(ret)
 }
 
