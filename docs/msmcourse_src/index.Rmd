@@ -40,25 +40,25 @@ All the course material is on this website, at
 
 so you can follow along at your own pace, and finish exercises in your own time. 
 
+Rough timings: 
 
-* 9.30 - 10.15 
+* 9.00 - 9.50 
     - [Part 1. Multistate modelling theory review](#theory)
     - [Part 2. Basic use of `msm`](#msmbasic)
     - Exercises
     
-* 10.15 - 10.50 
+* 9.50 - 10.30 
     - [Part 3. Prediction from models with `msm`](#outputs)
     - Exercises
     
-* 10.50 - 11.40
+* 10.40 - 11.30
     - [Part 4. `msm` models with covariates](#covariates)
     - Exercises
 
-* 11.40 - 12.30
+* 11.30 - 12.30
     - [Part 5. `msm` models with time-dependent covariates](#timedep)
     - Exercises 
-    
-* [Part 6. Advanced topics](#advanced) (for reference, but may not be time)
+    - [Part 6. Advanced topics](#advanced) (if there is time)
 
 
 ## Prerequisites {-}
