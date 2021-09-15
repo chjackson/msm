@@ -30,11 +30,11 @@ options(digits=3)
 
 # Course overview {-}
 
-9.30 to 12.30 French time (8.30 to 11.30 UK time)
+This course gives an introduction to the use of the `msm` R package for fitting and predicting from multi-state models for intermittently observed data, in typical medical applications. 
 
-Balance of lectures and practical exercises 
+There is a balance of short talks and practical exercises.  In the exercises, you will write your own R code, based on the code demonstrated in the talks, to perform multi-state data analyses and answer applied questions. 
 
-All the course material is available at 
+All the course material is on this website, at 
 
 [http://chjackson.github.io/msm/msmcourse](http://chjackson.github.io/msm/msmcourse)
 
@@ -63,9 +63,9 @@ so you can follow along at your own pace, and finish exercises in your own time.
 
 ## Prerequisites {-}
 
-Laptop with R and the `msm` package installed 
+Laptop with R and the `msm` package installed. 
 
-Basic knowledge of R 
+Basic knowledge of R. 
 
 Basic statistics / probability, ideally from a medical / biostatistics perspective.  
 

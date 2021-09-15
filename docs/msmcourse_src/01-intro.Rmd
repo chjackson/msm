@@ -10,7 +10,7 @@ More information about the `msm` package in
 
 * [the Journal of Statistical Software paper](http://www.jstatsoft.org/v38/i08/)
 
-A more in-depth treatment about this kind of modelling can be found in 
+A more in-depth treatment of this kind of modelling can be found in 
 
 * [van den Hout (2017)](https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569)
   
