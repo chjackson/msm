@@ -207,9 +207,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
 <li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
 <li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
-<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#pci-piecewise-constant-intensities-which-change-at-common-times"><i class="fa fa-check"></i><b>5.6</b> <code>pci</code>: piecewise constant intensities (which change at common times)</a></li>
 <li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models-advanced"><i class="fa fa-check"></i><b>5.8</b> Variants of <code>pci</code> models (advanced)</a></li>
 <li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
 <li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
@@ -416,7 +416,8 @@ moving to another state</p>
 <p>Here is an artificial dataset, where we know the patient:</p>
 <ul>
 <li><p>was in state 1 at times 0 and 1 (<code>obstype</code> 1)</p></li>
-<li><p>occupied state 2 throughout the period between years 2 and 3.09 and between years 4 and 5 (<code>obstype</code> 2)</p></li>
+<li><p>occupied state 2 throughout the period between years 2 and 3.09</p></li>
+<li><p>occupied state 2 between years 4 and 5 (<code>obstype</code> 2) before moving to state 3 at time 5</p></li>
 <li><p>died at time 5.85 (<code>obstype</code> 3)</p></li>
 </ul>
 <pre><code>##    PTNUM years state obstype
@@ -538,7 +539,7 @@ moving to another state</p>
 </div>
 <div id="postscript-what-if-it-doesnt-converge" class="section level2" number="2.11">
 <h2><span class="header-section-number">2.11</span> Postscript: What if it doesn’t converge?</h2>
-<p>A risk of the kinds of models used here is that they may be weakly identifiable from the data. Often the optimisation will not converge, or converge to an answer that its not sensible.</p>
+<p>A risk of the kinds of models used here is that they may be weakly identifiable from the data. Often the optimisation will not converge, or converge to an answer that is not useful.</p>
 <p>A common message is</p>
 <p><code>Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.</code></p>
 <p>Another common symptom is very large confidence intervals for certain parameters, e.g. </p>
@@ -546,7 +547,7 @@ moving to another state</p>
 <span id="cb25-2"><a href="msmbasic.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Baseline                    </span></span>
 <span id="cb25-3"><a href="msmbasic.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">## State 1 - State 2  0.1 ( 1e-12, 1e+12)</span></span></code></pre></div>
 <p>The optimiser claims to have found the maximum likelihood, but the answer is not very useful, because the data contain no information about that parameter, hence the likelihood is flat with respect to that parameter.</p>
-<p>In this case the model should be simplified, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (<code>qconstraint</code> option to <code>msm</code>) or constraining covariate effects (see the <a href="covariates.html#covariates">chapter on covariates</a>)</p>
+<p>If it doesn’t converge, that usually means it is sensible to simplify the model, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (<code>qconstraint</code> option to <code>msm</code>) or constraining covariate effects (see the <a href="covariates.html#covariates">chapter on covariates</a>)</p>
 <p>In some circumstances, numerical overflow/underflow can occur during optimisation, giving messages like</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="msmbasic.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## numerical overflow in calculating likelihood</span></span></code></pre></div>
 <p>In these cases we may be able to control the optimisation and help it find the solution.</p>

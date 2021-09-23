@@ -207,9 +207,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
 <li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
 <li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
-<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#pci-piecewise-constant-intensities-which-change-at-common-times"><i class="fa fa-check"></i><b>5.6</b> <code>pci</code>: piecewise constant intensities (which change at common times)</a></li>
 <li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models-advanced"><i class="fa fa-check"></i><b>5.8</b> Variants of <code>pci</code> models (advanced)</a></li>
 <li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
 <li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
@@ -266,14 +266,14 @@ Psoriatic arthritis example: investigate risk factors for joint damage</p>
 </div>
 <div id="choices-for-modelling-covariates" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Choices for modelling covariates</h2>
-<p>Most general model for the psoriatic arthritis data</p>
+<p>There are three transitions in the model. Which transitions should be affected by which covariates?</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-41"></span>
 <img src="msmcourse_files/figure-html/unnamed-chunk-41-1.png" alt="Psoriatic arthritis" width="672" />
 <p class="caption">
 Figure 4.1: Psoriatic arthritis
 </p>
 </div>
-<p>Consider which transitions may be affected by which covariates. Don’t just put all covariates on all transitions without thinking — you may not have enough data informing transitions out of particular states.</p>
+<p>Don’t just put all covariates on all transitions without thinking — you may not have enough data informing transitions out of particular states.</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="covariates.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, ptnum, <span class="at">data=</span>psor)</span></code></pre></div>
 <pre><code>##     to
 ## from   1   2   3   4
@@ -332,7 +332,8 @@ formula (instead of a list of formulae).</p>
 ## psorc_cons.msm    -557  8 1129
 ## psorc_all.msm     -556  9 1131</code></pre>
 <p>Most complex model <code>psorc_all.msm</code> has highest log-likelihood, but the extra parameters do not lead to better predictive performance</p>
-<p>Given the AICs and the estimates from the full model, it seems sufficient to assume that <code>hieffusn</code> is a predictor of the 1-2 and 2-3 transitions, and <code>ollwsdrt</code> is a predictor of the 2-3 transition.</p>
+<p>It seems sufficient to assume that <code>hieffusn</code> is a predictor of the 1-2 and 2-3 transitions, and <code>ollwsdrt</code> is a predictor of the 2-3 transition</p>
+<p>Check the coefficients from the fitted models to verify that this is plausible…</p>
 </div>
 <div id="interpretation-of-the-hazard-ratio" class="section level2" number="4.7">
 <h2><span class="header-section-number">4.7</span> Interpretation of the hazard ratio</h2>
@@ -389,10 +390,10 @@ formula (instead of a list of formulae).</p>
 <p>Low sedimentation rate is protective (lower transition probabilities for <code>ollwsdrt=1</code>), while high effusion is a risk factor for progression (higher transition probabilities for <code>hieffusn=1</code>)</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="covariates.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">hieffusn =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ollwsdrt=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), p_14)</span></code></pre></div>
 <pre><code>##      hieffusn ollwsdrt estimate  lower upper
-## [1,]        0        0    0.205 0.1566 0.266
-## [2,]        0        1    0.120 0.0834 0.179
-## [3,]        1        0    0.484 0.3104 0.636
-## [4,]        1        1    0.324 0.1752 0.513</code></pre>
+## [1,]        0        0    0.205 0.1529 0.256
+## [2,]        0        1    0.120 0.0771 0.175
+## [3,]        1        0    0.484 0.3120 0.705
+## [4,]        1        1    0.324 0.1772 0.477</code></pre>
 </div>
 <div id="exercises-2" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> Exercises</h2>
@@ -408,7 +409,7 @@ formula (instead of a list of formulae).</p>
 <div id="solutions-2" class="section level2" number="4.10">
 <h2><span class="header-section-number">4.10</span> Solutions</h2>
 <ol style="list-style-type: decimal">
-<li><p>First we start with the full model where the covariate affects all transitions, and examine the hazard ratios under this model.</p>
+<li><p>We convert the categorical variable <code>pdiag</code> to a binary 0/1 covariate indicating primary diagnosis of IHD. First we fit the full model where the binary covariate affects all transitions, and examine the hazard ratios under this model.</p>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="covariates.html#cb75-1" aria-hidden="true" tabindex="-1"></a>cav<span class="sc">$</span>IHD <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cav<span class="sc">$</span>pdiag <span class="sc">==</span> <span class="st">&quot;IHD&quot;</span>)</span>
 <span id="cb75-2"><a href="covariates.html#cb75-2" aria-hidden="true" tabindex="-1"></a>cavcov.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, <span class="at">covariates =</span> <span class="sc">~</span>IHD, </span>
 <span id="cb75-3"><a href="covariates.html#cb75-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">deathexact =</span> <span class="cn">TRUE</span>, <span class="at">gen.inits =</span> <span class="cn">TRUE</span>, <span class="at">qmatrix=</span>Q_cav)</span>
@@ -435,7 +436,7 @@ formula (instead of a list of formulae).</p>
 ## 
 ## -2 * log-likelihood:  3925 
 ## [Note, to obtain old print format, use &quot;printold.msm&quot;]</code></pre>
-<p>We see that the pre-transplant IHD is associated with an increased risk of CAV onset (state 1 - state 2) and death before CAV onset (state 1 - state 4). The confidence intervals for the hazard ratios of IHD on the other transition rates are wide and include the null 1.</p></li>
+<p>We see that the pre-transplant IHD is associated with an increased risk of CAV onset (state 1 - state 2), and possibly also with death before CAV onset (state 1 - state 4). The confidence intervals for the hazard ratios of IHD on the other transition rates are wide and include the null 1.</p></li>
 <li><p>Hence we build a simplified model, in which IHD only affects the transition rates out of State 1. This model has an improved AIC compared to the bigger model, despite having 5 fewer parameters (<code>df</code>).</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="covariates.html#cb77-1" aria-hidden="true" tabindex="-1"></a>cavcov1.msm <span class="ot">&lt;-</span> <span class="fu">msm</span>(state <span class="sc">~</span> years, <span class="at">subject=</span>PTNUM, <span class="at">data=</span>cav, </span>
 <span id="cb77-2"><a href="covariates.html#cb77-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">covariates =</span> <span class="fu">list</span>(<span class="st">&quot;1-2&quot;</span><span class="ot">=</span><span class="er">~</span>IHD, <span class="st">&quot;1-4&quot;</span><span class="ot">=</span><span class="er">~</span>IHD), </span>
@@ -465,7 +466,7 @@ formula (instead of a list of formulae).</p>
 ## State 2  0.2189  0.1483   0.210   0.423
 ## State 3  0.0537  0.0712   0.207   0.668
 ## State 4  0.0000  0.0000   0.000   1.000</code></pre>
-<p>The passage probability to severe CAV (which we computed in the previous chapter) is similar between both groups of people (<code>IHD=0</code>) and (<code>IHD=1</code>), though people who have had IHD are estimated to be slightly more likely to go through the “severe CAV” state before they die.</p>
+<p>The passage probability to severe CAV (which we computed in the previous chapter), i.e. the chance of going through the “severe CAV” state before death, is similar between both groups of people (<code>IHD=0</code>) and (<code>IHD=1</code>), though slightly higher for people who have had IHD.</p>
 <div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="covariates.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ppass.msm</span>(cavcov1.msm, <span class="at">tot=</span><span class="dv">100</span>, <span class="at">covariates=</span><span class="fu">list</span>(<span class="at">IHD=</span><span class="dv">0</span>))[<span class="st">&quot;State 1&quot;</span>,<span class="st">&quot;State 3&quot;</span>]</span></code></pre></div>
 <pre><code>## [1] 0.574</code></pre>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="covariates.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ppass.msm</span>(cavcov1.msm, <span class="at">tot=</span><span class="dv">100</span>, <span class="at">covariates=</span><span class="fu">list</span>(<span class="at">IHD=</span><span class="dv">1</span>))[<span class="st">&quot;State 1&quot;</span>,<span class="st">&quot;State 3&quot;</span>]</span></code></pre></div>

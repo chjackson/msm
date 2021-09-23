@@ -207,9 +207,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
 <li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
 <li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
-<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#pci-piecewise-constant-intensities-which-change-at-common-times"><i class="fa fa-check"></i><b>5.6</b> <code>pci</code>: piecewise constant intensities (which change at common times)</a></li>
 <li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models-advanced"><i class="fa fa-check"></i><b>5.8</b> Variants of <code>pci</code> models (advanced)</a></li>
 <li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
 <li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
@@ -251,9 +251,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>msm</code> can fit a Markov model to the latent true states, while estimating the error rates of the screening test that measures the disease state. This enables a more plausible model to be fitted which does not allow backwards transitions.</p>
 <p>See <code>ematrix</code> argument to <code>msm</code>. For further details and worked examples, see the <a href="https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf">package vignette</a>, Sections 1.6 and 2.14.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-77"></span>
-<img src="msmcourse_files/figure-html/unnamed-chunk-77-1.png" alt="Hidden Markov model" width="672" />
+<img src="msmcourse_files/figure-html/unnamed-chunk-77-1.png" alt="Hidden Markov multi-state model where states 1,2,3 can be misclassified" width="672" />
 <p class="caption">
-Figure 6.1: Hidden Markov model
+Figure 6.1: Hidden Markov multi-state model where states 1,2,3 can be misclassified
 </p>
 </div>
 </div>
@@ -274,14 +274,16 @@ Figure 6.1: Hidden Markov model
 <p>In a Markov model, the time to the next state does not depend on how long you have spent in that state. Relaxing that assumption is tricky if the data are intermittently observed, because the time of state entry is unknown.</p>
 <div id="phase-type-semi-markov-model" class="section level3" number="6.3.1">
 <h3><span class="header-section-number">6.3.1</span> “phase-type” semi-Markov model</h3>
-<p>To relax the Markov assumption for a specific state, split up that state into hidden “phases” and define a Markov model on a state space defined by the phases and the remaining states. Transition time between the phases is unknown.</p>
+<p>To relax the Markov assumption for a specific state, split up that state into hidden “phases” and define a Markov model on a state space defined by the phases and the remaining states. Transition time between the phases is unknown.
+For example:</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-78"></span>
 <img src="msmcourse_files/figure-html/unnamed-chunk-78-1.png" alt="Phase-type semi-Markov model" width="672" />
 <p class="caption">
 Figure 6.2: Phase-type semi-Markov model
 </p>
 </div>
-<p>This is a (partially) hidden Markov model, hence can be implemented in <code>msm</code>.</p>
+<p>This is equivalent to making the sojourn distribution in state 2 more flexible than an exponential distribution, so the hazard of leaving state 2 depends on how long has been spent there.</p>
+<p>It is a (partially) hidden Markov model, hence can be implemented in <code>msm</code> using its hidden Markov model machinery.</p>
 <p>See the <code>phase.states</code> option to the <code>msm</code> function.</p>
 <p>The idea is from <a href="https://doi.org/10.1111/j.1541-0420.2009.01339.x">Titman and Sharples</a>, but it hasn’t been applied much in practice.</p>
 </div>
@@ -291,7 +293,7 @@ Figure 6.2: Phase-type semi-Markov model
 <p><strong>Random effects</strong> (frailty) multi-state models for <em>intermittently-observed</em> data</p>
 <ul>
 <li><p>Theoretically possible in <a href="https://mcmc-jags.sourceforge.io/">JAGS</a>, <a href="http://mc-stan.org">Stan</a> or <a href="http://mrc-bsu.cam.ac.uk/software/bugs">BUGS</a> (Bayesian approach), though requires writing out a model likelihood in the program’s own language. Some examples in <a href="https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569">van den Hout (2017)</a>.</p></li>
-<li><p>Several R packages available for random effects models with <em>time-to-event</em> data - see the <a href="https://cran.r-project.org/web/views/Survival.html">CRAN task view</a>.</p></li>
+<li><p>Several R packages available for random effects models with <em>time-to-event</em> data - e.g. <code>frailtypack</code> and others in the <a href="https://cran.r-project.org/web/views/Survival.html">CRAN task view</a>.</p></li>
 </ul>
 <p>Models with <strong>informative sampling times</strong> (e.g. person is more likely to be observed at times when their disease is more severe.) See e.g. </p>
 <ul>

@@ -33,7 +33,7 @@ head(psor, 5)
 
 ## Choices for modelling covariates
 
-Most general model for the psoriatic arthritis data 
+There are three transitions in the model.  Which transitions should be affected by which covariates? 
 
 ```{tikz, fig.cap = "Psoriatic arthritis", fig.ext = 'png', echo=FALSE}
 \usetikzlibrary{positioning}
@@ -48,11 +48,11 @@ Most general model for the psoriatic arthritis data
 \node [state, right=of state3] (state4) {4. 10+ damaged joints};
 \draw[->] ($(state1.east)+(0cm,0.1cm)$) -- ($(state2.west)+(0cm,0.1cm)$) node [midway,above=2em] {$q_{12}^{(0)} \exp(\boldsymbol{\beta}_{12}^{\prime} \mathbf{z})$};
 \draw[->] ($(state2.east)+(0cm,0.1cm)$) -- ($(state3.west)+(0cm,0.1cm)$) node [midway,above=2em] {$q_{23}^{(0)} \exp(\boldsymbol{\beta}_{23}^{\prime} \mathbf{z})$};
-\draw[->] ($(state3.east)-(0cm,0.1cm)$) -- ($(state4.west)-(0cm,0.1cm)$) node [midway,above=2em] {$q_{34}^{(0)} \exp(\boldsymbol{\beta}_{34}^{\prime} \mathbf{z})$}; 
+\draw[->] ($(state3.east)+(0cm,0.1cm)$) -- ($(state4.west)+(0cm,0.1cm)$) node [midway,above=2em] {$q_{34}^{(0)} \exp(\boldsymbol{\beta}_{34}^{\prime} \mathbf{z})$}; 
 \end{tikzpicture}
 ```
 
-Consider which transitions may be affected by which covariates.  Don't just put all covariates on all transitions without thinking --- you may not have enough data informing transitions out of particular states. 
+Don't just put all covariates on all transitions without thinking --- you may not have enough data informing transitions out of particular states. 
 
 ```{r}
 statetable.msm(state, ptnum, data=psor)
@@ -131,7 +131,9 @@ cbind(logliks, AICs)
 
 Most complex model `psorc_all.msm` has highest log-likelihood, but the extra parameters do not lead to better  predictive performance
 
-Given the AICs and the estimates from the full model, it seems sufficient to assume that `hieffusn` is a predictor of the 1-2 and 2-3 transitions, and `ollwsdrt` is a predictor of the 2-3 transition.
+It seems sufficient to assume that `hieffusn` is a predictor of the 1-2 and 2-3 transitions, and `ollwsdrt` is a predictor of the 2-3 transition
+
+Check the coefficients from the fitted models to verify that this is plausible...
 
 
 ## Interpretation of the hazard ratio
@@ -199,7 +201,7 @@ We want to investigate whether heart transplant recipients who have previously h
 
 ## Solutions
 
-1. First we start with the full model where the covariate affects all transitions, and examine the hazard ratios under this model. 
+1. We convert the categorical variable `pdiag` to a binary 0/1 covariate indicating primary diagnosis of IHD.   First we fit the full model where the binary covariate affects all transitions, and examine the hazard ratios under this model. 
 
     ```{r,cache=TRUE}
     cav$IHD <- as.numeric(cav$pdiag == "IHD")
@@ -209,7 +211,7 @@ We want to investigate whether heart transplant recipients who have previously h
     ```
 
 
-    We see that the pre-transplant IHD is associated with an increased risk of CAV onset (state 1 - state 2) and death before CAV onset (state 1 - state 4).    The confidence intervals for the hazard ratios of IHD on the other transition rates are wide and include the null 1.
+    We see that the pre-transplant IHD is associated with an increased risk of CAV onset (state 1 - state 2), and possibly also with death before CAV onset (state 1 - state 4).    The confidence intervals for the hazard ratios of IHD on the other transition rates are wide and include the null 1.
 
 
 2.  Hence we build a simplified model, in which IHD only affects the transition rates out of State 1.  This model has an improved AIC compared to the bigger model, despite having 5 fewer parameters (`df`).  
@@ -242,7 +244,7 @@ We want to investigate whether heart transplant recipients who have previously h
     pmatrix.msm(cavcov.msm, t=5, covariates=list(IHD=1))
     ```
 
-    The passage probability to severe CAV (which we computed in the previous chapter) is similar between both groups of people (`IHD=0`) and (`IHD=1`), though people who have had IHD are estimated to be slightly more likely to go through the "severe CAV" state before they die.
+    The passage probability to severe CAV (which we computed in the previous chapter), i.e. the chance of going through the "severe CAV" state before death, is similar between both groups of people (`IHD=0`) and (`IHD=1`), though slightly higher for people who have had IHD.
 
     ```{r}
     ppass.msm(cavcov1.msm, tot=100, covariates=list(IHD=0))["State 1","State 3"]

@@ -250,7 +250,9 @@ Here is an artificial dataset, where we know the patient:
 
 * was in state 1 at times 0 and 1 (`obstype` 1)
 
-* occupied state 2 throughout the period between years 2 and 3.09 and between years 4 and 5 (`obstype` 2)
+* occupied state 2 throughout the period between years 2 and 3.09
+
+* occupied state 2 between years 4 and 5 (`obstype` 2) before moving to state 3 at time 5
 
 * died at time 5.85 (`obstype` 3)
 
@@ -367,7 +369,7 @@ People in state 1 are around three times as likely to transition next to state 2
 
 ## Postscript: What if it doesn't converge? 
 
-A risk of the kinds of models used here is that they may be weakly identifiable from the data.  Often the optimisation will not converge, or converge to an answer that its not sensible. 
+A risk of the kinds of models used here is that they may be weakly identifiable from the data.  Often the optimisation will not converge, or converge to an answer that is not useful.
 
 A common message is 
 
@@ -382,7 +384,7 @@ Another common symptom is very large confidence intervals for certain parameters
 
 The optimiser claims to have found the maximum likelihood, but the answer is not very useful, because the data contain no information about that parameter, hence the likelihood is flat with respect to that parameter.   
 
-In this case the model should be simplified, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (`qconstraint` option to `msm`) or constraining covariate effects (see the [chapter on covariates](#covariates))
+If it doesn't converge, that usually means it is sensible to simplify the model, e.g. by combining states, removing covariates, constraining intensities to be equal to each other (`qconstraint` option to `msm`) or constraining covariate effects (see the [chapter on covariates](#covariates))
 
 In some circumstances, numerical overflow/underflow can occur during optimisation, giving messages like
 

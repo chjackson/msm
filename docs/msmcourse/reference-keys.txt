@@ -56,9 +56,9 @@ predicting-when-we-know-the-covariate-value-in-advance
 covariates-may-themselves-change-unpredictably
 time-itself-as-a-covariate
 partially-known-states
-shorthand-for-defining-this-model-in-msm
+pci-piecewise-constant-intensities-which-change-at-common-times
 output-functions-for-models-with-pci
-variants-of-pci-models
+variants-of-pci-models-advanced
 exercises-3
 solutions-3
 advanced

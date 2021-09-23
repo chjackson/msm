@@ -207,9 +207,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="timedep.html"><a href="timedep.html#covariates-may-themselves-change-unpredictably"><i class="fa fa-check"></i><b>5.3</b> Covariates may themselves change unpredictably</a></li>
 <li class="chapter" data-level="5.4" data-path="timedep.html"><a href="timedep.html#time-itself-as-a-covariate"><i class="fa fa-check"></i><b>5.4</b> Time itself as a covariate</a></li>
 <li class="chapter" data-level="5.5" data-path="timedep.html"><a href="timedep.html#partially-known-states"><i class="fa fa-check"></i><b>5.5</b> Partially-known states</a></li>
-<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#shorthand-for-defining-this-model-in-msm"><i class="fa fa-check"></i><b>5.6</b> Shorthand for defining this model in <code>msm</code></a></li>
+<li class="chapter" data-level="5.6" data-path="timedep.html"><a href="timedep.html#pci-piecewise-constant-intensities-which-change-at-common-times"><i class="fa fa-check"></i><b>5.6</b> <code>pci</code>: piecewise constant intensities (which change at common times)</a></li>
 <li class="chapter" data-level="5.7" data-path="timedep.html"><a href="timedep.html#output-functions-for-models-with-pci"><i class="fa fa-check"></i><b>5.7</b> Output functions for models with <code>pci</code></a></li>
-<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models"><i class="fa fa-check"></i><b>5.8</b> Variants of pci models</a></li>
+<li class="chapter" data-level="5.8" data-path="timedep.html"><a href="timedep.html#variants-of-pci-models-advanced"><i class="fa fa-check"></i><b>5.8</b> Variants of <code>pci</code> models (advanced)</a></li>
 <li class="chapter" data-level="5.9" data-path="timedep.html"><a href="timedep.html#exercises-3"><i class="fa fa-check"></i><b>5.9</b> Exercises</a></li>
 <li class="chapter" data-level="5.10" data-path="timedep.html"><a href="timedep.html#solutions-3"><i class="fa fa-check"></i><b>5.10</b> Solutions</a></li>
 </ul></li>
@@ -281,18 +281,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Getting confidence intervals and standard errors for transition probabilites and related quantities is not trivial computationally. Two ways in <code>msm</code>:</p>
 <ol style="list-style-type: decimal">
 <li><p><code>ci="normal"</code>.</p>
-<p>Repeatedly draw from the asymptotic sampling distribution of the estimates, which is a multivariate normal with mean defined by the maximum likelihood estimates, and covariance defined by the (inverse) Hessian at the maximised log likelihood.</p>
+<p>Repeatedly draw from the asymptotic sampling distribution of the estimated log intensities (and covariate effects), which is a multivariate normal with mean defined by the maximum likelihood estimates, and covariance defined by the (inverse) Hessian at the maximised log likelihood.</p>
 <p>Compute the P matrix for each draw, and obtain the confidence interval from the quantiles of <span class="math inline">\(B\)</span> samples.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="outputs.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(psor.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">B=</span><span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##         State 1                         State 2                        
-## State 1 0.9127936 (0.8922596,0.9279849) 0.0806027 (0.0668666,0.0998334)
-## State 2 0                               0.8545672 (0.8183608,0.8798995)
+## State 1 0.9127936 (0.8973367,0.9257817) 0.0806027 (0.0683250,0.0953525)
+## State 2 0                               0.8545672 (0.8224491,0.8838657)
 ## State 3 0                               0                              
 ## State 4 0                               0                              
 ##         State 3                         State 4                        
-## State 1 0.0060564 (0.0046493,0.0083842) 0.0005474 (0.0003648,0.0008135)
-## State 2 0.1276400 (0.1057063,0.1605838) 0.0177928 (0.0128012,0.0238118)
-## State 3 0.7711897 (0.7203635,0.8189545) 0.2288103 (0.1810455,0.2796365)
+## State 1 0.0060564 (0.0045269,0.0078851) 0.0005474 (0.0003779,0.0008007)
+## State 2 0.1276400 (0.1012910,0.1542284) 0.0177928 (0.0134774,0.0255488)
+## State 3 0.7711897 (0.6961001,0.8177842) 0.2288103 (0.1822158,0.3038999)
 ## State 4 0                               1.0000000 (1.0000000,1.0000000)</code></pre></li>
 <li><p><code>ci="boot"</code>.</p>
 <p>Repeatedly draw bootstrap resamples of the data, refit the model for each sample, and summarise the estimates over the repeated samples (slower but more accurate, as avoids asymptotic normal approximation)</p>
@@ -304,8 +304,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.4</span> Total length of stay in states</h2>
 <p>For someone in state <span class="math inline">\(r\)</span> now, over the next <span class="math inline">\(t=10\)</span> years they are expected to spend a total of:</p>
 <ul>
-<li><p>? years in state 1</p></li>
-<li><p>? years in state 2 …</p></li>
+<li><p>? years in state <span class="math inline">\(s=1\)</span></p></li>
+<li><p>? years in state <span class="math inline">\(s=2\)</span> …</p></li>
 </ul>
 <p>Defined as <span class="math inline">\(\int_{0}^{t} P(u)_{rs} du\)</span>, for each <span class="math inline">\(s\)</span>, and computed in <code>msm</code> by the <code>totlos.msm</code> function</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="outputs.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">totlos.msm</span>(psor.msm, <span class="at">t=</span><span class="dv">10</span>)</span></code></pre></div>
@@ -353,31 +353,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Using the CAV model that you fitted in the exercises from the previous chapter, investigate how the survival probability depends on the state of CAV.</p></li>
 <li><p>For a new heart transplant recipient, how likely is it that someone will experience severe CAV before dying?</p></li>
 <li><p>Does the model appear to fit the data?</p>
-<p>Note that if death times are known, you could also check the fit of an <code>msm</code> model by comparing estimated survival probabilities with Kaplan-Meier estimates (in addition to comparing observed and expected prevalence). <code>msm</code> has a shortcut function to check fitted survival probabilities, called as <code>plot.survfit.msm(x, from=1)</code>, where <code>x</code> is your fitted model, and <code>from</code> indicates the starting state from which to forecast survival. Look at the help page for this function, and customise the plot to your liking.</p>
-<p>Note also that in this example, some aspects of the goodness-of-fit checks are misleading - see the solution for an explanation why.</p></li>
+<p>Note that if death times are known, you could also check the fit of an <code>msm</code> model by comparing estimated survival probabilities with Kaplan-Meier estimates (in addition to comparing observed and expected prevalence). <code>msm</code> has a shortcut function to check fitted survival probabilities, called as <code>plot.survfit.msm(x, from=1)</code>, where <code>x</code> is your fitted model, and <code>from</code> indicates the starting state from which to forecast survival. Look at the help page for this function, and customise the plot to your liking.</p></li>
 </ol>
 </div>
 <div id="solutions-1" class="section level2" number="3.9">
 <h2><span class="header-section-number">3.9</span> Solutions</h2>
 <ol style="list-style-type: decimal">
-<li><p>Picking a range of prediction times covering those in the data (1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.</p>
+<li><p>Picking a range of prediction times covering those in the data (e.g. 1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="outputs.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">1</span>)[,<span class="dv">4</span>]</span></code></pre></div>
 <pre><code>##      estimate  lower  upper
 ## [1,]   0.0429 0.0362 0.0526
-## [2,]   0.0718 0.0543 0.1377
-## [3,]   0.2519 0.2035 0.3159
+## [2,]   0.0718 0.0541 0.1332
+## [3,]   0.2519 0.2022 0.3103
 ## [4,]   1.0000 1.0000 1.0000</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="outputs.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">5</span>)[,<span class="dv">4</span>]</span></code></pre></div>
 <pre><code>##      estimate lower upper
-## [1,]    0.251 0.224 0.288
-## [2,]    0.436 0.388 0.527
-## [3,]    0.701 0.624 0.780
+## [1,]    0.251 0.226 0.289
+## [2,]    0.436 0.385 0.534
+## [3,]    0.701 0.624 0.776
 ## [4,]    1.000 1.000 1.000</code></pre>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="outputs.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">10</span>)[,<span class="dv">4</span>]</span></code></pre></div>
 <pre><code>##      estimate lower upper
-## [1,]    0.505 0.465 0.563
-## [2,]    0.685 0.633 0.764
-## [3,]    0.865 0.808 0.917
+## [1,]    0.505 0.468 0.560
+## [2,]    0.685 0.633 0.761
+## [3,]    0.865 0.810 0.916
 ## [4,]    1.000 1.000 1.000</code></pre>
 <p>At each time, the risk of death by this time increases sharply with the severity of CAV.</p>
 <p>These risks are high, but note that the data only include outcomes without treatment. In practice, people who are diagnosed with CAV will get treatment (e.g. coronary artery revascularisation). Outcomes after treatment were excluded from the <code>cav</code> data.</p></li>
@@ -389,7 +388,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="outputs.html#cb55-1" aria-hidden="true" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">ppass.msm</span>(cav.msm, <span class="at">tot=</span><span class="dv">100</span>, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>)</span>
 <span id="cb55-2"><a href="outputs.html#cb55-2" aria-hidden="true" tabindex="-1"></a>pp[<span class="dv">1</span>,<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## estimate    lower    upper 
-##    0.586    0.466    0.656</code></pre></li>
+##    0.586    0.460    0.654</code></pre></li>
 <li><p>Judging from the comparison of observed and predicted prevalences, and comparing with the Kaplan-Meier survival estimates, the model appears to underestimate the probability of death at later times.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="outputs.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.prevalence.msm</span>(cav.msm)</span></code></pre></div>
 <p><img src="msmcourse_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
@@ -399,7 +398,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb58-4"><a href="outputs.html#cb58-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">col=</span><span class="st">&quot;red&quot;</span>,</span>
 <span id="cb58-5"><a href="outputs.html#cb58-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">col.surv=</span><span class="st">&quot;black&quot;</span>)</span></code></pre></div>
 <p><img src="msmcourse_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
-<p>In fact, this is an artefactual finding resulting from people in the data being followed up for different lengths of time. To calculate the probability at each time, <code>msm</code> uses a denominator defined by the number of people whose state we know at this time. This overestimates the probability of death, because the people whose state we know at later times are more likely to be the people who have died. We don’t know the state at later times for people whose outcomes were censored at the end of the study when they were still alive.</p>
+<p>In fact (though you were not expected to know this from the information given in the question!) this is an artefactual finding resulting from people in the data being followed up for different lengths of time. To calculate the probability at each time, <code>msm</code> uses a denominator defined by the number of people whose state we know at this time. This overestimates the probability of death, because the people whose state we know at later times are more likely to be the people who have died. We don’t know the state at later times for people whose outcomes were censored at the end of the study when they were still alive.</p>
 <p>We could correct for this bias if we impose an “end of study” time for every person, and exclude people from the denominator after this time, even people who we know to have died. These can be supplied as the <code>censtime</code> argument to <code>plot.prevalence.msm</code>, but these times are not available in the <code>cav</code> dataset supplied with <code>msm</code>.</p></li>
 </ol>
 

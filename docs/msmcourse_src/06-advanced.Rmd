@@ -8,7 +8,7 @@ In the CAV example, the true state of disease is measured with error.  We allowe
 
 See `ematrix` argument to `msm`.  For further details and worked examples, see the [package vignette](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf), Sections 1.6 and 2.14.
 
-```{tikz, fig.cap = "Hidden Markov model", fig.ext = 'png', echo=FALSE}
+```{tikz, fig.cap = "Hidden Markov multi-state model where states 1,2,3 can be misclassified", fig.ext = 'png', echo=FALSE}
 \usetikzlibrary{positioning}
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows}
@@ -64,6 +64,7 @@ In a Markov model, the time to the next state does not depend on how long you ha
 ### "phase-type" semi-Markov model 
 
 To relax the Markov assumption for a specific state, split up that state into hidden "phases" and define a Markov model on a state space defined by the phases and the remaining states.  Transition time between the phases is unknown. 
+For example: 
 
 ```{tikz, fig.cap = "Phase-type semi-Markov model", fig.ext = 'png', echo=FALSE}
 \usetikzlibrary{positioning}
@@ -92,7 +93,9 @@ To relax the Markov assumption for a specific state, split up that state into hi
 \end{tikzpicture}
 ```
 
-This is a (partially) hidden Markov model, hence can be implemented in `msm`.
+This is equivalent to making the sojourn distribution in state 2 more flexible than an exponential distribution, so the hazard of leaving state 2 depends on how long has been spent there.
+
+It is a (partially) hidden Markov model, hence can be implemented in `msm` using its hidden Markov model machinery. 
 
 See the `phase.states` option to the `msm` function. 
 
@@ -105,7 +108,7 @@ The idea is from [Titman and Sharples](https://doi.org/10.1111/j.1541-0420.2009.
 
 - Theoretically possible in [JAGS](https://mcmc-jags.sourceforge.io/), [Stan](http://mc-stan.org) or [BUGS](http://mrc-bsu.cam.ac.uk/software/bugs) (Bayesian approach), though requires writing out a model likelihood in the program's own language.  Some examples in [van den Hout (2017)](https://www.routledge.com/Multi-State-Survival-Models-for-Interval-Censored-Data/Hout/p/book/9780367570569).
 
-- Several R packages available for random effects models with _time-to-event_ data - see the [CRAN task view](https://cran.r-project.org/web/views/Survival.html).
+- Several R packages available for random effects models with _time-to-event_ data - e.g. `frailtypack` and others in the [CRAN task view](https://cran.r-project.org/web/views/Survival.html).
 
 Models with **informative sampling times** (e.g. person is more likely to be observed at times when their disease is more severe.)  See e.g. 
 

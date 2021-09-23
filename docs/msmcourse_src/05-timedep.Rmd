@@ -56,9 +56,9 @@ Now we want to _predict_ the transition probability matrix that governs the stat
 
 Then we can make an approximate prediction using the function `pmatrix.piecewise.msm`.  This needs us to specify 
 
- - times when the age changes (hence when the intensity changes) (`times`) 
+ - times when the `age` covariate changes (hence when the intensity changes) (`times`) 
 
- - the values that age takes at these times (`covariates`)
+ - the values that `age` takes at these times (`covariates`)
 
 ```{r,eval=FALSE}
 pmatrix.piecewise.msm(psor_tage.msm, 
@@ -72,7 +72,7 @@ pmatrix.piecewise.msm(psor_tage.msm,
                                         list(age=54)))
 ```
 
-A finer time grid will give a better approximation to a prediction from the ideal model where risk changes _continuously_ with age.
+`times` doesn't have to be an integer.  A finer time grid might be chosen, to give a better approximation to a prediction from the ideal model where risk changes _continuously_ with age.
 
 But remember the fitted model itself was based on an approximation to the data, so we can never get an _exact_ prediction from the ideal model.
 
@@ -89,7 +89,7 @@ In the psoriatic arthritis example, suppose the risk factors `hieffusn` and `oll
 
 We can only use `pmatrix.piecewise.msm` if we specify how the risk factors themselves will change in the future, which will be unknown in practice. 
 
-If we don't want to condition on a specific future trajectory for the risk factors, we could build a _joint model_ for the clinical state and the risk factors, hence predict both together. 
+If we don't want to condition on a specific future trajectory for the risk factors, we could build a _joint model_ for the clinical state and the risk factors, hence predict both together.
 
 If the risk factors are _discrete_, we could do this in `msm` by building a multi-state model on an *expanded state space*. 
 
@@ -131,6 +131,8 @@ If the risk factors are _discrete_, we could do this in `msm` by building a mult
 
 \end{tikzpicture}
 ```
+
+Then we could predict future outcomes for someone with a particular combination of states and risk factors (= someone in a particular state in the expanded model).
 
 This kind of model can be tricky to deal due to the large number of parameters - see e.g. [Tom and Farewell](https://doi.org/10.1002/sim.4429).
 
@@ -174,7 +176,7 @@ impdata$state[impdata$state==5] <- NA
 impdata
 ```
 
-Problem is that the state is unknown at 6 and 12 years
+Problem is that the state is unknown at 6 and 12 years if the data are intermittently observed. 
 
 We need a new tool to compute the likelihood in this situation...
 
@@ -183,7 +185,7 @@ We need a new tool to compute the likelihood in this situation...
 
 If a state is unknown at a particular time, `msm` can compute the likelihood as a *sum over the potential values* of the likelihood given the unknown state.  
 
-Replace the `NA` values for the unknown state with a code (99, say), and use the following syntax to tell `msm` what states this code can represent:  
+Replace the `NA` values in the data for the unknown state with a code (99, say), and use the following syntax to fit the model while telling `msm` what states this code can represent:  
 
 ```
 msm(..., 
@@ -196,12 +198,14 @@ Two common examples
 
 * censored survival times when multi-state model includes death as a state.  We know someone is alive at the end of the study, but we don't know their clinical state at this time. 
 
-* (as here) time-dependent covariates that change at a common time.  We know the covariate value, but not the state, at that time.  
+* (as in the example here) time-dependent intensities that change at a common time.  We know the value of the "time period" covariate, but not the state, at that time.  
 
-Footnote: syntax uses the term `censor`, because a _censored_ random variable is one that is partially observed, but in `msm` this refers to a partially observed state, not a partially-known event time. 
+(Footnote: `msm` syntax uses the term `censor`, because a _censored_ random variable is one that is partially observed, but in `msm` this refers to a partially observed state, not a partially-known event time.)
 
 
-## Shorthand for defining this model in `msm`
+## `pci`: piecewise constant intensities (which change at common times)
+
+`msm` provides a shorthand for these models where the intensities depend on the time period.
 
 Supply the times when all intensities change in the `pci` argument.  `msm` will automatically construct a categorical covariate indicating the time period, impute artificial observations at the change times, and construct and fit a `censor` model to calculate and maximise the correct likelihood.   
 
@@ -218,14 +222,16 @@ As in any other model with categorical covariates, `msm` estimates a hazard rati
 
 - compared to the baseline category (here, 0-5 years)
 
-No evidence for time dependence in the intensities 
+No evidence for time dependence in the intensities in this example 
 
 
 ## Output functions for models with `pci` 
 
 For models fitted using `pci`, then the `pmatrix.msm` and `totlos.msm` functions will _automatically recognise_ that the model has a covariate representing time since the start of the process.
 
-Here, when we predict the transition probabilities over 15 years, it will automatically adjust for the intensities changing at 5 and 10 years.   So there is no need to use `pmatrix.piecewise.msm` or supply a `covariates` argument. 
+Here, when we predict the transition probabilities over 15 years, it will automatically adjust for the intensities changing at 5 and 10 years.
+
+So there is no need to use `pmatrix.piecewise.msm` or supply a `covariates` argument. 
 
 ```{r}
 pmatrix.msm(psorpci.msm, t=15)
@@ -235,20 +241,20 @@ pmatrix.msm(psorpci.msm, t=15)
 
 
 
-## Variants of pci models 
+## Variants of `pci` models (advanced)
 
-What if we want to build more detailed models with time-dependence, e.g. 
+What if we want to build more detailed models with time-dependent intensities, e.g. 
 
-* models with a different covariate effect for each time period?  
+* models with a second covariate, whose effect is different within each time period?  i.e. a time/covariate interaction. 
 
-* models where the time period affects some transition rates but not others? 
+* models where the time period affects some transition intensities but not others? 
 
 
-1. Construct the expanded dataset 
+1. **Construct the expanded dataset**
 
-    Fit a standard `pci` model and then use the `model.frame` function to extract the expanded dataset constructed by `msm`, with
+    Fit a standard `pci` model, then use `model.frame()` to extract the expanded dataset constructed by `msm`, that has
     
-    - extra rows at the time change points, and 
+    - extra rows at the time change points where the state is unknown, 
     
     - an automatically-constructed `timeperiod` covariate
     
@@ -262,13 +268,13 @@ What if we want to build more detailed models with time-dependence, e.g.
     head(psor_pcidata)
     ```
 
-2. Fit model to the expanded dataset, using `censor`
+2. **Fit model to the expanded dataset**, using `censor`
 
     Then we can use this dataset for a standard `msm` fit with `timeperiod` as a categorical covariate.
     
     The missing states at the time change points are given a code equal to 1 plus the number of states 
     
-    - here the code is 5, so call `msm` with `censor = 5`.  
+    - here the "state unknown" code is 5, so call `msm` with `censor = 5`.  
 
 Example (a): Time period only affects the rate of the 1-2 transition: 
 
@@ -306,7 +312,7 @@ In the CAV example, investigate how the transition intensities depend on time si
 
 In each case, AIC could be used to compare models with different assumptions about the covariate effect.   
 
-Note if you get a `numerical overflow` error, this may be solved by normalising the optimisation using `msm(..., control=list(fnscale=4000))`, as described at the end of Chapter 2, noting that the -2 log likelihood in this example takes a value of around 4000. 
+Note if you get a `numerical overflow` error, this may be solved by normalising the optimisation using `msm(..., control=list(fnscale=4000))`, as described at the end of Chapter 2, noting that the -2 log-likelihood being optimised in this example takes a value of around 4000. 
 
 If you get a "iteration limit exceeded" error, use `msm(..., control=list(maxit=10000), ...)` or some other large number for `maxit`.  This increases the number of iterations that R's `optim` function uses before giving up trying to find the maximum. 
 
@@ -330,7 +336,8 @@ increase significantly with time.
     
     ```{r,cache=TRUE}
     cav.timei.msm <- msm(state ~ years, subject=PTNUM, data=cav, deathexact = TRUE, 
-                       covariates = list("1-2"=~ years, "2-1" = ~years, "2-4"=~years, "3-4"=~years), 
+                       covariates = list("1-2"=~ years, "2-1" = ~years,
+		                         "2-4"=~years, "3-4"=~years), 
                        gen.inits = TRUE, qmatrix=Q_cav, 
                        control = list(fnscale=4000, maxit=10000))
     cav.timei.msm

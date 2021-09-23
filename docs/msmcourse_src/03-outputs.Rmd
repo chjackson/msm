@@ -36,7 +36,7 @@ Getting confidence intervals and standard errors for transition probabilites and
 
 1. `ci="normal"`.
 
-    Repeatedly draw from the asymptotic sampling distribution of the estimates, which is a multivariate normal with mean defined by the maximum likelihood estimates, and covariance defined by the (inverse) Hessian at the maximised log likelihood.  
+    Repeatedly draw from the asymptotic sampling distribution of the estimated log intensities (and covariate effects), which is a multivariate normal with mean defined by the maximum likelihood estimates, and covariance defined by the (inverse) Hessian at the maximised log likelihood.  
 
     Compute the P matrix for each draw, and obtain the confidence interval from the quantiles of $B$ samples. 
 
@@ -58,9 +58,9 @@ In either method, it is sensible to check $B$ is large enough, by computing for 
 
 For someone in state $r$ now, over the next $t=10$ years they are expected to spend a total of:
 
-* ? years in state 1
+* ? years in state $s=1$
 
-* ? years in state 2 ... 
+* ? years in state $s=2$ ... 
 
 Defined as $\int_{0}^{t} P(u)_{rs} du$, for each $s$, and computed in `msm` by the `totlos.msm` function
 
@@ -127,12 +127,11 @@ P[1,3] + P[1,4]
 
     Note that if death times are known, you could also check the fit of an `msm` model by comparing estimated survival probabilities with Kaplan-Meier estimates (in addition to comparing observed and expected prevalence).  `msm` has a shortcut function to check fitted survival probabilities, called as `plot.survfit.msm(x, from=1)`, where `x` is your fitted model, and `from` indicates the starting state from which to forecast survival.    Look at the help page for this function, and customise the plot to your liking. 
 
-    Note also that in this example, some aspects of the goodness-of-fit checks are misleading - see the solution for an explanation why. 
 
 
 ## Solutions 
 
-1.  Picking a range of prediction times covering those in the data (1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.
+1.  Picking a range of prediction times covering those in the data (e.g. 1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.
 
     ```{r}
     pmatrix.msm(cav.msm, ci="normal", t=1)[,4]
@@ -168,6 +167,6 @@ P[1,3] + P[1,4]
                      col.surv="black")
     ```
  
-    In fact, this is an artefactual finding resulting from people in the data being followed up for different lengths of time.  To calculate the probability at each time, `msm` uses a denominator defined by the number of people whose state we know at this time.   This overestimates the probability of death, because the people whose state we know at later times are more likely to be the people who have died.  We don't know the state at later times for people whose outcomes were censored at the end of the study when they were still alive. 
+    In fact (though you were not expected to know this from the information given in the question!) this is an artefactual finding resulting from people in the data being followed up for different lengths of time.  To calculate the probability at each time, `msm` uses a denominator defined by the number of people whose state we know at this time.   This overestimates the probability of death, because the people whose state we know at later times are more likely to be the people who have died.  We don't know the state at later times for people whose outcomes were censored at the end of the study when they were still alive. 
 
     We could correct for this bias if we impose an "end of study" time for every person, and exclude people from the denominator after this time, even people who we know to have died.    These can be supplied as the `censtime` argument to `plot.prevalence.msm`, but these times are not available in the `cav` dataset supplied with `msm`. 
