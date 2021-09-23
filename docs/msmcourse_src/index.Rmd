@@ -34,9 +34,7 @@ This course gives an introduction to the use of the `msm` R package for fitting 
 
 There is a balance of short talks and practical exercises.  In the exercises, you will write your own R code, based on the code demonstrated in the talks, to perform multi-state data analyses and answer applied questions. 
 
-All the course material is on this website, at 
-
-[http://chjackson.github.io/msm/msmcourse](http://chjackson.github.io/msm/msmcourse)
+All the course material will stay on this website, [http://chjackson.github.io/msm/msmcourse](http://chjackson.github.io/msm/msmcourse),
 
 so you can follow along at your own pace, and finish exercises in your own time. 
 
@@ -63,7 +61,7 @@ Rough timings:
 
 ## Prerequisites {-}
 
-Laptop with R and the `msm` package installed. 
+Computer with R and the `msm` package installed. 
 
 Basic knowledge of R. 
 

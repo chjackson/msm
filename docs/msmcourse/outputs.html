@@ -285,14 +285,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Compute the P matrix for each draw, and obtain the confidence interval from the quantiles of <span class="math inline">\(B\)</span> samples.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="outputs.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(psor.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">B=</span><span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##         State 1                         State 2                        
-## State 1 0.9127936 (0.8894643,0.9283028) 0.0806027 (0.0660372,0.1025465)
-## State 2 0                               0.8545672 (0.8223591,0.8788057)
+## State 1 0.9127936 (0.8922596,0.9279849) 0.0806027 (0.0668666,0.0998334)
+## State 2 0                               0.8545672 (0.8183608,0.8798995)
 ## State 3 0                               0                              
 ## State 4 0                               0                              
 ##         State 3                         State 4                        
-## State 1 0.0060564 (0.0044647,0.0078513) 0.0005474 (0.0003827,0.0008277)
-## State 2 0.1276400 (0.1055240,0.1569934) 0.0177928 (0.0132519,0.0251443)
-## State 3 0.7711897 (0.7127843,0.8125560) 0.2288103 (0.1874440,0.2872157)
+## State 1 0.0060564 (0.0046493,0.0083842) 0.0005474 (0.0003648,0.0008135)
+## State 2 0.1276400 (0.1057063,0.1605838) 0.0177928 (0.0128012,0.0238118)
+## State 3 0.7711897 (0.7203635,0.8189545) 0.2288103 (0.1810455,0.2796365)
 ## State 4 0                               1.0000000 (1.0000000,1.0000000)</code></pre></li>
 <li><p><code>ci="boot"</code>.</p>
 <p>Repeatedly draw bootstrap resamples of the data, refit the model for each sample, and summarise the estimates over the repeated samples (slower but more accurate, as avoids asymptotic normal approximation)</p>
@@ -362,22 +362,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li><p>Picking a range of prediction times covering those in the data (1 year, 5 years, 10 years), we can compute the probability of death (state 4 in the model) by this time by extracting the fourth column of the transition probability matrix.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="outputs.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">1</span>)[,<span class="dv">4</span>]</span></code></pre></div>
-<pre><code>##      estimate  lower upper
-## [1,]   0.0429 0.0357 0.052
-## [2,]   0.0718 0.0543 0.135
-## [3,]   0.2519 0.2057 0.312
-## [4,]   1.0000 1.0000 1.000</code></pre>
+<pre><code>##      estimate  lower  upper
+## [1,]   0.0429 0.0362 0.0526
+## [2,]   0.0718 0.0543 0.1377
+## [3,]   0.2519 0.2035 0.3159
+## [4,]   1.0000 1.0000 1.0000</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="outputs.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">5</span>)[,<span class="dv">4</span>]</span></code></pre></div>
 <pre><code>##      estimate lower upper
-## [1,]    0.251 0.227 0.293
-## [2,]    0.436 0.384 0.536
-## [3,]    0.701 0.624 0.777
+## [1,]    0.251 0.224 0.288
+## [2,]    0.436 0.388 0.527
+## [3,]    0.701 0.624 0.780
 ## [4,]    1.000 1.000 1.000</code></pre>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="outputs.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pmatrix.msm</span>(cav.msm, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>, <span class="at">t=</span><span class="dv">10</span>)[,<span class="dv">4</span>]</span></code></pre></div>
 <pre><code>##      estimate lower upper
-## [1,]    0.505 0.468 0.565
-## [2,]    0.685 0.636 0.764
-## [3,]    0.865 0.807 0.916
+## [1,]    0.505 0.465 0.563
+## [2,]    0.685 0.633 0.764
+## [3,]    0.865 0.808 0.917
 ## [4,]    1.000 1.000 1.000</code></pre>
 <p>At each time, the risk of death by this time increases sharply with the severity of CAV.</p>
 <p>These risks are high, but note that the data only include outcomes without treatment. In practice, people who are diagnosed with CAV will get treatment (e.g. coronary artery revascularisation). Outcomes after treatment were excluded from the <code>cav</code> data.</p></li>
@@ -389,7 +389,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="outputs.html#cb55-1" aria-hidden="true" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">ppass.msm</span>(cav.msm, <span class="at">tot=</span><span class="dv">100</span>, <span class="at">ci=</span><span class="st">&quot;normal&quot;</span>)</span>
 <span id="cb55-2"><a href="outputs.html#cb55-2" aria-hidden="true" tabindex="-1"></a>pp[<span class="dv">1</span>,<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## estimate    lower    upper 
-##    0.586    0.466    0.664</code></pre></li>
+##    0.586    0.466    0.656</code></pre></li>
 <li><p>Judging from the comparison of observed and predicted prevalences, and comparing with the Kaplan-Meier survival estimates, the model appears to underestimate the probability of death at later times.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="outputs.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.prevalence.msm</span>(cav.msm)</span></code></pre></div>
 <p><img src="msmcourse_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>

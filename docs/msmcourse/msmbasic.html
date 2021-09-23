@@ -265,7 +265,7 @@ Figure 2.1: Psoriatic arthritis
 <li><p>The dataset, and which columns indicate the state, time (and patient)</p>
 <ul>
 <li><p>States should be numbers, 1, 2, 3, etc.</p></li>
-<li><p>Time should be increasing within each patient</p></li>
+<li><p>Time should be increasing within each patient (but first observation doesn’t have to be at time 0)</p></li>
 <li><p>Patients should be grouped together in the data</p></li>
 </ul></li>
 <li><p>The <strong>transition structure</strong> of the model</p></li>
@@ -326,7 +326,7 @@ Figure 2.1: Psoriatic arthritis
 <p><img src="msmcourse_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>Multi-state models are commonly used in situations like this, for <strong>ordered states of disease severity</strong>, e.g. with states derived by discretising a continuous variable. Transitions should then only be allowed between <strong>adjacent states</strong> in continuous time.</p>
 <p>The transition structure <code>Q</code> should not be chosen based on which elements of the <code>statetable.msm</code> output are non-zero!</p>
-<p>Instead, draw a diagram of allowed <em>continuous-time</em> transitions, and choose <code>Q</code> to describe the structure of this diagram.</p>
+<p>Instead, it should be based on scientific judgement about what happens in continuous time.</p>
 </div>
 <div id="maximum-likelihood-estimation" class="section level2" number="2.5">
 <h2><span class="header-section-number">2.5</span> Maximum likelihood estimation</h2>
@@ -358,12 +358,16 @@ intensities.</p>
 <h2><span class="header-section-number">2.6</span> Intuition for what transition intensities mean</h2>
 <p>The <em>mean sojourn time</em> <span class="math inline">\(E(T_r)\)</span> is the average time spent in state <span class="math inline">\(r\)</span> before
 moving to another state</p>
-<p>If the intensities <span class="math inline">\(q_{rs}\)</span> are constant over time, then <span class="math inline">\(E(T_r) = -1/q_{rr}\)</span> where <span class="math inline">\(q_{rr} = -\sum_{s!=r} q_{rs}\)</span></p>
+<p>If the intensities <span class="math inline">\(q_{rs}\)</span> are constant over time, then</p>
+<ul>
+<li><p><span class="math inline">\(E(T_r) = -1/q_{rr}\)</span> where <span class="math inline">\(q_{rr} = -\sum_{s!=r} q_{rs}\)</span>, i.e.</p></li>
+<li><p>the sum of intensities in row <span class="math inline">\(r\)</span> (excluding the diagonal <span class="math inline">\(q_{rr}\)</span>) is 1 / the mean sojourn time in state <span class="math inline">\(r\)</span></p></li>
+</ul>
 <p>So we might guess that someone spends an average of</p>
 <ul>
-<li><p>10 months in state 1 before moving to state 2 : <span class="math inline">\(q_{12} = 0.1\)</span></p></li>
-<li><p>10 months in state 2 before moving to state 3 : <span class="math inline">\(q_{23} = 0.1\)</span></p></li>
-<li><p>10 months in state 3 before moving to state 4 : <span class="math inline">\(q_{23} = 0.1\)</span></p></li>
+<li><p>10 months in state 1 before moving to state 2 : <span class="math inline">\(-1/q_{11} = 10\)</span>, hence <span class="math inline">\(q_{12} = 0.1\)</span>, since in this model we can only transition to <span class="math inline">\(s=2\)</span> from <span class="math inline">\(r=1\)</span>, and similarly,</p></li>
+<li><p>10 months in state 2 before moving to state 3 : <span class="math inline">\(q_{23} = -q_{22} = 0.1\)</span></p></li>
+<li><p>10 months in state 3 before moving to state 4 : <span class="math inline">\(q_{34} = -q_{33} = 0.1\)</span></p></li>
 </ul>
 <p>and use these as initial values to start the search for the maximum likelihood estimates. Initial values do not usually need to be very close to the true estimates, just within an order of magnitude.</p>
 <p>See the exercises for a slightly harder example, where there is more than one state <span class="math inline">\(s\)</span> we can transition to from state <span class="math inline">\(r\)</span>…</p>
@@ -409,7 +413,12 @@ moving to another state</p>
 <li><p>known time of transition out of the previously-observed state (<code>obstype=2</code>). Not considered in this course. If all observations are of this type, this is equivalent to time-to-event data where the state is known at all times.</p></li>
 <li><p>entry time observed exactly but state at previous instant unknown (<code>obstype=3</code>). If death states always have <code>obtype=3</code>, this is equivalent to <code>deathexact=TRUE</code>.</p></li>
 </ol>
-<p>Here is an artificial example:</p>
+<p>Here is an artificial dataset, where we know the patient:</p>
+<ul>
+<li><p>was in state 1 at times 0 and 1 (<code>obstype</code> 1)</p></li>
+<li><p>occupied state 2 throughout the period between years 2 and 3.09 and between years 4 and 5 (<code>obstype</code> 2)</p></li>
+<li><p>died at time 5.85 (<code>obstype</code> 3)</p></li>
+</ul>
 <pre><code>##    PTNUM years state obstype
 ## 1 100002  0.00     1       1
 ## 2 100002  1.00     1       1
@@ -427,13 +436,13 @@ moving to another state</p>
 <ol style="list-style-type: decimal">
 <li><p>Summarise the transitions over an interval</p></li>
 <li><p>Define a matrix of 1s and 0s indicating the allowed transitions in continuous time. Assume for the moment that people can move to any adjacent disease state, to both more severe or less severe states, and die from any state.</p></li>
-<li><p>From the May workshop notes, remind yourself of how the transition intensities are related to the probabilities governing the state that someone will move to on leaving the current state.</p>
+<li><p>In the CAV model, there are two alternative “next states” for people in state 1 and people in state 2. From the <a href="https://chjackson.github.io/msm/msmcourse/cjackson_bordeaux2020.pdf">May workshop notes</a>, remind yourself of how the transition intensities are related to the probabilities governing the state that someone will move to on leaving the current state.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>From your data summary, make a guess at what these might be.</p></li>
+<li><p>From your data summary, make a guess at what these probablities might be.</p></li>
 <li><p>Likewise, roughly guess what the mean sojourn times might be.</p></li>
 <li><p>Use those guesses to construct a matrix of plausible initial values for the intensities.</p></li>
 </ol>
-<p>Note that there is no “right answer” for these initial guesses. The learning objective is to be able to convert between transition intensities and more easily-understood quantities.</p></li>
+<p>Note there is no single “right answer” for these initial guesses. The learning objective is to be able to convert between transition intensities and more easily-understood quantities.</p></li>
 <li><p>Call <code>msm</code> to fit the multi-state model, using</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>auto-generated initial values from (2) and</p></li>
@@ -447,7 +456,8 @@ moving to another state</p>
 <div id="solutions" class="section level2" number="2.10">
 <h2><span class="header-section-number">2.10</span> Solutions</h2>
 <ol style="list-style-type: decimal">
-<li><div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="msmbasic.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, PTNUM, <span class="at">data=</span>cav)</span></code></pre></div>
+<li><div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="msmbasic.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(msm)</span>
+<span id="cb15-2"><a href="msmbasic.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, PTNUM, <span class="at">data=</span>cav)</span></code></pre></div>
 <pre><code>##     to
 ## from    1    2    3    4
 ##    1 1367  204   44  148
@@ -459,7 +469,7 @@ moving to another state</p>
 <span id="cb17-4"><a href="msmbasic.html#cb17-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code></pre></div></li>
 <li><p>For someone in state <span class="math inline">\(r\)</span>, the probability that the next state that they will move to is state <span class="math inline">\(s\)</span> is <span class="math inline">\(-q_{rs} / q_{rr}\)</span>. Row <span class="math inline">\(r\)</span> of the transition intensity matrix corresponds to the transitions out of state <span class="math inline">\(r\)</span>.</p>
 <p>We can set initial values for this row by first guessing the mean sojourn time <span class="math inline">\(T_r\)</span>, and setting the diagonal entry <span class="math inline">\(q_{rr} = -1/T_{r}\)</span>.</p>
-<p>We then set the remaining, off-diagonal values <span class="math inline">\(q_{rs}, s!=r\)</span> according to guesses of the probability <span class="math inline">\(\pi_{rs}\)</span> that the next state will be <span class="math inline">\(s\)</span>, and deducing that since $_{rs} = <span class="math inline">\(-q_{rs} / q_{rr}\)</span>, we can initialise <span class="math inline">\(q_{rs} = \pi_{rs} T_r\)</span>.</p>
+<p>We then set the remaining, off-diagonal values <span class="math inline">\(q_{rs}, s!=r\)</span> according to guesses of the probability <span class="math inline">\(\pi_{rs}\)</span> that the next state will be <span class="math inline">\(s\)</span>, and deducing that since <span class="math inline">\(\pi_{rs} = -q_{rs} / q_{rr}\)</span>, we can initialise <span class="math inline">\(q_{rs} = \pi_{rs} / T_r\)</span>.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="msmbasic.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cav<span class="sc">$</span>years)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    0.00    1.01    3.89    3.85    6.00   19.46</code></pre>

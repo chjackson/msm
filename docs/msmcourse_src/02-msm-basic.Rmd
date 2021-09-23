@@ -35,7 +35,7 @@ At minimum, need to specify
   
   - States should be numbers, 1, 2, 3, etc.   
   
-  - Time should be increasing within each patient 
+  - Time should be increasing within each patient (but first observation doesn't have to be at time 0)
   
   - Patients should be grouped together in the data
 
@@ -143,7 +143,8 @@ Multi-state models are commonly used in situations like this, for **ordered stat
 
 The transition structure `Q` should not be chosen based on which elements of the `statetable.msm` output are non-zero!
 
-Instead, draw a diagram of allowed _continuous-time_ transitions, and choose `Q` to describe the structure of this diagram.
+Instead, it should be based on scientific judgement about what happens in continuous time. 
+
 
 
 ## Maximum likelihood estimation
@@ -187,15 +188,19 @@ But if we supply our own initial values, where would we get them from?
 The _mean sojourn time_ $E(T_r)$ is the average time spent in state $r$ before
 moving to another state
 
-If the intensities $q_{rs}$ are constant over time, then $E(T_r) = -1/q_{rr}$ where $q_{rr} = -\sum_{s!=r} q_{rs}$
-  
+If the intensities $q_{rs}$ are constant over time, then
+
+* $E(T_r) = -1/q_{rr}$ where $q_{rr} = -\sum_{s!=r} q_{rs}$, i.e.
+
+* the sum of intensities in row $r$ (excluding the diagonal $q_{rr}$) is 1 / the mean sojourn time in state $r$ 
+
 So we might guess that someone spends an average of 
 
-* 10 months in state 1 before moving to state 2 : $q_{12} = 0.1$
+* 10 months in state 1 before moving to state 2 : $-1/q_{11} = 10$, hence $q_{12} = 0.1$, since in this model we can only transition to $s=2$ from $r=1$, and similarly,
 
-* 10 months in state 2 before moving to state 3 : $q_{23} = 0.1$ 
+* 10 months in state 2 before moving to state 3 : $q_{23} = -q_{22} = 0.1$ 
 
-* 10 months in state 3 before moving to state 4 : $q_{23} = 0.1$ 
+* 10 months in state 3 before moving to state 4 : $q_{34} = -q_{33} = 0.1$ 
 
 and use these as initial values to start the search for the maximum likelihood estimates.   Initial values do not usually need to be very close to the true estimates, just within an order of magnitude. 
 
@@ -241,7 +246,14 @@ More generally, each row of the data could represent a different type of observa
 
 3. entry time observed exactly but state at previous instant unknown (`obstype=3`).  If death states always have `obtype=3`, this is equivalent to `deathexact=TRUE`. 
 
-Here is an artificial example: 
+Here is an artificial dataset, where we know the patient: 
+
+* was in state 1 at times 0 and 1 (`obstype` 1)
+
+* occupied state 2 throughout the period between years 2 and 3.09 and between years 4 and 5 (`obstype` 2)
+
+* died at time 5.85 (`obstype` 3)
+
 ```{r,echo=FALSE}
 cav_obstype <- cav[1:7,c("PTNUM","years","state")]
 cav_obstype$obstype <- c(1,1,1,2,1,2,3)
@@ -262,15 +274,15 @@ From the CAV dataset `cav` in the package, write R code to:
 
 2. Define a matrix of 1s and 0s indicating the allowed transitions in continuous time.  Assume for the moment that people can move to any adjacent disease state, to both more severe or less severe states, and die from any state. 
 
-3. From the May workshop notes, remind yourself of how the transition intensities are related to the probabilities governing the state that someone will move to on leaving the current state.    
+3. In the CAV model, there are two alternative "next states" for people in state 1 and people in state 2.   From the [May workshop notes](https://chjackson.github.io/msm/msmcourse/cjackson_bordeaux2020.pdf), remind yourself of how the transition intensities are related to the probabilities governing the state that someone will move to on leaving the current state.    
 
-    a. From your data summary, make a guess at what these might be.
+    a. From your data summary, make a guess at what these probablities might be.
 
     b. Likewise, roughly guess what the mean sojourn times might be.  
 
     c. Use those guesses to construct a matrix of plausible initial values for the intensities. 
   
-    Note that there is no "right answer" for these initial guesses.  The learning objective is to be able to convert between transition intensities and more easily-understood quantities.
+    Note there is no single "right answer" for these initial guesses.  The learning objective is to be able to convert between transition intensities and more easily-understood quantities.
 
 4. Call `msm` to fit the multi-state model, using 
 
@@ -292,6 +304,7 @@ From the CAV dataset `cav` in the package, write R code to:
 
 1. 
     ```{r}
+    library(msm)
     statetable.msm(state, PTNUM, data=cav)
     ```
 
@@ -307,7 +320,7 @@ From the CAV dataset `cav` in the package, write R code to:
 
     We can set initial values for this row by first guessing the mean sojourn time $T_r$, and setting the diagonal entry $q_{rr} = -1/T_{r}$. 
 
-    We then set the remaining, off-diagonal values $q_{rs}, s!=r$ according to guesses of the probability $\pi_{rs}$ that the next state will be $s$, and deducing that since $\pi_{rs} = $-q_{rs} / q_{rr}$, we can initialise $q_{rs} = \pi_{rs} T_r$.   
+    We then set the remaining, off-diagonal values $q_{rs}, s!=r$ according to guesses of the probability $\pi_{rs}$ that the next state will be $s$, and deducing that since $\pi_{rs} = -q_{rs} / q_{rr}$, we can initialise $q_{rs} = \pi_{rs} / T_r$.   
 
     ```{r}
     summary(cav$years)
