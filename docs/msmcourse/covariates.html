@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
 <li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittent"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
 <li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
 <li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
@@ -390,10 +390,10 @@ formula (instead of a list of formulae).</p>
 <p>Low sedimentation rate is protective (lower transition probabilities for <code>ollwsdrt=1</code>), while high effusion is a risk factor for progression (higher transition probabilities for <code>hieffusn=1</code>)</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="covariates.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">hieffusn =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ollwsdrt=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), p_14)</span></code></pre></div>
 <pre><code>##      hieffusn ollwsdrt estimate  lower upper
-## [1,]        0        0    0.205 0.1529 0.256
-## [2,]        0        1    0.120 0.0771 0.175
-## [3,]        1        0    0.484 0.3120 0.705
-## [4,]        1        1    0.324 0.1772 0.477</code></pre>
+## [1,]        0        0    0.205 0.1500 0.270
+## [2,]        0        1    0.120 0.0855 0.178
+## [3,]        1        0    0.484 0.2922 0.688
+## [4,]        1        1    0.324 0.1866 0.499</code></pre>
 </div>
 <div id="exercises-2" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> Exercises</h2>

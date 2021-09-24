@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
 <li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittent"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
 <li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
 <li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
@@ -311,10 +311,10 @@ Figure 5.1: Joint model for progression of damage
 </p>
 </div>
 <p>Then we could predict future outcomes for someone with a particular combination of states and risk factors (= someone in a particular state in the expanded model).</p>
-<p>This kind of model can be tricky to deal due to the large number of parameters - see e.g. <a href="https://doi.org/10.1002/sim.4429">Tom and Farewell</a>.</p>
+<p>This kind of model can be tricky to deal with due to the large number of parameters - see e.g. <a href="https://doi.org/10.1002/sim.4429">Tom and Farewell</a>.</p>
 <p>For identifiability / interpretability, may need to constrain some parameters to equal each other using the <code>qconstraint</code> option to <code>msm()</code></p>
 <ul>
-<li>e.g. might assume the state of damage doesn’t affect transition rates between effusion states, but the effusion state affects the rates of progression of joint damage. Appropriate assumption depends on the clinical application.</li>
+<li>e.g. we might assume the state of damage doesn’t affect transition rates between effusion states, but the effusion state affects the rates of progression of joint damage. The appropriate assumption depends on the clinical application.</li>
 </ul>
 </div>
 <div id="time-itself-as-a-covariate" class="section level2" number="5.4">

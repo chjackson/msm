@@ -107,8 +107,8 @@ Entries $p_{rs}(t)$ define the probability someone in state $r$ now is in state 
 Be careful of these distinctions!
 
 
-## Intermittently-observed data 
-
+## Intermittently-observed data {#intermittent}
+ 
 `msm` is mainly designed for data that are **intermittently observed**
 
 ```{r echo=FALSE}

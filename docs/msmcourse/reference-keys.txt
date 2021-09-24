@@ -10,7 +10,7 @@ multi-state-processes
 msm-models-work-in-continuous-time
 transition-intensities
 transition-probabilities
-intermittently-observed-data
+intermittent
 time-to-event-data-not-covered-in-this-course
 examples-used-for-illustration
 psoriatic-arthritis

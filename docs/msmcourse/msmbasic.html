@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.1" data-path="theory.html"><a href="theory.html#transition-intensities"><i class="fa fa-check"></i><b>1.2.1</b> Transition intensities</a></li>
 <li class="chapter" data-level="1.2.2" data-path="theory.html"><a href="theory.html#transition-probabilities"><i class="fa fa-check"></i><b>1.2.2</b> Transition probabilities</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittently-observed-data"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
+<li class="chapter" data-level="1.3" data-path="theory.html"><a href="theory.html#intermittent"><i class="fa fa-check"></i><b>1.3</b> Intermittently-observed data</a></li>
 <li class="chapter" data-level="1.4" data-path="theory.html"><a href="theory.html#time-to-event-data-not-covered-in-this-course"><i class="fa fa-check"></i><b>1.4</b> Time-to-event data (not covered in this course)</a></li>
 <li class="chapter" data-level="1.5" data-path="theory.html"><a href="theory.html#examples-used-for-illustration"><i class="fa fa-check"></i><b>1.5</b> Examples used for illustration</a>
 <ul>
@@ -288,6 +288,7 @@ Figure 2.1: Psoriatic arthritis
 <li><code>state</code>: state of joint damage</li>
 </ul>
 <p>Other columns are covariates, to be discussed later.</p>
+<p>Each row represents a different <em>time when the state was observed</em> (<strong>not</strong> a <em>time of transition</em>!). Recall that the times of transition are not known in <a href="theory.html#intermittent">intermittently observed data</a>.</p>
 <p>A simple summary of the data is a count of the number of <em>transitions over visit intervals</em>, i.e. the number of people observed in one state at one visit, and each other state at the next visit.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="msmbasic.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">statetable.msm</span>(state, ptnum, <span class="at">data=</span>psor)</span></code></pre></div>
 <pre><code>##     to

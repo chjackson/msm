@@ -134,11 +134,11 @@ If the risk factors are _discrete_, we could do this in `msm` by building a mult
 
 Then we could predict future outcomes for someone with a particular combination of states and risk factors (= someone in a particular state in the expanded model).
 
-This kind of model can be tricky to deal due to the large number of parameters - see e.g. [Tom and Farewell](https://doi.org/10.1002/sim.4429).
+This kind of model can be tricky to deal with due to the large number of parameters - see e.g. [Tom and Farewell](https://doi.org/10.1002/sim.4429).
 
 For identifiability / interpretability, may need to constrain some parameters to equal each other using the `qconstraint` option to `msm()` 
 
-- e.g. might assume the state of damage doesn't affect transition rates between effusion states, but the effusion state affects the rates of progression of joint damage.   Appropriate assumption depends on the clinical application. 
+- e.g. we might assume the state of damage doesn't affect transition rates between effusion states, but the effusion state affects the rates of progression of joint damage.   The appropriate assumption depends on the clinical application. 
   
 
 ## Time itself as a covariate

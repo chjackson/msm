@@ -57,6 +57,8 @@ head(psor, 5)
 
 Other columns are covariates, to be discussed later. 
 
+Each row represents a different _time when the state was observed_ (**not** a _time of transition_!).  Recall that the times of transition are not known in [intermittently observed data](#intermittent).
+
 A simple summary of the data is a count of the number of _transitions over visit intervals_, i.e. the number of people observed in one state at one visit, and each other state at the next visit.   
 
 ```{r}
