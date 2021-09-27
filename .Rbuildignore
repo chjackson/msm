@@ -37,3 +37,4 @@ src/doc
 ^.*\.Rproj$
 ^\.Rproj\.user$
 \.dropbox\.attr
+docs

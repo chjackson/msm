@@ -5,10 +5,14 @@ USER-VISIBLE CHANGES
 
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
+Version 1.6.9 (2021-09-26)
+-------------
 
 o Bug fix for likelihood calculation for models with both censoring and exact transition times (obstype=2).  This includes models with "pci" specified and obstype=2.
 
 o Bug fix for the Viterbi algorithm which was ignoring the first observation in cases when the hidden state is unknown at the first time.
+
+o Remove the ancient message about "printold.msm" from the print output.
 
 
 Version 1.6.8  (2019-12-16)
