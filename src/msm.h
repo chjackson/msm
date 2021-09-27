@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
+#define USE_FC_LEN_T
 #include <R.h>
 #include <R_ext/Applic.h>
 

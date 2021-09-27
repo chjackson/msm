@@ -25,6 +25,9 @@
 #define MEXP_PADE 1
 #define MEXP_SERIES 2
 #include "R_ext/Lapack.h"
+#ifndef FCONE
+#define FCONE
+#endif
 #include "R_ext/Rdynload.h"
 
 typedef enum {Ward_2, Ward_1, Ward_buggy_octave} precond_type;
@@ -224,8 +227,8 @@ MatrixExpPade(double *ExpAt, double *A, int n, double t)
   double * At = workspace + N;
   double * Num = workspace + 2*N;
   double * Denom = workspace + 3*N;
-  double l1 = F77_CALL(dlange)("1", &n, &n, At, &n, 0); /* L-1 norm */
-  double linf = F77_CALL(dlange)("i", &n, &n, At, &n, Temp); /* L-Infinity norm */
+  double l1 = F77_CALL(dlange)("1", &n, &n, At, &n, 0 FCONE); /* L-1 norm */
+  double linf = F77_CALL(dlange)("i", &n, &n, At, &n, Temp FCONE); /* L-Infinity norm */
   double K = (log(l1) + log(linf))/log(4);
   int npower = (R_FINITE(K) ? (int)(K)+4 : NA_INTEGER);
   double scale = 1;
@@ -310,11 +313,11 @@ void Eigen(Matrix mat, int n, vector revals, vector ievals, Matrix evecs, int *e
 #ifdef _USE_LAPACK_EIGEN_
     jobVL[0] = 'N'; jobVR[0] = 'V';
     /* calculate optimal size of workspace */
-    F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, &tmp, &lwork, err);
+    F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, &tmp, &lwork, err FCONE FCONE);
     lwork = (int) tmp;
     work = (Matrix) Realloc(work, lwork, double);
     /* calculate eigensystem */
-    F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, work, &lwork, err);
+    F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, work, &lwork, err FCONE FCONE);
 #endif
     Free(work); Free(worki); Free(temp);
 }
