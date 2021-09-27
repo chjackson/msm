@@ -76,7 +76,7 @@ intensity matrix
 
   The implementation of the Pade approximation used by
   \code{method="pade"} was taken from
-  JAGS by Martyn Plummer (\url{http://mcmc-jags.sourceforge.net}).
+  JAGS by Martyn Plummer (\url{https://mcmc-jags.sourceforge.io}).
 }
 \references{
   Cox, D. R. and Miller, H. D. \emph{The theory of stochastic
