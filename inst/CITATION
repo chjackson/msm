@@ -8,7 +8,7 @@ citEntry(entry = "Article",
   volume       = "38",
   number       = "8",
   pages        = "1--29",
-  url          = "https://www.jstatsoft.org/v38/i08/",
+  doi          = "10.18637/jss.v038.i08",
 
   textVersion  =
   paste("Christopher H. Jackson (2011).",

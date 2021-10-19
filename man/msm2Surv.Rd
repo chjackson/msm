@@ -106,7 +106,7 @@ modelling.
    Liesbeth C. de Wreede, Marta Fiocco, Hein Putter (2011). \pkg{mstate}: An R
   Package for the Analysis of Competing Risks and Multi-State
   Models. \emph{Journal of Statistical Software}, 38(7), 1-30. 
-  \url{https://www.jstatsoft.org/v38/i07}  
+  \doi{10.18637/jss.v038.i07}
 
   Jackson, C. H. (2014). flexsurv: Flexible parametric survival and
   multi-state models.  R package version 0.5.
