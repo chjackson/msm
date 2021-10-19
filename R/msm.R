@@ -734,15 +734,13 @@ msm.check.model <- function(fromstate, tostate, obs, subject, obstype=NULL, qmat
 msm.check.constraint <- function(constraint, mm){
     if (is.null(constraint)) return(invisible())
     covlabels <- colnames(mm)[-1]
-    aa <- attr(mm, "assign")
-    covfactor <- rep(table(aa), table(aa)) > 1
     if (!is.list(constraint)) stop(deparse(substitute(constraint)), " should be a list")
     if (!all(sapply(constraint, is.numeric)))
         stop(deparse(substitute(constraint)), " should be a list of numeric vectors")
     ## check and parse the list of constraints on covariates
     for (i in names(constraint))
         if (!(is.element(i, covlabels))){
-            factor.warn <- if ((i %in% names(covfactor)) && covfactor[i])
+            factor.warn <- if (i %in% names(attr(mm,"contrasts")))
                 "\n\tFor factor covariates, specify constraints using covnameCOVVALUE = c(...)"
             else ""
             stop("Covariate \"", i, "\" in constraint statement not in model.", factor.warn)
