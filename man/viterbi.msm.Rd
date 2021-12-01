@@ -8,7 +8,7 @@
   observations, the Viterbi algorithm recursively constructs the path
   with the highest probability through the underlying states.  The
   probability of each hidden state is also computed for hidden Markov
-  models.
+  models, using the forward-backward algorithm.
 }
 
 \usage{
@@ -21,6 +21,10 @@ viterbi.msm(x, normboot=FALSE)
     maximum likelihood estimates of the model parameters are replaced by
     an alternative set of parameters drawn randomly from the asymptotic
     multivariate normal distribution of the MLEs.}
+  \item{newdata}{An optional data frame containing observations on which 
+  to construct the Viterbi path and forward-backward probabilities. It 
+  must be in the same format as the data frame used to fit \code{x}. 
+  If \code{NULL}, the data frame used to fit \code{x} is used.}
 }
 \value{
     A data frame with columns:
