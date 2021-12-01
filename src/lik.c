@@ -100,9 +100,14 @@ int all_equal(double x, double y)
 /* These will be summed over when calculating the likelihood */
 /* Compare one-indexed obs against one-indexed cm->censor. Return one-indexed current (*states) */
 
-void GetCensored (double obs, cmodel *cm, int *nc, double **states)
+double * GetCensored(double ** obsvec, int obsno, int nout, cmodel *cm, int *nc, double **states)
 {
+    double obs;
     int j, k=0, n, cens=0;
+    if (nout > 1) {
+        return &((*obsvec)[MI(0, obsno, nout)]);
+    }
+    else obs = (double)(*obsvec)[obsno];
     if (cm->ncens == 0)
 	n = 1;
     else {
@@ -120,6 +125,7 @@ void GetCensored (double obs, cmodel *cm, int *nc, double **states)
     else { for (j = cm->index[k]; j < cm->index[k+1]; ++j)
 	(*states)[j - cm->index[k]] = cm->states[j]; }
     *nc = n;
+    return *states;
 }
 
 /*
@@ -425,11 +431,12 @@ double likhidden(int pt, /* ordinal subject ID */
 	return 0; /* individual has only one observation. Shouldn't happen since 1.3.2 */
     /* Likelihood for individual's first observation */
     hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
-    if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
-    else {  /* TODO these four lines or similar are pasted a few times */
-	GetCensored((double)d->obs[d->firstobs[pt]], cm, &nc, &curr);
-	outcome = curr;
-    }
+    outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
+    // if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
+    // else {  /* TODO these four lines or similar are pasted a few times */
+	// GetCensored((double)d->obs[d->firstobs[pt]], cm, &nc, &curr);
+	// outcome = curr;
+    // }
     GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[d->firstobs[pt]]);
     /* Likelihood contribution for initial observation */
 //    printf("\nlikhidden:\n");
@@ -450,11 +457,7 @@ double likhidden(int pt, /* ordinal subject ID */
     for (obsno = d->firstobs[pt]+1; obsno <= d->firstobs[pt+1] - 1; ++obsno)
     {
 	R_CheckUserInterrupt();
-	if (d->nout > 1) outcome = &d->obs[MI(0, obsno, d->nout)];
-	else {
-	    GetCensored((double)d->obs[obsno], cm, &nc, &curr);
-	    outcome = curr;
-	}
+    outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
 	update_likhidden(outcome, nc, obsno, d, qm, hm, cump, newp, &lweight,
 			 &pmat[MI3(0,0,d->pcomb[obsno],qm->nst,qm->nst)]);
     }
@@ -637,8 +640,7 @@ void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pm
     if (hm->hidden) hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
     if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
     else { 
-	GetCensored((double)d->obs[d->firstobs[pt]], cm, &nc, &curr);
-	outcome = curr;
+        outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
     }
     // Get lik and deriv at first obs
     init_hmm_deriv(outcome, nc, pt, d->firstobs[pt], hpars,
@@ -665,8 +667,7 @@ void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pm
 	hpars = &(hm->pars[MI(0, obsno, hm->totpars)]);
 	if (d->nout > 1) outcome = &d->obs[MI(0, obsno, d->nout)];
 	else { 
-	    GetCensored((double)d->obs[obsno], cm, &nc, &curr);
-	    outcome = curr;
+        outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
 	}
 	update_hmm_deriv(outcome, nc, obsno,
 			 pmat, dpmat, qmat, dqmat, hpars,
@@ -736,8 +737,7 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
     }
     if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
     else { 
-	GetCensored((double)d->obs[d->firstobs[pt]], cm, &nc, &curr);
-	outcome = curr;
+    outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
     }
     init_hmm_deriv(outcome, nc, pt, d->firstobs[pt], hpars,
 		   aold, phiold, xiold, dxiold, // use actual observation to update these
@@ -765,8 +765,7 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
 	}
 	if (d->nout > 1) outcome = &d->obs[MI(0, obsno, d->nout)];
 	else {
-	    GetCensored((double)d->obs[obsno], cm, &nc, &curr); // update using observed data
-	    outcome = curr;
+        outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
 	}
 	update_hmm_deriv(outcome, nc, obsno, pmat, dpmat, qmat, dqmat, hpars,
 			 aold, phiold, xiold, dxiold,
@@ -833,11 +832,11 @@ double likcensor(int pt, /* ordinal subject ID */
       return 0; /* individual has only one observation */
     for (i = 0; i < qm->nst; ++i)
 	cump[i] = 1;
-    GetCensored((double)d->obs[d->firstobs[pt]], cm, &np, &prev);
+    GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &np, &prev);
     for (obs = d->firstobs[pt]+1; obs <= d->firstobs[pt+1] - 1; ++obs)
 	{
 	    /* post-multiply by sub-matrix of P at each obs */
-	    GetCensored((double)d->obs[obs], cm, &nc, &curr);
+        GetCensored(&d->obs, obs, d->nout, cm, &nc, &curr);
 	    update_likcensor(obs, prev, curr, np, nc, d, qm, hm,
 			     cump, newp, &lweight,
 			     &pmat[MI3(0,0,d->pcomb[obs],qm->nst,qm->nst)]);
@@ -1269,8 +1268,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     else {
       if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
       else {
-        GetCensored(d->obs[i], cm, &nc, &curr);
-        outcome = curr; 
+        outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
       }
       /* initial observation is a censored state. No HMM here, so initprobs not needed */
       if (nc > 1) {
@@ -1313,8 +1311,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    hpars = &(hm->pars[MI(0, i, hm->totpars)]); /* not i-1 as pre 1.2.3 */
 		    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
 		    else {
-			GetCensored(d->obs[i], cm, &nc, &curr);
-			outcome = curr;
+            outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 		    }
 		    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 #ifdef VITDEBUG0
@@ -1405,8 +1402,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    hpars = &(hm->pars[MI(0, obs, hm->totpars)]);
 			    if (d->nout > 1) outcome = &d->obs[MI(0, obs, d->nout)];
 			    else {
-				GetCensored(d->obs[obs], cm, &nc, &curr);
-				outcome = curr;
+                outcome = GetCensored(&d->obs, obs, d->nout, cm, &nc, &curr);
 			    }
 			    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[obs]);
 			    Pmat(pmat, dt, qmat, qm->nst,
@@ -1451,8 +1447,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			else {
 			    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
 			    else {
-				GetCensored(d->obs[i], cm, &nc, &curr);
-				outcome = curr;
+                outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 			    }
 			    /* initial observation is a censored state. No HMM here, so initprobs not needed */
 			    if (nc > 1) {
