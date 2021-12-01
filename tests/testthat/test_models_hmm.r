@@ -58,6 +58,12 @@ test_that("HMM normal likelihoods: FEV data: covariate on outcome",{
                      hconstraint = list(acute = c(1,1,1,1)),
                      fixedpars=TRUE, center=FALSE))
     expect_equal(49839.1627881087, fev5.hid$minus2loglik, tol=1e-06)
+    
+    ## Viterbi
+    vit <- viterbi.msm(fev3.hid)
+    vit2 <- viterbi.msm(fev3.hid, newdata=fev[fev$ptnum==1,])
+    expect_equal(vit$fitted[1:10], vit2$fitted[1:10])
+    expect_equal(vit$pstate.1[1:10], vit2$pstate.1[1:10])
 })
 
 context("Hidden Markov model error handling")
