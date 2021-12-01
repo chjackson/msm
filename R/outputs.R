@@ -1858,7 +1858,6 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
   }
   xexpand <- msm:::expand.data(xnew)
   
-  
   if (x$cmodel$ncens > 0 && !x$hmodel$hidden) {
     ## If censoring but not HMM, then define an identity HMM with
     ## true state known at every time except censoring times
@@ -1874,7 +1873,6 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
     x$paramdata$allinits <- c(x$paramdata$allinits,x$hmodel$pars)
     x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq_along(x$hmodel$pars))
   }
-  
   
   if (x$hmodel$hidden) {
     if (normboot)

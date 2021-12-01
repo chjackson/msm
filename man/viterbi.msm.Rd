@@ -12,7 +12,7 @@
 }
 
 \usage{
-viterbi.msm(x, normboot=FALSE)
+viterbi.msm(x, normboot=FALSE, newdata=NULL)
 }
 \arguments{
   \item{x}{A fitted hidden Markov multi-state model, or a model with
