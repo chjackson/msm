@@ -1856,8 +1856,8 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
   } else {
     xnew <- x
   }
-  xexpand <- msm:::expand.data(xnew)
-  
+  xdata <- expand.data(xnew)
+    
   if (x$cmodel$ncens > 0 && !x$hmodel$hidden) {
     ## If censoring but not HMM, then define an identity HMM with
     ## true state known at every time except censoring times
@@ -1865,31 +1865,33 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
     for (i in 1:x$qmodel$nstates)
       hmod[[i]] <- hmmIdent(i)
     x$hmodel <- msm.form.hmodel(hmod, est.initprobs=FALSE)
-    x$hmodel <- c(x$hmodel, list(ncovs=rep(rep(0,x$hmodel$nstates),x$hmodel$npars), ncoveffs=0, nicovs=rep(0,x$hmodel$nstates-1), nicoveffs=0))
-    xnew$data$mf$"(obstrue)" <- ifelse(xnew$data$mf$"(state)" %in% x$cmodel$censor, 0, (xnew$data$mf$"(state)"))
-    xnew$data$mm.hcov <- vector(mode="list", length=x$hmodel$nstates) # reqd by msm.add.hmmcovs
+    x$hmodel <- c(x$hmodel, list(ncovs=rep(rep(0,x$hmodel$nstates),x$hmodel$npars), 
+                                 ncoveffs=0, nicovs=rep(0,x$hmodel$nstates-1), nicoveffs=0))
+    xdata$mf$"(obstrue)" <- ifelse(xdata$mf$"(state)" %in% x$cmodel$censor, 
+                                          0, (xdata$mf$"(state)"))
+    xdata$mm.hcov <- vector(mode="list", length=x$hmodel$nstates) # reqd by msm.add.hmmcovs
     for (i in seq_len(x$hmodel$nstates))
-      xnew$data$mm.hcov[[i]] <- model.matrix(~1, xnew$data$mf)
+      xdata$mm.hcov[[i]] <- model.matrix(~1, xdata$mf)
     x$paramdata$allinits <- c(x$paramdata$allinits,x$hmodel$pars)
     x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq_along(x$hmodel$pars))
   }
   
-  if (x$hmodel$hidden) {
+    if (x$hmodel$hidden) {
     if (normboot)
       params <- rmvnorm(1, x$paramdata$opt$par, x$covmat[x$paramdata$optpars,x$paramdata$optpars])
     else
       params <- x$paramdata$opt$par
     
-    ret <- msm:::Ccall.msm(params,
-                           do.what="viterbi",
-                           xexpand,
-                           x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata
+    ret <- Ccall.msm(params,
+                     do.what="viterbi",
+                     xdata,
+                     x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata
     )
     fitted <- ret[[1]]
     pstate <- ret[[2]]
     fitted <- fitted + 1
   } else {
-    fitted <- xnew$data$mf$"(state)"
+    fitted <- xdata$mf$"(state)"
     pstate <- NULL
   }
   
@@ -1897,9 +1899,9 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
     fitted <- x$qmodel$phase.labs[fitted]
   }
   ret <- data.frame(
-    subject = xnew$data$mf$"(subject)",
-    time = xnew$data$mf$"(time)",
-    observed = xnew$data$mf$"(state)",
+    subject = xdata$mf$"(subject)",
+    time = xdata$mf$"(time)",
+    observed = xdata$mf$"(state)",
     fitted = fitted
   )
   if (!is.null(pstate))
