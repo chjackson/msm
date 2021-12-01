@@ -102,12 +102,13 @@ int all_equal(double x, double y)
 
 double * GetCensored(double ** obsvec, int obsno, int nout, cmodel *cm, int *nc, double **states)
 {
-    double obs;
+    double * pobs;
     int j, k=0, n, cens=0;
-    if (nout > 1) {
-        return &((*obsvec)[MI(0, obsno, nout)]);
-    }
-    else obs = (double)(*obsvec)[obsno];
+    pobs = (nout > 1 ?
+        &(*obsvec)[MI(0, obsno, nout)]
+        : &(*obsvec)[obsno]
+    ); 
+    double obs = *pobs;
     if (cm->ncens == 0)
 	n = 1;
     else {
@@ -125,7 +126,10 @@ double * GetCensored(double ** obsvec, int obsno, int nout, cmodel *cm, int *nc,
     else { for (j = cm->index[k]; j < cm->index[k+1]; ++j)
 	(*states)[j - cm->index[k]] = cm->states[j]; }
     *nc = n;
-    return *states;
+    if (!cens & nout>1) {
+        return pobs;
+    }
+    else return *states;
 }
 
 /*
@@ -432,11 +436,6 @@ double likhidden(int pt, /* ordinal subject ID */
     /* Likelihood for individual's first observation */
     hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
     outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
-    // if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
-    // else {  /* TODO these four lines or similar are pasted a few times */
-	// GetCensored((double)d->obs[d->firstobs[pt]], cm, &nc, &curr);
-	// outcome = curr;
-    // }
     GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[d->firstobs[pt]]);
     /* Likelihood contribution for initial observation */
 //    printf("\nlikhidden:\n");
