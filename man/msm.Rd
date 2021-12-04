@@ -246,10 +246,9 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
   state to be included in the model, thus improving the estimation of
   the HMM outcome distributions.
   
-  In HMMs where there are also censored states, \code{obstrue} should be
-  set to 1 for observed states which are \emph{censored} but not
-  \emph{misclassified}.
-  }
+  In HMMs where censored states are present, \code{obstrue} may be
+  set to 1 to indicate that the corresponding entries in \code{censor.states}
+  contain (hidden) true states (see also \code{censor}).
 
   \item{covariates}{A formula or a list of formulae representing the
     covariates on the transition intensities via a log-linear model. If
@@ -564,6 +563,11 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
     unnecessary, since the standard multi-state model likelihood is
     applicable.   Also a "censored" state here can be at any time, not
     just at the end.
+
+    For hidden Markov models, censoring may indicate either a set of possible
+    observed states, or a set of (hidden) true states. The later case is
+    specified by setting the relevant elements of \code{obstrue} to 1 (and 
+    \code{NA} otherwise).
 
     Note in particular that general time-inhomogeneous Markov models with
     piecewise constant transition
