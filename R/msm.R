@@ -337,7 +337,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     msmobject$QmatricesU$baseline <- q$U
 
     if (hmodel$hidden) {
-        msmobject$hmodel <- msm.form.houtput(hmodel, p, msmdata)
+        msmobject$hmodel <- msm.form.houtput(hmodel, p, msmdata, cmodel)
     }
     if (emodel$misc) {
         msmobject <- msm.form.output(msmobject, "misc")
@@ -603,8 +603,7 @@ msm.form.obstype <- function(mf, obstype, dmodel, exacttimes)
 ### On exit, obstrue will contain the true state (if known) or 0 (if unknown)
 ### Any NAs should be replaced by 0 - logically if you don't know whether the state is known or not, that means you don't know the state
 
-### TODO For cases where true state is known, 
-### distinguish between cases where the state data contains the true state or a misclassified version of the true state
+### If "obstrue" and "censor" both specified, obstrue=1 specifies that the true state is within "censor.states", and we have no other outcome generated conditionally on that true state at that time.  In HMMs with "censor" where obstrue not specified, then it is the observed state which is assumed to be within "censor.states.
 
 msm.form.obstrue <- function(mf, hmodel, cmodel) {
     obstrue <- mf$"(obstrue)"
@@ -632,17 +631,6 @@ msm.form.obstrue <- function(mf, hmodel, cmodel) {
                 ## If misclassification model specified through "ematrix", interpret the state data as the true state.
 
                 ## If specified through hmodel (including hmmCat), interpret the state as a misclassified/HMM outcome generated conditionally on the true state.
-
-                ## Though that doesn't allow a mixture of true/misclassified states in the same model
-
-                ## If we know the true state, we might sometimes want
-                ## to model a misclassified version of it to
-                ## strengthen estimation of misclassification probs.
-
-                ## In theory we could put NA in the state then to
-                ## indicate that true state is passed through from
-                ## obstrue, and misclassified version isn't known.
-                ## But don't do this until someone asks for it.
             }
         }
     }
@@ -934,6 +922,7 @@ msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix)
             }
             censor.states <- transient.msm(qmatrix=qmatrix)
             states.index <- c(1, length(censor.states)+1)
+            states_list <- list(censor.states)
         }
         else {
             if (ncens == 1) {
@@ -948,15 +937,18 @@ msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix)
                 if (length(censor.states) != ncens) stop("expected ", ncens, " elements in censor.states list, found ", length(censor.states))
                 states.index <- cumsum(c(0, lapply(censor.states, length))) + 1
             }
-            censor.states <- unlist(censor.states)
+            states_list <- censor.states
+            censor.states <- unlist(states_list)
         }
+        names(states_list) <- censor
     }
-    if (ncens==0) censor <- censor.states <- states.index <- NULL
+    if (ncens==0) censor <- censor.states <- states_list <- states.index <- NULL
     ## Censoring information to be passed to C
     list(ncens = ncens, # number of censoring states
          censor = censor, # vector of their labels in the data
-         states = censor.states, # possible true states that the censoring represents
-         index = states.index # index into censor.states for the start of each true-state set, including an extra length(censor.states)+1
+         states = censor.states, # possible true states that the censoring represents (in unlisted form, for C) 
+         states_list = states_list, # (same in list form, for R)
+         index = states.index # index into censor.states for the start of each true-state set, including an extra length(censor.states)+1.  For C
          )
 }
 
@@ -1395,8 +1387,7 @@ msm.dmninvlogit <- function(hmodel, pars, mml, hcov, dh){
     dh
 }
 
-
-msm.initprobs2mat <- function(hmodel, pars, mm, mf){
+msm.initprobs2mat <- function(hmodel, pars, mm, mf, cmodel){
     npts <- attr(mf, "npts")
     ## Convert vector initial state occupancy probs to matrix by patient
     if (!hmodel$hidden) return(0)
@@ -1421,6 +1412,24 @@ msm.initprobs2mat <- function(hmodel, pars, mm, mf){
     else if (!is.matrix(hmodel$initprobs))
         initp <- matrix(rep(hmodel$initprobs,each=npts),nrow=npts)
     else initp <- hmodel$initprobs
+
+    ## If the initial state is fully or partially known for some people but not others
+    ## can specify this by setting both "censor" and "obstrue" at those times 
+    ## Adjust initprobs in those cases so it is zero for states outside the censor set
+    ## and reweight other entries to sum to 1. 
+    initstate <- mf$"(state)"[!duplicated(mf$"(subject)")]
+    initobstrue <- mf$"(obstrue)"[!duplicated(mf$"(subject)")]
+    initknown <- (initstate %in% cmodel$censor) & (initobstrue != 0) 
+    if (cmodel$ncens > 0 && any(initknown)) {
+        for (i in 1:npts) {
+            if (initknown[i]){
+                cs <- cmodel$states_list[[as.character(initstate[i])]]
+                ip <- initp[i,cs]
+                initp[i,] <- 0
+                initp[i,cs] <- ip / sum(ip)
+            }
+        }
+    }
     initp
 }
 
@@ -1440,7 +1449,7 @@ Ccall.msm <- function(params, do.what="lik", msmdata, qmodel, qcmodel, cmodel, h
     DQ <- if (do.what %in% c("deriv","info","deriv.subj","dpmat")) msm.form.dq(qmodel, qcmodel, pars, p, mm.cov) else NULL
     H <- if (hmodel$hidden) msm.add.hmmcovs(hmodel, pars, msmdata$mm.hcov) else NULL
     DH <- if (hmodel$hidden && (do.what %in% c("deriv","info","deriv.subj"))) msm.form.dh(hmodel, pars, H, paramdata, msmdata$mm.hcov) else NULL
-    initprobs <- msm.initprobs2mat(hmodel, pars, msmdata$mm.icov, msmdata$mf)
+    initprobs <- msm.initprobs2mat(hmodel, pars, msmdata$mm.icov, msmdata$mf, cmodel)
 
    mf <- msmdata$mf; mf.agg <- msmdata$mf.agg
    ## In R, ordinal variables indexed from 1.  In C, these are indexed from 0.
@@ -1572,7 +1581,7 @@ msm.form.output <- function(x, whichp)
 
 ## Format hidden Markov model estimates and CIs
 
-msm.form.houtput <- function(hmodel, p, msmdata)
+msm.form.houtput <- function(hmodel, p, msmdata, cmodel)
 {
     hmodel$pars <- p$estimates.t[!(p$plabs %in% c("qbase","qcov","hcov","initp","initpbase","initp0","initpcov"))]
     hmodel$coveffect <- p$estimates.t[p$plabs == "hcov"]
@@ -1605,7 +1614,7 @@ msm.form.houtput <- function(hmodel, p, msmdata)
             }
         }
     }
-    hmodel$initpmat <- msm.initprobs2mat(hmodel, p$estimates, msmdata$mm.icov, msmdata$mf)
+    hmodel$initpmat <- msm.initprobs2mat(hmodel, p$estimates, msmdata$mm.icov, msmdata$mf, cmodel)
     if (hmodel$foundse) {
         hmodel$ci <- p$ci[!(p$plabs %in% c("qbase","qcov","hcov","initpbase","initp","initp0","initpcov")), , drop=FALSE]
         hmodel$covci <- p$ci[p$plabs %in% c("hcov"), ]

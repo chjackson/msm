@@ -1874,8 +1874,19 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
       xdata$mm.hcov[[i]] <- model.matrix(~1, xdata$mf)
     x$paramdata$allinits <- c(x$paramdata$allinits,x$hmodel$pars)
     x$paramdata$constr <- c(x$paramdata$constr,max(x$paramdata$constr)+seq_along(x$hmodel$pars))
+      npts <- attr(xdata$mf, "npts")
+      initstate <- xdata$mf$"(state)"[!duplicated(xdata$mf$"(subject)")]
+      initp <- matrix(0,nrow=npts,ncol=x$hmodel$nstates)
+      for (i in 1:npts){
+          if (initstate[i] %in% x$cmodel$censor) {
+              cs <- x$cmodel$states_list[[as.character(initstate[i])]]
+              initp[i,cs] <- 1/length(cs)
+          }
+          else initp[i,initstate[i]] <- 1
+      }
+      x$hmodel$initprobs <- initp
   }
-  
+
     if (x$hmodel$hidden) {
     if (normboot)
       params <- rmvnorm(1, x$paramdata$opt$par, x$covmat[x$paramdata$optpars,x$paramdata$optpars])

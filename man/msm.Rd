@@ -246,9 +246,13 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
   state to be included in the model, thus improving the estimation of
   the HMM outcome distributions.
   
-  In HMMs where censored states are present, \code{obstrue} may be
-  set to 1 to indicate that the corresponding entries in \code{censor.states}
-  contain (hidden) true states (see also \code{censor}).
+  HMMs where the true state is known to be within a specific set
+  at specific times can be defined with a combination of \code{censor}
+  and \code{obstrue}.  In these models, a code is defined for the
+  \code{state} outcome (see \code{censor}), and \code{obstrue} is
+  set to 1 for observations where the true state is known to be
+  one of the elements of \code{censor.states} at the corresponding
+  time.} 
 
   \item{covariates}{A formula or a list of formulae representing the
     covariates on the transition intensities via a log-linear model. If

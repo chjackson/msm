@@ -161,7 +161,8 @@ test_that("intermediate state censored",{
 test_that("first state censored",{
     cav.cens4 <- cav
     cav.cens4$state[c(1,8,12,22)] <- 99
-    cavcens4.msm <- msm(state ~ years, subject=PTNUM, data=cav.cens4, qmatrix=twoway4.q, censor=c(99), censor.states=list(c(2,3)), fixedpars=TRUE)
+    cavcens4.msm <- msm(state ~ years, subject=PTNUM, data=cav.cens4, qmatrix=twoway4.q, 
+                        censor=c(99), censor.states=list(c(2,3)), fixedpars=TRUE)
     expect_equal(4846.06045097812, cavcens4.msm$minus2loglik)
     v <- viterbi.msm(cavcens4.msm)
     expect_true(all(v$fitted[v$observed==99] %in% 2:3))
