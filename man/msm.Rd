@@ -574,6 +574,8 @@ msm ( formula, subject=NULL, data = list(), qmatrix, gen.inits = FALSE,
     The covariate may represent time itself, in which case the \code{pci} option to msm can be used
     to perform this trick automatically, or some other time-dependent
     variable.
+
+    Not supported for multivariate hidden Markov models specified with \code{\link{hmmMV}}. 
   }
 
   \item{censor.states}{
