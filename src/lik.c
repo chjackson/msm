@@ -1260,7 +1260,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     double *ucbwd = Calloc(d->n, double);
 
     i = 0;
-    GetCensored(d->obs[i], cm, &nc, &curr);
+    GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
     if (d->obstrue[i] && (nc == 1)) {
       // obstrue contains true state, or obstrue can only represent one state 
       // if nc>1, true state taken from censor set, then lvold is set from initprobs below
@@ -1430,7 +1430,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    printf("\n");
 #endif
 		    if (i < d->n) {
-		      GetCensored(d->obs[i], cm, &nc, &curr);
+		      GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 		      if (d->obstrue[i] && (nc == 1)) {
 			// obstrue contains true state, or obstrue can only represent one state 
 			// if nc>1, true state taken from censor set, lvold is set from initprobs below
