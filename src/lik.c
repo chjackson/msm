@@ -126,7 +126,7 @@ double * GetCensored(double ** obsvec, int obsno, int nout, cmodel *cm, int *nc,
     else { for (j = cm->index[k]; j < cm->index[k+1]; ++j)
 	(*states)[j - cm->index[k]] = cm->states[j]; }
     *nc = n;
-    if (!cens & nout>1) {
+    if ((!cens) & (nout>1)) {
         return pobs;
     }
     else return *states;
