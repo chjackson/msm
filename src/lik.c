@@ -639,10 +639,7 @@ void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pm
     double *dpok = Calloc(np, double);
     double *qmat, *dqmat, *hpars=NULL, *outcome=NULL;
     if (hm->hidden) hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
-    if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
-    else { 
-        outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
-    }
+    outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
     // Get lik and deriv at first obs
     init_hmm_deriv(outcome, nc, pt, d->firstobs[pt], hpars,
 		   aold, phiold, xiold, dxiold,
@@ -666,10 +663,7 @@ void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pm
 	qmat = &(qm->intens[MI3(0, 0, obsno-1, n, n)]);
 	dqmat = &(qm->dintens[MI4(0, 0, 0, obsno - 1, n, n, nqp)]);
 	hpars = &(hm->pars[MI(0, obsno, hm->totpars)]);
-	if (d->nout > 1) outcome = &d->obs[MI(0, obsno, d->nout)];
-	else { 
-        outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
-	}
+    outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
 	update_hmm_deriv(outcome, nc, obsno,
 			 pmat, dpmat, qmat, dqmat, hpars,
 			 aold, phiold, xiold, dxiold,
@@ -736,10 +730,7 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
 //		printf("k=0,j=%d,dpok[%d]=%f,dpok[%d]=%f,pok=%f,info=%f\n",j,p,dpok[p],q,dpok[q],pok,info[MI(q,p,np)]);
 	    }
     }
-    if (d->nout > 1) outcome = &d->obs[MI(0, d->firstobs[pt], d->nout)];
-    else { 
     outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
-    }
     init_hmm_deriv(outcome, nc, pt, d->firstobs[pt], hpars,
 		   aold, phiold, xiold, dxiold, // use actual observation to update these
 		   d, qm, cm, hm, &pok, dpok);
@@ -764,10 +755,7 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
 //		    printf("k=%d,j=%d,dpok[%d]=%f,dpok[%d]=%f,pok=%f,info=%f\n",k,j,p,dpok[p],q,dpok[q],pok,info[MI(q,p,np)]);
 		}
 	}
-	if (d->nout > 1) outcome = &d->obs[MI(0, obsno, d->nout)];
-	else {
-        outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
-	}
+    outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
 	update_hmm_deriv(outcome, nc, obsno, pmat, dpmat, qmat, dqmat, hpars,
 			 aold, phiold, xiold, dxiold,
 			 anew, phinew, xinew, dxinew,
@@ -1270,10 +1258,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
       }
     }
     else {
-      if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
-      else {
-        outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
-      }
+      outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
       for (k = 0; k < qm->nst; ++k){
 	    lvold[k] = log(hm->initp[MI(0, k, d->npts)]);
       }
@@ -1310,10 +1295,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    dt = d->time[i] - d->time[i-1];
 		    qmat = &(qm->intens[MI3(0, 0, i-1, qm->nst, qm->nst)]);
 		    hpars = &(hm->pars[MI(0, i, hm->totpars)]); /* not i-1 as pre 1.2.3 */
-		    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
-		    else {
-		      outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
-		    }
+		    outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 		    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 		    Pmat(pmat, dt, qmat, qm->nst,
 			 (d->obstype[i] == OBS_EXACT), qm->iso, qm->perm,  qm->qperm, qm->expm);
@@ -1404,10 +1386,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    dt = d->time[obs] - d->time[obs-1];
 			    qmat = &(qm->intens[MI3(0, 0, obs-1, qm->nst, qm->nst)]);
 			    hpars = &(hm->pars[MI(0, obs, hm->totpars)]);
-			    if (d->nout > 1) outcome = &d->obs[MI(0, obs, d->nout)];
-			    else {
-			      outcome = GetCensored(&d->obs, obs, d->nout, cm, &nc, &curr);
-			    }
+			    outcome = GetCensored(&d->obs, obs, d->nout, cm, &nc, &curr);
 			    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[obs]);
 			    Pmat(pmat, dt, qmat, qm->nst,
 				 (d->obstype[obs] == OBS_EXACT), qm->iso, qm->perm,  qm->qperm, qm->expm);
@@ -1456,10 +1435,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			  }
 		      }
 		      else {
-			    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
-			    else {
-			      outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
-			    }
+			    outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 			    for (k = 0; k < qm->nst; ++k)
 			      lvold[k] = log(hm->initp[MI(d->subject[i]-1, k, d->npts)]);
 			    hpars = &(hm->pars[MI(0, i, hm->totpars)]);
