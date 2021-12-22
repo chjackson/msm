@@ -6,6 +6,10 @@
   This produces a plot of the expected probability of
   survival against time, from each transient state. Survival is defined
   as not entering an absorbing state.
+  
+  Note that while this function is only relevant to models with
+  absorbing states, models in \pkg{msm} can have any transition
+  structure and do not necessarily have to have an absorbing state.
 }
 \usage{
 \method{plot}{msm}(x, from, to, range, covariates, legend.pos, xlab="Time",

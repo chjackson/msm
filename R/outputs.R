@@ -689,7 +689,7 @@ plot.msm <- function(x, from=NULL, to=NULL, range=NULL, covariates="mean", legen
     }
     if (is.null(to)){
         if (length(absorbing.msm(x))==0)
-            stop("\"to\" not specified, and no absorbing state in the model")
+            stop("\"to\" not specified, and no absorbing state. See help(plot.msm)")
         to <- max(absorbing.msm(x))
     }
     else {
