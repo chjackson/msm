@@ -187,7 +187,7 @@ void GetOutcomeProb(double *pout, double *outcome, int nc, int nout, double *hpa
 	    } else { /* univariate outcomes, obstrue */
 		pout[i] = 0;
 		if (hm->hidden && nc == 1 && !hm->ematrix){ /* no censoring, non-misclassification HMMs */
-		  pout[i] = 1;
+		    pout[i] = 1;
 		  /* "outcome" data contain an actual observation. 
 		     get its distribution here conditional on the supplied true state */
 		  if (!ISNA(outcome[0])  &&  obstrue == i+1){
@@ -1254,7 +1254,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     double *pfwd = Calloc((d->n)*(qm->nst), double);
     double *pbwd = Calloc((d->n)*(qm->nst), double);
 
-    double dt, logpall, psum;
+    double dt, logpall, psum, pfwd_current;
     double *qmat, *hpars;
     double *ucfwd = Calloc(d->n, double);
     double *ucbwd = Calloc(d->n, double);
@@ -1280,9 +1280,18 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
       hpars = &(hm->pars[MI(0, i, hm->totpars)]);
       GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
    }
+#ifdef VITDEBUG
+	    Rprintf("obs 0\n", i);
+#endif
     for (k = 0; k < qm->nst; ++k){
 	lvp[k] = lvold[k] + log(pout[k]);
-    	pfwd[MI(i,k,d->n)] = exp(lvp[k]);
+	if (d->obstrue[i] && (nc==1)) {
+	    pfwd[MI(i,k,d->n)] = (d->obstrue[i] == k+1  ?  1  : 0);
+	}
+    	else pfwd[MI(i,k,d->n)] = exp(lvp[k]);
+#ifdef VITDEBUG
+	Rprintf("pfwd[%d,%d]=%1.2f\n", i, k, pfwd[MI(i,k,d->n)]);
+#endif
     }
     ucfwd[0] = 0;
     first_obs = 1;
@@ -1290,32 +1299,29 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     for (i = 1; i <= d->n; ++i)
 	{
 	    R_CheckUserInterrupt();
-#ifdef VITDEBUG0
-	    printf("obs %d\n", i);
+#ifdef VITDEBUG
+	    Rprintf("obs %d\n", i);
 #endif
 	    if ((i < d->n) && (d->subject[i] == d->subject[i-1]))
 		{
-#ifdef VITDEBUG0
-		    printf("subject %d\n", d->subject[i]);
+#ifdef VITDEBUG
+		    Rprintf("subject %d\n", d->subject[i]);
 #endif
 		    dt = d->time[i] - d->time[i-1];
 		    qmat = &(qm->intens[MI3(0, 0, i-1, qm->nst, qm->nst)]);
 		    hpars = &(hm->pars[MI(0, i, hm->totpars)]); /* not i-1 as pre 1.2.3 */
 		    if (d->nout > 1) outcome = &d->obs[MI(0, i, d->nout)];
 		    else {
-            outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
+		      outcome = GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 		    }
 		    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
-#ifdef VITDEBUG0
-		    for (tru=0;tru<nc;++tru) printf("outcome[%d] = %1.0lf, ",tru, outcome[tru]);
-		    printf("\n");
-#endif
 		    Pmat(pmat, dt, qmat, qm->nst,
 			 (d->obstype[i] == OBS_EXACT), qm->iso, qm->perm,  qm->qperm, qm->expm);
 
 		    psum = 0;
 		    for (tru = 0; tru < qm->nst; ++tru)
 			{
+
 /* lvnew =  log prob of most likely path ending in tru at current obs.
    kmax  = most likely state at the previous obs  
    pfwd = p(data up to and including current obs, and hidden state at current obs), then scaled at each step to sum to 1 to avoid underflow.
@@ -1332,11 +1338,14 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    else pmax(lvp, qm->nst, &kmax);
 			    lvnew[tru] = log ( pout[tru] )  +  lvp[kmax];
 			    ptr[MI(i, tru, d->n)] = kmax;
-			    pfwd[MI(i,tru,d->n)] *= pout[tru];
+			    if (d->obstrue[i] && (nc==1))
+				pfwd_current = (d->obstrue[i] == tru+1  ?  1  : 0);
+			    else pfwd_current = pout[tru];
+			    pfwd[MI(i,tru,d->n)] *= pfwd_current;
 			    psum += pfwd[MI(i,tru,d->n)];
-#ifdef VITDEBUG0
-			    printf("true %d, pout[%d] = %lf, lvold = %lf, pmat = %lf, lvnew = %lf, ptr[%d,%d]=%d\n",
-				   tru, tru, pout[tru], lvold[tru], pmat[MI(kmax, tru, qm->nst)], lvnew[tru], i, tru, ptr[MI(i, tru, d->n)]);
+#ifdef VITDEBUG
+			    Rprintf("true %d, pout[%d] = %lf, lvold = %lf, pmat = %lf, lvnew = %lf, ptr[%d,%d]=%d, pfwd[%d,%d]=%lf\n",
+				    tru, tru, pout[tru], lvold[tru], pmat[MI(kmax, tru, qm->nst)], lvnew[tru], i, tru, ptr[MI(i, tru, d->n)], i, tru, pfwd[MI(i,tru,d->n)]);
 #endif
 			}
 		    if (first_obs) first_obs = 0;
@@ -1365,27 +1374,31 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    }
 		    logpall = log(logpall) + ucfwd[obs];
 		    for (k = 0; k < qm->nst; ++k){
-			pstate[MI(obs,k,d->n)] = exp(log(pfwd[MI(obs,k,d->n)]) + log(pbwd[MI(obs,k,d->n)]) - logpall + ucfwd[obs]);
+		      pstate[MI(obs,k,d->n)] = exp(log(pfwd[MI(obs,k,d->n)]) + log(pbwd[MI(obs,k,d->n)]) -
+						   logpall + ucfwd[obs]);
 		    }
 #ifdef VITDEBUG
-		    printf("traceback for subject %d\n", d->subject[i-1]);
-		    printf("obs=%d,fitted[%d]=%1.0lf\n",obs,obs,fitted[obs]);
-		    for (tru = 0; tru < qm->nst; ++tru){
-			printf("pfwd[%d,%d]=%f, ", obs, tru, pfwd[MI(obs,tru,d->n)]);
-			printf("pbwd[%d,%d]=%f, ", obs, tru, pbwd[MI(obs,tru,d->n)]);
-			printf("ucfwd[%d]=%f, ", obs, ucfwd[obs]);
-			printf("ucbwd[%d]=%f, ", obs, ucfwd[obs]);
-			printf("logpall=%f,",logpall);
-			printf("pstate[%d,%d]=%f, ", obs, tru, pstate[MI(obs,tru,d->n)]);
-			printf("\n");
 
+			Rprintf("\n");
+			Rprintf("traceback for subject %d\n", d->subject[i-1]);
+			Rprintf("obs=%d,fitted[%d]=%1.0lf\n",obs,obs,fitted[obs]);
+		    for (tru = 0; tru < qm->nst; ++tru){
+			Rprintf("pfwd[%d,%d]=%1.2f, ", obs, tru, pfwd[MI(obs,tru,d->n)]);
+			Rprintf("pbwd[%d,%d]=%1.2f, ", obs, tru, pbwd[MI(obs,tru,d->n)]);
+			Rprintf("ucfwd[%d]=%1.2f, ", obs, ucfwd[obs]);
+			Rprintf("ucbwd[%d]=%1.2f, ", obs, ucbwd[obs]);
+			Rprintf("logpall=%1.2f,",logpall);
+			Rprintf("pstate[%d,%d]=%1.2f, ", obs, tru, pstate[MI(obs,tru,d->n)]);
+			Rprintf("\n");
 		    }
 #endif
 		    while   ( (obs > 0) && (d->subject[obs] == d->subject[obs-1]) )
 			{
 			    fitted[obs-1] = ptr[MI(obs, fitted[obs], d->n)];
-#ifdef VITDEBUG
-			    printf("fitted[%d] = ptr[%d,%1.0lf] = %1.0lf\n", obs-1, obs, fitted[obs], fitted[obs-1]);
+#ifdef VITDEBUG0
+		    if (d->subject[i] == 1){ 
+			    Rprintf("fitted[%d] = ptr[%d,%1.0lf] = %1.0lf\n", obs-1, obs, fitted[obs], fitted[obs-1]);
+		    }
 #endif
 
 			    dt = d->time[obs] - d->time[obs-1];
@@ -1402,32 +1415,35 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    psum=0;
 			    for (tru = 0; tru < qm->nst; ++tru){
 				pbwd[MI(obs-1,tru,d->n)] = 0;
-				for (k = 0; k < qm->nst; ++k)
-				    pbwd[MI(obs-1,tru,d->n)] += pmat[MI(tru,k,qm->nst)] * pout[k] * pbwd[MI(obs,k,d->n)];
+				for (k = 0; k < qm->nst; ++k) {
+				    if (d->obstrue[obs] && (nc==1)) { 
+					if (k+1 == d->obstrue[obs])
+					    pbwd[MI(obs-1,tru,d->n)] += pmat[MI(tru,k,qm->nst)] * pbwd[MI(obs,k,d->n)];
+				    } else 
+					pbwd[MI(obs-1,tru,d->n)] += pmat[MI(tru,k,qm->nst)] * pout[k] * pbwd[MI(obs,k,d->n)];
+				} 
 				psum += pbwd[MI(obs-1,tru,d->n)];				
 			    }
 			    ucbwd[obs-1] = ucbwd[obs] + log(psum);
 			    for (tru = 0; tru < qm->nst; ++tru){
 				pbwd[MI(obs-1,tru,d->n)] /= psum;
-				pstate[MI(obs-1,tru,d->n)] = exp(log(pfwd[MI(obs-1,tru,d->n)]) + log(pbwd[MI(obs-1,tru,d->n)]) - logpall + ucfwd[obs-1] + ucbwd[obs-1]);
-
+				pstate[MI(obs-1,tru,d->n)] = exp(log(pfwd[MI(obs-1,tru,d->n)]) +
+								 log(pbwd[MI(obs-1,tru,d->n)]) -
+								 logpall + ucfwd[obs-1] + ucbwd[obs-1]);
 #ifdef VITDEBUG
-				printf("pfwd[%d,%d]=%f, ", obs-1, tru, pfwd[MI(obs-1,tru,d->n)]);
-				printf("pbwd[%d,%d]=%f, ", obs-1, tru, pbwd[MI(obs-1,tru,d->n)]);
-				printf("ucfwd[%d]=%f, ", obs, ucfwd[obs]);
-				printf("ucbwd[%d]=%f, ", obs, ucfwd[obs]);
-				printf("logpall=%f,",logpall);
-				printf("pstate[%d,%d]=%f, ", obs-1, tru, pstate[MI(obs-1,tru,d->n)]);
-				printf("\n");
+				Rprintf("pfwd[%d,%d]=%1.2f, ", obs-1, tru, pfwd[MI(obs-1,tru,d->n)]);
+				Rprintf("pbwd[%d,%d]=%1.2f, ", obs-1, tru, pbwd[MI(obs-1,tru,d->n)]);
+				Rprintf("ucfwd[%d]=%1.2f, ", obs-1, ucfwd[obs-1]);
+				Rprintf("ucbwd[%d]=%1.2f, ", obs-1, ucbwd[obs-1]);
+				Rprintf("logpall=%1.2f,",logpall);
+				Rprintf("pstate[%d,%d]=%1.2f, ", obs-1, tru, pstate[MI(obs-1,tru,d->n)]);
+				Rprintf("\n");
 #endif
 			    }
-#ifdef VITDEBUG
-			    printf("logpall=%f\n",logpall);
-#endif
 			    --obs;
 			}
-#ifdef VITDEBUG
-		    printf("\n");
+#ifdef VITDEBUG0
+		    Rprintf("\n");
 #endif
 		    if (i < d->n) {
 		      GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
