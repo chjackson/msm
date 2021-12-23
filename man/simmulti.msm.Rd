@@ -88,7 +88,8 @@ simmulti.msm(data, qmatrix, covariates=NULL, death = FALSE,  start,
 
 \item{hmodel}{An optional hidden Markov model for generating observed
   outcomes conditionally on the simulated true states. As defined in
-  \code{\link{msm}}.}
+  \code{\link{msm}}.  Multivariate outcomes (\code{hmmMV}) are not
+  supported. }
 
 \item{hcovariates}{List of the same length as \code{hmodel}, defining any covariates
   governing the hidden Markov outcome models.  Unlike in the

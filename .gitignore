@@ -11,4 +11,5 @@ symbols.rds
 *~
 vignettes/_region_.tex
 vignettes/auto
-
+R/#*
+inst/#*

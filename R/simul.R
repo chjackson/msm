@@ -312,6 +312,8 @@ simhidden.msm <- function(state, hmodel, nstates, beta=NULL, x=NULL)
     msm.check.hmodel(hmodel, nstates)
     for (i in 1:nstates)
         if (any(state==i)) {
+            if (inherits(hmodel[[i]], "hmmMVdist")) 
+              stop("multivariate HMM outcomes not supported for simulation")
             ## don't change the underlying state if the HMM is the null (identity) model
             if (!(hmodel[[i]]$label=="identity" && (length(hmodel[[i]]$pars) == 0)))  {
                 ## simulate from the sampling function "r" in the HMM object
