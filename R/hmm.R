@@ -423,7 +423,7 @@ msm.form.hranges <- function(ranges, hmodel)
                             " less than theoretical maximum of ", ran.default[j,2], ", ignoring")
                     ran.user[j,2] <- ran.default[j,2]
                 }
-                hranges[rownames(hranges)==i,][j,] <- ran.user[j,]
+                hranges[which(rownames(hranges)==i)[j],] <- ran.user[j,]
             }
         }
     }
