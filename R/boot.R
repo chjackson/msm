@@ -42,6 +42,7 @@ bootdata.trans.msm <- function(x) {
     inds <- sample(which(duplicated(dat[,un["subject"]], fromLast=TRUE)), replace=TRUE)
     ## make new data by interleaving corresponding "from-state" and "to-state" rows
     ntrans <- length(inds)
+    dat <- dat[,-match(un["subject"], names(dat)),drop=FALSE]
     z <- array(c(unlist(dat[inds,]), # "from-state" data
                  unlist(dat[inds+1,])), # "to-state" data
                dim=c(ntrans, ncol(dat), 2))
