@@ -1655,6 +1655,7 @@ crudeinits.msm <- function(formula, subject, qmatrix, data=NULL, censor=NULL, ce
     cens <- msm.form.cmodel(censor, censor.states, qmatrix)
     mf <- model.frame(formula, data=data, na.action=NULL)
     state <- mf[,1]
+    if (is.factor(state)) state <- as.numeric(as.character(state))
     time <- mf[,2]
     n <- length(state)
     if (missing(subject)) subject <- rep(1, n)
