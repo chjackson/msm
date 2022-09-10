@@ -108,6 +108,14 @@ test_that("Exponential distribution with piecewise constant hazard",{
     set.seed(220676)
     r <- rexp(10)
     expect_equal(rt, r, tol=1e-06)
+
+    set.seed(12345)
+    expect_equal(rpexp(1, rate=1:3, t = 0:2), 0.4418078, tol=1e-6)
+    expect_equal(rpexp(1, rate=1:3, t = 1:3), 1.527473, tol=1e-6)
+    expect_equal(rpexp(1, rate=0:2, t = 0:2), 1.808467, tol=1e-6)
+    expect_equal(rpexp(1, rate=c(0.01,0), t = 0:1), Inf)
+    expect_equal(rpexp(1, rate=1:3, t = 0:2, start=1.7), 1.927705, tol=1e-6)
+    expect_equal(rpexp(1, rate=0:2, t = 0:2, start=4), 4.011969, tol=1e-6)
 })
 
 test_that("deltamethod",{
