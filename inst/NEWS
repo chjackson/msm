@@ -6,8 +6,10 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
-Version 1.6.10 (2021-??-??)
--------------
+Version 1.7  (2022-??-??)
+------------
+
+o rpexp is now more efficient.  Thanks to Mark Clements.  Note that the values simulated by rpexp, sim.msm and simmulti.msm for a specific seed will now be different in models where the intensities are piecewise constant.
 
 o Bug fix: in HMMs with partially known initial states specified through "obstrue" and "censor", initprobs is now accounted for.
 
