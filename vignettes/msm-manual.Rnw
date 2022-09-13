@@ -705,7 +705,7 @@ algorithm to continuous time was described by Bureau \etal
 \cite{bureau:hughes:shiboski:00}.
 
 The \Rpackage{msm} package uses a direct method of calculating
-likelihoods in discrete or continuous time based on matrix products.
+likelihoods for continuous-time models based on matrix products.
 This type of method has been described by Macdonald and Zucchini
 \cite[pp.  77--79]{macdonald:zucchini}, Lindsey
 \cite[p.73]{lindsey:rm} and Guttorp \cite{guttorp}.  Satten and
