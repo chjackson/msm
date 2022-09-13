@@ -325,26 +325,32 @@ qpexp <- function (p, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE) {
 ## rate changing at t.  Simulate from exponentials in turn, simulated
 ## value is retained if it is less than the next change time.
 
-rpexp <- function(n=1, rate=1, t=0)
-  {
-      if (length(t) != length(rate)) stop("length of t must be equal to length of rate")
-      if (!isTRUE(all.equal(0, t[1]))) stop("first element of t should be 0")
-      if (is.unsorted(t)) stop("t should be in increasing order")
-      if (length(rate) == 1) return(rexp(n, rate))
-      if (n == 0) return(numeric(0))
-      if (length(n) > 1) n <- length(n)
-      ret <- numeric(n)                          # outcome is a vector length n
-      left <- 1:n
-      for (i in seq_along(rate)){
-          re <- rexp(length(left), rate[i])   # simulate as many exponentials as there are values remaining
-          r <- t[i] + re
-          success <- if (i == length(rate)) seq_along(left) else which(r < t[i+1])
-          ret[left[success]] <- r[success]
-          left <- setdiff(left, left[success])  # indices of values in outcome remaining to simulate.
-          if (length(left)==0) break;
-      }
-      ret
-  }
+rpexp <- function(n=1, rate=1, t=0, start=min(t))
+{
+    if (length(t) != length(rate))
+        stop("length of t must be equal to length of rate")
+    if (length(start) > 1)
+        stop("current implementation does not allow for length(start) > 1")
+    if (start < min(t))
+        stop("start is less then min(t)")
+    if (is.unsorted(t))
+        stop("t should be in increasing order")
+    if (n == 0)
+        return(numeric(0))
+    if (length(n) > 1)
+        n <- length(n)
+    if (length(rate) == 1 || start > max(t))
+        return(start + rexp(n, tail(rate,1)))
+    if (length(start)==1 && start > min(t)) {
+        index <- which(t > start)
+        t <- c(start,t[index])
+        rate <- rate[c(index[1]-1,index)]
+    }
+    H <- c(0,cumsum(head(rate,-1)*diff(t)))
+    e <- stats::rexp(n)
+    i <- findInterval(e,H)
+    return(t[i]+(e-H[i])/rate[i])
+}
 
 qgeneric <- function(pdist, p, special=NULL, ...)
 {

@@ -33,7 +33,7 @@ msm.check.hcovariates <- function(hcovariates, qmodel)
         stop("hcovariates of length ", length(hcovariates), ", expected ", qmodel$nstates)
       for (i in hcovariates) {
           if (!is.null(i) )
-            if ( class(i) != "formula") stop("hcovariates should be a list of formulae or NULLs")
+            if (!inherits(i, "formula")) stop("hcovariates should be a list of formulae or NULLs")
       }
   }
 

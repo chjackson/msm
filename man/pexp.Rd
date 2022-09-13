@@ -14,7 +14,7 @@
      dpexp(x, rate=1, t=0, log = FALSE)
      ppexp(q, rate=1, t=0, lower.tail = TRUE, log.p = FALSE)
      qpexp(p, rate=1, t=0, lower.tail = TRUE, log.p = FALSE)
-     rpexp(n, rate=1, t=0)
+     rpexp(n, rate=1, t=0, start=min(t))
 }
 \arguments{
 
@@ -24,12 +24,13 @@
     taken to be the number required.}
   \item{rate}{vector of rates.}
   \item{t}{vector of the same length as \code{rate}, giving the times at
-    which the rate changes. The first element of \code{t} should be 0,
-    and \code{t} should be in increasing order.}
+    which the rate changes. The values of \code{t} should be in increasing order.}
   \item{log, log.p}{logical; if TRUE, probabilities p are given as
     log(p), or log density is returned.}
   \item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x],
     otherwise, P[X > x].}
+  \item{start}{numeric scalar; delayed entry time. The random deviates
+  will be left truncated from this start time.}
 }
 \value{
      \code{dpexp} gives the density, \code{ppexp} gives the distribution

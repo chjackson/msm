@@ -134,4 +134,4 @@ importFrom("stats", "as.formula", "deriv", "dexp", "dnorm",
            "reformulate", "rexp", "rgamma", "rlnorm", "rnbinom",
            "rnorm", "rpois", "rt", "runif", "rweibull", "sd",
 "setNames", "terms", "uniroot")
-
+importFrom("utils", "head", "tail")
