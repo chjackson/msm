@@ -155,7 +155,7 @@ p2phase <- function(q, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE){
     ind <- (l1>=0 & mu1>=0 & mu2>=0 & t>=0)
     if(any(ind)) { 
         if (l1+mu1==mu2) {
-            if (!lower.tail && log)
+            if (!lower.tail && log.p)
                 tmp <- -(l1+mu1)*t + log(1 + l1*t)    
             else {
                 tmp <- 1 - exp(-(l1+mu1)*t)*(1 + l1*t)

@@ -9,7 +9,7 @@ test_that("one phased state", {
 test_that("one phased state, model fit", {
     ## num overflow in lik with bfgs, even with fnscale. NM method does better. TODO does bad inits cause that?
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q, 
-                    phase.states=c(1), method="Nelder-Mead")
+                    phase.states=c(1), pci=5, method="Nelder-Mead")
     expect_equal(psor.msm$minus2loglik, 1234.568505251202, tol=1e-06)
     psor0.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q)
     ## better fit compared to unphased
