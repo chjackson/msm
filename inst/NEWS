@@ -6,7 +6,7 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
-Version 1.7  (2022-??-??)
+Version 1.7  (2022-11-27)
 ------------
 
 o rpexp is now more efficient.  Thanks to Mark Clements.  Note that the values simulated by rpexp, sim.msm and simmulti.msm for a specific seed will now be different in models where the intensities are piecewise constant.
@@ -14,6 +14,12 @@ o rpexp is now more efficient.  Thanks to Mark Clements.  Note that the values s
 o Bug fix: in HMMs with partially known initial states specified through "obstrue" and "censor", initprobs is now accounted for.
 
 o Bug fix for bootstrapping with character subject IDs.
+
+o crudeinits.msm handled when state is a factor.
+
+o Fix for hranges on multiple parameters.
+
+o obstrue handled in forward-backward algorithm (viterbi.msm).
 
 
 Version 1.6.9 (2021-09-26)
