@@ -13,8 +13,6 @@
 #include <Rmath.h>
 #include <Rdefines.h>
 #define NODEBUG
-#define NOVITDEBUG0
-#define NOVITDEBUG
 #define NODERIVDEBUG
 
 /* MUST KEEP THIS IN SAME ORDER AS .msm.HMODELPARS IN R/constants.R */
@@ -1237,6 +1235,7 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     double *lvold = Calloc(qm->nst, double);
     double *lvnew = Calloc(qm->nst, double);
     double *lvp = Calloc(qm->nst, double);
+    double *log_initp_pout = Calloc(qm->nst, double);
     double *curr = Calloc (qm->nst, double), *outcome;
     double *pout = Calloc(qm->nst, double);
     double *pfwd = Calloc((d->n)*(qm->nst), double);
@@ -1265,18 +1264,12 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
       hpars = &(hm->pars[MI(0, i, hm->totpars)]);
       GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
    }
-#ifdef VITDEBUG
-	    Rprintf("obs 0\n", i);
-#endif
     for (k = 0; k < qm->nst; ++k){
-	lvp[k] = lvold[k] + log(pout[k]);
+	log_initp_pout[k] = lvold[k] + log(pout[k]);
 	if (d->obstrue[i] && (nc==1)) {
 	    pfwd[MI(i,k,d->n)] = (d->obstrue[i] == k+1  ?  1  : 0);
 	}
-    	else pfwd[MI(i,k,d->n)] = exp(lvp[k]);
-#ifdef VITDEBUG
-	Rprintf("pfwd[%d,%d]=%1.2f\n", i, k, pfwd[MI(i,k,d->n)]);
-#endif
+    	else pfwd[MI(i,k,d->n)] = exp(log_initp_pout[k]);
     }
     ucfwd[0] = 0;
     first_obs = 1;
@@ -1284,14 +1277,8 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
     for (i = 1; i <= d->n; ++i)
 	{
 	    R_CheckUserInterrupt();
-#ifdef VITDEBUG
-	    Rprintf("obs %d\n", i);
-#endif
 	    if ((i < d->n) && (d->subject[i] == d->subject[i-1]))
 		{
-#ifdef VITDEBUG
-		    Rprintf("subject %d\n", d->subject[i]);
-#endif
 		    dt = d->time[i] - d->time[i-1];
 		    qmat = &(qm->intens[MI3(0, 0, i-1, qm->nst, qm->nst)]);
 		    hpars = &(hm->pars[MI(0, i, hm->totpars)]); /* not i-1 as pre 1.2.3 */
@@ -1303,17 +1290,16 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    psum = 0;
 		    for (tru = 0; tru < qm->nst; ++tru)
 			{
-
-/* lvnew =  log prob of most likely path ending in tru at current obs.
-   kmax  = most likely state at the previous obs  
-   pfwd = p(data up to and including current obs, and hidden state at current obs), then scaled at each step to sum to 1 to avoid underflow.
-*/
 			    pfwd[MI(i,tru,d->n)] = 0;
 			    for (k = 0; k < qm->nst; ++k) {
-			      if (!first_obs){
-				lvp[k] = lvold[k] + log(pmat[MI(k, tru, qm->nst)]);
-			      }
-			      pfwd[MI(i,tru,d->n)] += pfwd[MI(i-1,k,d->n)] * pmat[MI(k,tru,qm->nst)];
+				if (!first_obs){
+				    lvp[k] = lvold[k];
+				}
+				else {
+				    lvp[k] = log_initp_pout[k];
+				}
+				lvp[k] += log(pmat[MI(k, tru, qm->nst)]);
+			        pfwd[MI(i,tru,d->n)] += pfwd[MI(i-1,k,d->n)] * pmat[MI(k,tru,qm->nst)];
 			    }
 			    if (d->obstrue[i-1])
 				kmax = d->obstrue[i-1] - 1;
@@ -1325,10 +1311,6 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    else pfwd_current = pout[tru];
 			    pfwd[MI(i,tru,d->n)] *= pfwd_current;
 			    psum += pfwd[MI(i,tru,d->n)];
-#ifdef VITDEBUG
-			    Rprintf("true %d, pout[%d] = %lf, lvold = %lf, pmat = %lf, lvnew = %lf, ptr[%d,%d]=%d, pfwd[%d,%d]=%lf\n",
-				    tru, tru, pout[tru], lvold[tru], pmat[MI(kmax, tru, qm->nst)], lvnew[tru], i, tru, ptr[MI(i, tru, d->n)], i, tru, pfwd[MI(i,tru,d->n)]);
-#endif
 			}
 		    if (first_obs) first_obs = 0;
 		    ucfwd[i] = ucfwd[i-1] + log(psum);
@@ -1359,30 +1341,10 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		      pstate[MI(obs,k,d->n)] = exp(log(pfwd[MI(obs,k,d->n)]) + log(pbwd[MI(obs,k,d->n)]) -
 						   logpall + ucfwd[obs]);
 		    }
-#ifdef VITDEBUG
 
-			Rprintf("\n");
-			Rprintf("traceback for subject %d\n", d->subject[i-1]);
-			Rprintf("obs=%d,fitted[%d]=%1.0lf\n",obs,obs,fitted[obs]);
-		    for (tru = 0; tru < qm->nst; ++tru){
-			Rprintf("pfwd[%d,%d]=%1.2f, ", obs, tru, pfwd[MI(obs,tru,d->n)]);
-			Rprintf("pbwd[%d,%d]=%1.2f, ", obs, tru, pbwd[MI(obs,tru,d->n)]);
-			Rprintf("ucfwd[%d]=%1.2f, ", obs, ucfwd[obs]);
-			Rprintf("ucbwd[%d]=%1.2f, ", obs, ucbwd[obs]);
-			Rprintf("logpall=%1.2f,",logpall);
-			Rprintf("pstate[%d,%d]=%1.2f, ", obs, tru, pstate[MI(obs,tru,d->n)]);
-			Rprintf("\n");
-		    }
-#endif
 		    while   ( (obs > 0) && (d->subject[obs] == d->subject[obs-1]) )
 			{
 			    fitted[obs-1] = ptr[MI(obs, fitted[obs], d->n)];
-#ifdef VITDEBUG0
-		    if (d->subject[i] == 1){ 
-			    Rprintf("fitted[%d] = ptr[%d,%1.0lf] = %1.0lf\n", obs-1, obs, fitted[obs], fitted[obs-1]);
-		    }
-#endif
-
 			    dt = d->time[obs] - d->time[obs-1];
 			    qmat = &(qm->intens[MI3(0, 0, obs-1, qm->nst, qm->nst)]);
 			    hpars = &(hm->pars[MI(0, obs, hm->totpars)]);
@@ -1409,21 +1371,9 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 				pstate[MI(obs-1,tru,d->n)] = exp(log(pfwd[MI(obs-1,tru,d->n)]) +
 								 log(pbwd[MI(obs-1,tru,d->n)]) -
 								 logpall + ucfwd[obs-1] + ucbwd[obs-1]);
-#ifdef VITDEBUG
-				Rprintf("pfwd[%d,%d]=%1.2f, ", obs-1, tru, pfwd[MI(obs-1,tru,d->n)]);
-				Rprintf("pbwd[%d,%d]=%1.2f, ", obs-1, tru, pbwd[MI(obs-1,tru,d->n)]);
-				Rprintf("ucfwd[%d]=%1.2f, ", obs-1, ucfwd[obs-1]);
-				Rprintf("ucbwd[%d]=%1.2f, ", obs-1, ucbwd[obs-1]);
-				Rprintf("logpall=%1.2f,",logpall);
-				Rprintf("pstate[%d,%d]=%1.2f, ", obs-1, tru, pstate[MI(obs-1,tru,d->n)]);
-				Rprintf("\n");
-#endif
 			    }
 			    --obs;
 			}
-#ifdef VITDEBUG0
-		    Rprintf("\n");
-#endif
 		    if (i < d->n) {
 		      GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
 		      if (d->obstrue[i] && (nc == 1)) {
@@ -1442,15 +1392,15 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 			    GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[i]);
 			}
 			for (k = 0; k < qm->nst; ++k){
-			  lvp[k] = lvold[k] + log(pout[k]);
-			  pfwd[MI(i,k,d->n)] = exp(lvp[k]);
+			  log_initp_pout[k] = lvold[k] + log(pout[k]);
+			  pfwd[MI(i,k,d->n)] = exp(log_initp_pout[k]);
 			}
 			ucfwd[i] = 0;
 			first_obs = 1;
 		    }
 		}
 	}
-    Free(pmat); Free(ptr); Free(lvold); Free(lvnew); Free(lvp); Free(curr); Free(pout);
+    Free(pmat); Free(ptr); Free(lvold); Free(lvnew); Free(lvp); Free(log_initp_pout); Free(curr); Free(pout);
     Free(pfwd); Free(pbwd); Free(ucfwd); Free(ucbwd);
 }
 
