@@ -35,7 +35,7 @@ boot.msm(x, stat=pmatrix.msm, B=1000, file=NULL, cores=NULL)
 }
 \details{
   The bootstrap datasets are computed by resampling independent
-  transitions between pairs of states (for non-hidden models without
+  pairs of observations at successive times (for non-hidden models without
   censoring), or independent individual series (for hidden models or
   models with censoring).  Therefore this approach doesn't work if,
   for example, the data for a HMM consist of a series of observations
