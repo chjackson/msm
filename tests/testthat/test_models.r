@@ -457,6 +457,20 @@ test_that("pmatrix.piecewise.msm",{
     expect_error(pmatrix.piecewise.msm(psor.msm, 1, 2, c(1, 1.5, 2), list(0, 1, 0, 1)), "covariates argument")
 })
 
+test_that("pmatrix.piecewise.msm given just Q matrices",{
+  p1 <-  pmatrix.piecewise.msm(
+    t1 = 0,
+    t2 = 6,
+    times = c(2, 4),
+    covariates = list(list(cov1 = 1), list(cov1 = 2), list(cov1 = 3)),
+    qlist = list(
+      Q1 = rbind(c(0.9, 0.1), c(0.1, 0.9)),
+      Q2 = rbind(c(0.8, 0.2), c(0.1, 0.9)),
+      Q3 = rbind(c(0.7, 0.3), c(0.1, 0.9))
+    )
+  )
+  expect_equal(round(p1), rbind(c(166, 238), c(99, 304)))
+})
 
 test_that("logLik.msm",{
     expect_equivalent(unclass(logLik.msm(psor.msm)), psor.msm$minus2loglik / -2)

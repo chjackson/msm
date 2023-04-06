@@ -11,6 +11,8 @@ Version 1.7.1  (2023-??)
 
 o Fix of a bug in the Viterbi algorithm for the calculation of the fitted state at the initial time for each subject.
 
+o Bug fix for pmatrix.piecewise.msm given just intensity matrices instead of a fitted model.
+
 
 Version 1.7  (2022-11-27)
 ------------

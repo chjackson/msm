@@ -1091,7 +1091,7 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
     else {
         P.start <- pmatrix.msm(x=x, t = times[ind1] - t1, covariates=covariates[[ind1]], qmatrix=qlist[[ind1]], ...)
         P.end <- pmatrix.msm(x=x, t = t2 - times[ind2-1], covariates=covariates[[ind2]], qmatrix=qlist[[ind2]], ...)
-        P.middle <- diag(x$qmodel$nstates)
+        P.middle <- if (!is.null(x)) diag(x$qmodel$nstates) else diag(ncol(qlist[[1]]))
         for (i in (ind1+1):(ind2-1)) {
             P.middle <- P.middle %*% pmatrix.msm(x=x, t = times[i] - times[i-1], covariates=covariates[[i]], qmatrix=qlist[[i]], ...)
         }
