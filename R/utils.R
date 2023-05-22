@@ -133,9 +133,9 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     ret <- numeric(n)
     ind <- seq(length.out=n)
 
-    sdzero <- ((sd==0) & (mean >= lower) & (mean >= upper))
+    sdzero <- ((sd < .Machine$double.eps) & (mean >= lower) & (mean >= upper))
     ## return the mean, unless mean is outside the range, then return nan 
-    sdna <- ((sd==0) & ((mean < lower) | (mean > upper)))
+    sdna <- ((sd < .Machine$double.eps) & ((mean < lower) | (mean > upper)))
 
     lower <- (lower - mean) / sd ## Algorithm works on mean 0, sd 1 scale
     upper <- (upper - mean) / sd
