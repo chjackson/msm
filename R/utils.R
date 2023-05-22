@@ -133,7 +133,6 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     ret <- numeric(n)
     ind <- seq(length.out=n)
 
-    ## TODO handle sd = 0.
     sdzero <- ((sd==0) & (mean >= lower) & (mean >= upper))
     ## return the mean, unless mean is outside the range, then return nan 
     sdna <- ((sd==0) & ((mean < lower) | (mean > upper)))
