@@ -133,9 +133,9 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     ret <- numeric(n)
     ind <- seq(length.out=n)
 
-    sdzero <- ((sd < .Machine$double.eps) & (mean >= lower) & (mean >= upper))
+    sdzero <- sd < .Machine$double.eps
     ## return the mean, unless mean is outside the range, then return nan 
-    sdna <- ((sd < .Machine$double.eps) & ((mean < lower) | (mean > upper)))
+    sdna <- sdzero & ((mean < lower) | (mean > upper))
 
     lower <- (lower - mean) / sd ## Algorithm works on mean 0, sd 1 scale
     upper <- (upper - mean) / sd
@@ -166,7 +166,7 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     ind.nan <- ind[alg==-1]; ind.no <- ind[alg==0]; ind.expl <- ind[alg==1]; ind.expu <- ind[alg==2]; ind.u <- ind[alg==3]
     ind.sd0 <- ind[alg==4]; 
     ret[ind.nan] <- NaN
-    ret[ind.sd0] <- 0  # SD zero, so set the sampled value to the mean. 
+    ret[ind.sd0] <- 0  # SD zero, so set the sampled value to the mean.
     while (length(ind.no) > 0) {
         y <- rnorm(length(ind.no))
         done <- which(y >= lower[ind.no] & y <= upper[ind.no])
