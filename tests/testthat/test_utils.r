@@ -30,6 +30,9 @@ test_that("truncated normal",{
     expect_warning(rtnorm(3, mean=c(1, NA, 0)), "NAs produced")
     expect_warning(res <- rtnorm(3, sd=c(1, NA, 1), lower=c(NA, 0, 2)), "NAs produced")
     expect_equal(res[1:2], c(NaN, NaN))
+    ## Zero SDs in rtnorm
+    expect_equal(rnorm(1, mean=1, sd=0), 1)
+    expect_warning(rtnorm(1, mean=1, sd=0, lower=2), "NAs produced")
 })
 
 test_that("Measurement error distributions: normal",{

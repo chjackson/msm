@@ -130,17 +130,26 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     sd <- rep(sd, length=n)
     lower <- rep(lower, length=n)
     upper <- rep(upper, length=n)
+    ret <- numeric(n)
+    ind <- seq(length.out=n)
+
+    ## TODO handle sd = 0.
+    sdzero <- ((sd==0) & (mean >= lower) & (mean >= upper))
+    ## return the mean, unless mean is outside the range, then return nan 
+    sdna <- ((sd==0) & ((mean < lower) | (mean > upper)))
+
     lower <- (lower - mean) / sd ## Algorithm works on mean 0, sd 1 scale
     upper <- (upper - mean) / sd
-    ind <- seq(length.out=n)
-    ret <- numeric(n)
-    nas <- is.na(mean) | is.na(sd) | is.na(lower) | is.na(upper)
+    nas <- is.na(mean) | is.na(sd) | is.na(lower) | is.na(upper) | sdna
     if (any(nas)) warning("NAs produced")
     ## Different algorithms depending on where upper/lower limits lie.
     alg <- ifelse(
                   ((lower > upper) | nas),
                   -1,# return NaN
                   ifelse(
+                         sdzero, 
+                         4, # SD zero, so set the sampled value to the mean. 
+                         ifelse(
                          ((lower < 0 & upper == Inf) |
                           (lower == -Inf & upper > 0) |
                           (is.finite(lower) & is.finite(upper) & (lower < 0) & (upper > 0) & (upper-lower > sqrt(2*pi)))
@@ -153,10 +162,12 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
                                 ifelse(upper <= 0 & (-lower > -upper + 2*sqrt(exp(1)) /
                                        (-upper + sqrt(upper^2 + 4)) * exp((upper*2 - -upper*sqrt(upper^2 + 4)) / 4)),
                                        2, # rejection sampling with exponential proposal. Use if upper << mean.
-                                       3)))) # rejection sampling with uniform proposal. Use if bounds are narrow and central.
+                                       3))))) # rejection sampling with uniform proposal. Use if bounds are narrow and central.
 
     ind.nan <- ind[alg==-1]; ind.no <- ind[alg==0]; ind.expl <- ind[alg==1]; ind.expu <- ind[alg==2]; ind.u <- ind[alg==3]
+    ind.sd0 <- ind[alg==4]; 
     ret[ind.nan] <- NaN
+    ret[ind.sd0] <- 0  # SD zero, so set the sampled value to the mean. 
     while (length(ind.no) > 0) {
         y <- rnorm(length(ind.no))
         done <- which(y >= lower[ind.no] & y <= upper[ind.no])
