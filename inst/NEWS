@@ -13,6 +13,8 @@ o Fix of a bug in the Viterbi algorithm for the calculation of the fitted state 
 
 o Bug fix for pmatrix.piecewise.msm given just intensity matrices instead of a fitted model.
 
+o Auto-generated initial values set to a small positive number rather than zero when there are no observed data for a particular permitted transition.  This fixes consistency checks (e.g. for qconstraint) in this situation.
+
 
 Version 1.7  (2022-11-27)
 ------------
