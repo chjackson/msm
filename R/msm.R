@@ -1678,10 +1678,13 @@ crudeinits.msm <- function(formula, subject, qmatrix, data=NULL, censor=NULL, ce
     estmat <- matrix(0, nst, nst)
     rownames(estmat) <- colnames(estmat) <- paste(1:nst)
     tab <- sweep(ntrans, 1, tottime, "/")
-    for (i in 1:nst) # Include zero rows for states for which there were no transitions
+    for (i in 1:nst) 
         for (j in 1:nst)
             if ((paste(i) %in% rownames(tab)) && (paste(j) %in% colnames(tab)))
-                estmat[paste(i), paste(j)] <- tab[paste(i),paste(j)]
+                estmat[paste(i), paste(j)] <- tab[paste(i),paste(j)]#
+    ## If no observed transitions but transition is permitted,
+    ## set initial value to small number relative to other initial values
+    estmat[estmat == 0 & qmatrix==1] <- mean(tab[tab>0]) / 100 # 
     estmat[qmatrix == 0] <- 0 #
     estmat <- msm.fixdiag.qmatrix(estmat)
     rownames(estmat) <- rownames(qmatrix)

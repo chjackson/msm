@@ -579,8 +579,12 @@ test_that("error handling: qmatrix",{
 })
 
 test_that("error handling: subject",{
-    expect_error(cav.msm <- msm(state~years, subject="foo", data = cav, qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE),"variable lengths differ")
-    expect_error(cav.msm <- msm(state~years, subject=foo, data = cav, qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE),"not found")
+    expect_error(cav.msm <- msm(state~years, subject="foo", data = cav, 
+                                qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE),
+                 "variable lengths differ")
+    expect_error(cav.msm <- msm(state~years, subject=foo, data = cav, 
+                                qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE),
+                 "not found")
 })
 
 test_that("error handling: obstype",{
