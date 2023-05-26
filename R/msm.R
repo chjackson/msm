@@ -1949,22 +1949,22 @@ msm.aggregate.data <- function(mf.trans)
 {
     n <- nrow(mf.trans)
     apaste <- do.call("paste", mf.trans[,c("(fromstate)","(tostate)","(timelag)","(obstype)", attr(mf.trans, "covnames"))])
-    mf.agg <- mf.trans[!duplicated(apaste),]
-    mf.agg <- mf.agg[order(unique(apaste)),]
-    mf.agg$"(nocc)" <- as.numeric(table(apaste))
-    apaste2 <- mf.agg[,"(timelag)"]
-    if (attr(mf.agg, "ncovs") > 0)
-        apaste2 <- paste(apaste2,  do.call("paste", mf.agg[,attr(mf.agg, "covnames"),drop=FALSE]))
+    ma <- mf.trans[!duplicated(apaste),]
+    ma <- ma[order(unique(apaste)),]
+    ma$"(nocc)" <- as.numeric(table(apaste))
+    apaste2 <- ma[,"(timelag)"]
+    if (attr(ma, "ncovs") > 0)
+        apaste2 <- paste(apaste2,  do.call("paste", ma[,attr(ma, "covnames"),drop=FALSE]))
     ## which unique timelag/cov combination each row of aggregated data corresponds to
     ## lik.c needs this to know when to recalculate the P matrix.
-    mf.agg$"(whicha)" <- match(apaste2, sort(unique(apaste2)))
-    mf.agg <- mf.agg[order(apaste2,mf.agg$"(fromstate)",mf.agg$"(tostate)"),]
+    ma$"(whicha)" <- match(apaste2, sort(unique(apaste2)))
     ## for Fisher information: number of obs over timelag/covs starting in
     ## fromstate, replicated for all tostates.
-    apaste2 <- paste(mf.agg$"(fromstate)", apaste2)
-    mf.agg$"(noccsum)" <- unname(tapply(mf.agg$"(nocc)", apaste2, sum)[apaste2])
+    apaste3 <- paste(ma$"(fromstate)", apaste2)
+    ma$"(noccsum)" <- unname(tapply(ma$"(nocc)", apaste2, sum)[apaste3])
+    ma <- ma[order(apaste2,ma$"(fromstate)",ma$"(tostate)"),]
     ## NOTE not kept covdata, hcovdata, npts, covlabels, covmeans, nobs, ntrans
-    mf.agg
+    ma
 }
 
 ### Form indicator for which unique timelag/obstype/cov each observation belongs to
