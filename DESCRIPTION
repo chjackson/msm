@@ -16,7 +16,8 @@ Imports:
     survival,mvtnorm,expm
 Suggests:
     mstate,minqa,doParallel,foreach,numDeriv,testthat,flexsurv
-URL: https://github.com/chjackson/msm
+URL: https://github.com/chjackson/msm,
+    https://chjackson.github.io/msm/
 BugReports: https://github.com/chjackson/msm/issues
 LazyData: yes
 Encoding: UTF-8

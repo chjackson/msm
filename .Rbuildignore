@@ -38,3 +38,7 @@ src/doc
 ^\.Rproj\.user$
 \.dropbox\.attr
 docs
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

@@ -13,3 +13,5 @@ vignettes/_region_.tex
 vignettes/auto
 R/#*
 inst/#*
+.Rprofile
+docs

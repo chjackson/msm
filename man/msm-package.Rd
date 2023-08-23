@@ -18,6 +18,7 @@ constant or piecewise-constant in time.
 Useful links:
 \itemize{
   \item \url{https://github.com/chjackson/msm}
+  \item \url{https://chjackson.github.io/msm/}
   \item Report bugs at \url{https://github.com/chjackson/msm/issues}
 }
 
