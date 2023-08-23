@@ -97,6 +97,31 @@ msm.phase2hmodel <- function(qmodel, hmodel){
 
 ## Convert parameters of fitted phase-type model to mixture representation
 
+
+
+#' Parameters of phase-type models in mixture form
+#' 
+#' Parameters of fitted two-phase models, in mixture model parameterisation.
+#' 
+#' 
+#' @param x A fitted multi-state model, as returned by \code{\link{msm}}.
+#' @param covariates Covariate values, see \code{\link{qmatrix.msm}}.
+#' @param ci If \code{"none"} (the default) no confidence intervals are
+#' calculated.  Otherwise \code{"normal"}, or \code{"boot"} as described by
+#' \code{\link{qmatrix.msm}}.
+#' @param cl Width of the symmetric confidence interval, relative to 1.
+#' @param B Number of bootstrap replicates, or number of normal simulations
+#' from the distribution of the MLEs.
+#' @param cores Number of cores to use for bootstrapping using parallel
+#' processing. See \code{\link{boot.msm}} for more details.
+#' @return Matrix with one row for each state that has a two-phase
+#' distribution, and three columns: the short-stay mean, long-stay mean and
+#' long-stay probability.  These are functions of the transition intensities of
+#' the expanded hidden Markov model, defined in \code{\link{d2phase}}.
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @seealso \code{\link{d2phase}}.
+#' @keywords models
+#' @export phasemeans.msm
 phasemeans.msm <- function(x, covariates="mean", ci=c("none","normal","bootstrap"), cl=0.95, B=1000, cores=NULL){
     ps <- x$qmodel$phase.states
     Q <- qmatrix.msm(x, ci="none", covariates=covariates)
@@ -124,6 +149,8 @@ phasemeans.msm <- function(x, covariates="mean", ci=c("none","normal","bootstrap
     res
 }
 
+#' @rdname twophase
+#' @export
 d2phase <- function(x, l1, mu1, mu2, log=FALSE){
     t <- x
     ret <- numeric(length(t))
@@ -147,6 +174,8 @@ d2phase <- function(x, l1, mu1, mu2, log=FALSE){
     ret
 }
 
+#' @rdname twophase
+#' @export
 p2phase <- function(q, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE){
     t <- q
     ret <- numeric(length(t))
@@ -174,10 +203,14 @@ p2phase <- function(q, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE){
     ret
 }
 
+#' @rdname twophase
+#' @export
 q2phase <- function(p, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE){
     qgeneric(p2phase, p=p, l1=l1, mu1=mu1, mu2=mu2, lower.tail=lower.tail, log.p=log.p)
 }
 
+#' @rdname twophase
+#' @export
 r2phase <- function(n, l1, mu1, mu2){
     if (length(n) > 1) n <- length(n)
     ret <- numeric(n)
@@ -192,6 +225,8 @@ r2phase <- function(n, l1, mu1, mu2){
     ret
 }
 
+#' @rdname twophase
+#' @export
 h2phase <- function(x, l1, mu1, mu2, log=FALSE) {
     t <- x
     ret <- numeric(length(x))

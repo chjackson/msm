@@ -9,6 +9,60 @@ resample <- function(x, size, ...)
 ### General function to simulate one individual's realisation from a continuous-time Markov model
 ### Produces the exact times of transition
 
+
+
+#' Simulate one individual trajectory from a continuous-time Markov model
+#' 
+#' Simulate one realisation from a continuous-time Markov process up to a given
+#' time.
+#' 
+#' The effect of time-dependent covariates on the transition intensity matrix
+#' for an individual is determined by assuming that the covariate is a step
+#' function which remains constant in between the individual's observation
+#' times.
+#' 
+#' @param qmatrix The transition intensity matrix of the Markov process. The
+#' diagonal of \code{qmatrix} is ignored, and computed as appropriate so that
+#' the rows sum to zero. For example, a possible \code{qmatrix} for a three
+#' state illness-death model with recovery is:
+#' 
+#' \code{rbind( c( 0, 0.1, 0.02 ), c( 0.1, 0, 0.01 ), c( 0, 0, 0 ) )}
+#' 
+#' @param maxtime Maximum time for the simulated process.
+#' @param covs Matrix of time-dependent covariates, with one row for each
+#' observation time and one column for each covariate.
+#' @param beta Matrix of linear covariate effects on log transition
+#' intensities. The rows correspond to different covariates, and the columns to
+#' the transition intensities. The intensities are ordered by reading across
+#' rows of the intensity matrix, starting with the first, counting the positive
+#' off-diagonal elements of the matrix.
+#' @param obstimes Vector of times at which the covariates are observed.
+#' @param start Starting state of the process. Defaults to 1.
+#' @param mintime Starting time of the process. Defaults to 0.
+#' @return A list with components,
+#' 
+#' \item{states}{Simulated states through which the process moves.  This ends
+#' with either an absorption before \code{obstime}, or a transient state at
+#' \code{obstime}. }
+#' 
+#' \item{times}{Exact times at which the process changes to the corresponding
+#' states}
+#' 
+#' \item{qmatrix}{The given transition intensity matrix}
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @seealso \code{\link{simmulti.msm}}
+#' @keywords datagen
+#' @examples
+#' 
+#' 
+#' qmatrix <- rbind(
+#'                  c(-0.2,   0.1,  0.1 ),
+#'                  c(0.5,   -0.6,  0.1 ),
+#'                  c(0,  0,  0)
+#'                  )
+#' sim.msm(qmatrix, 30)
+#' 
+#' @export sim.msm
 sim.msm <- function(qmatrix,   # intensity matrix
                     maxtime,   # maximum time for realisations
                     covs=NULL,     # covariate matrix, nobs rows, ncovs cols
@@ -117,6 +171,112 @@ getobs.msm <- function(sim, obstimes, death=FALSE, drop.absorb=TRUE)
 ### e.g. separate hcovariates and  covariates formulae,
 ### plus covinits and hcovinits?
 
+
+
+#' Simulate multiple trajectories from a multi-state Markov model with
+#' arbitrary observation times
+#' 
+#' Simulate a number of individual realisations from a continuous-time Markov
+#' process. Observations of the process are made at specified arbitrary times
+#' for each individual, giving panel-observed data.
+#' 
+#' \code{\link{sim.msm}} is called repeatedly to produce a simulated trajectory
+#' for each individual. The state at each specified observation time is then
+#' taken to produce a new column \code{state}.  The effect of time-dependent
+#' covariates on the transition intensity matrix for an individual is
+#' determined by assuming that the covariate is a step function which remains
+#' constant in between the individual's observation times.  If the subject
+#' enters an absorbing state, then only the first observation in that state is
+#' kept in the data frame. Rows corresponding to future observations are
+#' deleted.  The entry times into states given in \code{death} are assumed to
+#' be known exactly.
+#' 
+#' @param data A data frame with a mandatory column named \code{time},
+#' representing observation times.  The optional column named \code{subject},
+#' corresponds to subject identification numbers. If not given, all
+#' observations are assumed to be on the same individual. Observation times
+#' should be sorted within individuals.  The optional column named \code{cens}
+#' indicates the times at which simulated states should be censored. If
+#' \code{cens==0} then the state is not censored, and if \code{cens==k}, say,
+#' then all simulated states at that time which are in the set
+#' \code{censor.states} are replaced by \code{k}.  Other named columns of the
+#' data frame represent any covariates, which may be time-constant or
+#' time-dependent.  Time-dependent covariates are assumed to be constant
+#' between the observation times.
+#' @param qmatrix The transition intensity matrix of the Markov process, with
+#' any covariates set to zero.  The diagonal of \code{qmatrix} is ignored, and
+#' computed as appropriate so that the rows sum to zero. For example, a
+#' possible \code{qmatrix} for a three state illness-death model with recovery
+#' is:
+#' 
+#' \code{rbind( c( 0, 0.1, 0.02 ), c( 0.1, 0, 0.01 ), c( 0, 0, 0 ) )}
+#' @param covariates List of linear covariate effects on log transition
+#' intensities. Each element is a vector of the effects of one covariate on all
+#' the transition intensities. The intensities are ordered by reading across
+#' rows of the intensity matrix, starting with the first, counting the positive
+#' off-diagonal elements of the matrix.
+#' 
+#' For example, for a multi-state model with three transition intensities, and
+#' two covariates \code{x} and \code{y} on each intensity,
+#' 
+#' \code{covariates=list(x = c(-0.3,-0.3,-0.3), y=c(0.1, 0.1, 0.1))}
+#' @param death Vector of indices of the death states.  A death state is an
+#' absorbing state whose time of entry is known exactly, but the individual is
+#' assumed to be in an unknown transient state ("alive") at the previous
+#' instant.  This is the usual situation for times of death in chronic disease
+#' monitoring data.  For example, if you specify \code{death = c(4, 5)} then
+#' states 4 and 5 are assumed to be death states.
+#' 
+#' \code{death = TRUE} indicates that the final state is a death state, and
+#' \code{death = FALSE} (the default) indicates that there is no death state.
+#' @param start A vector with the same number of elements as there are distinct
+#' subjects in the data, giving the states in which each corresponding
+#' individual begins.  Or a single number, if all of these are the same.
+#' Defaults to state 1 for each subject.
+#' @param ematrix An optional misclassification matrix for generating observed
+#' states conditionally on the simulated true states. As defined in
+#' \code{\link{msm}}.
+#' @param misccovariates Covariate effects on misclassification probabilities
+#' via multinomial logistic regression. Linear effects operate on the log of
+#' each probability relative to the probability of classification in the
+#' correct state. In same format as \code{covariates}.
+#' @param hmodel An optional hidden Markov model for generating observed
+#' outcomes conditionally on the simulated true states. As defined in
+#' \code{\link{msm}}.  Multivariate outcomes (\code{hmmMV}) are not supported.
+#' @param hcovariates List of the same length as \code{hmodel}, defining any
+#' covariates governing the hidden Markov outcome models.  Unlike in the
+#' \code{msm} function, this should also define the values of the covariate
+#' effects. Each element of the list is a named vector of the initial values
+#' for each set of covariates for that state.  For example, for a three-state
+#' hidden Markov model with two, one and no covariates on the state 1, 2 and 3
+#' outcome models respectively,
+#' 
+#' \code{ hcovariates = list (c(acute=-8, age=0), c(acute=-8), NULL) }
+#' @param censor.states Set of simulated states which should be replaced by a
+#' censoring indicator at censoring times.  By default this is all transient
+#' states (representing alive, with unknown state).
+#' @param drop.absorb Drop repeated observations in the absorbing state,
+#' retaining only one.
+#' @return A data frame with columns, \item{subject}{Subject identification
+#' indicators} \item{time}{Observation times} \item{state}{Simulated (true)
+#' state at the corresponding time} \item{obs}{Observed outcome at the
+#' corresponding time, if \code{ematrix} or \code{hmodel} was supplied}
+#' \item{keep}{Row numbers of the original data.  Useful when
+#' \code{drop.absorb=TRUE}, to show which rows were not dropped} plus any
+#' supplied covariates.
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @seealso \code{\link{sim.msm}}
+#' @keywords datagen
+#' @examples
+#' 
+#' ### Simulate 100 individuals with common observation times
+#' sim.df <- data.frame(subject = rep(1:100, rep(13,100)), time = rep(seq(0, 24, 2), 100))
+#' qmatrix <- rbind(c(-0.11,   0.1,  0.01 ),
+#'                  c(0.05,   -0.15,  0.1 ),
+#'                  c(0.02,   0.07, -0.09))
+#' simmulti.msm(sim.df, qmatrix)
+#' 
+#' @export simmulti.msm
 simmulti.msm <- function(data,           # data frame with subject, times, covariates...
                          qmatrix,        # intensity matrix
                          covariates=NULL,  # initial values
@@ -338,6 +498,44 @@ simhidden.msm <- function(state, hmodel, nstates, beta=NULL, x=NULL)
 ### Simulate data from fitted model with same observation scheme
 ### Used for parametric bootstrap in pearson.msm
 
+
+
+#' Simulate from a Markov model fitted using msm
+#' 
+#' Simulate a dataset from a Markov model fitted using \code{\link{msm}}, using
+#' the maximum likelihood estimates as parameters, and the same observation
+#' times as in the original data.
+#' 
+#' This function is a wrapper around \code{\link{simmulti.msm}}, and only
+#' simulates panel-observed data.  To generate datasets with the exact times of
+#' transition, use the lower-level \code{\link{sim.msm}}.
+#' 
+#' Markov models with misclassified states fitted through the \code{ematrix}
+#' option to \code{\link{msm}} are supported, but not general hidden Markov
+#' models with \code{hmodel}.  For misclassification models, this function
+#' includes misclassification in the simulated states.
+#' 
+#' This function is used for parametric bootstrapping to estimate the null
+#' distribution of the test statistic in \code{\link{pearson.msm}}.
+#' 
+#' @param x A fitted multi-state model object as returned by \code{\link{msm}}.
+#' @param drop.absorb Should repeated observations in an absorbing state be
+#' omitted.  Use the default of \code{TRUE} to avoid warnings when using the
+#' simulated dataset for further \code{\link{msm}} fits.  Or set to
+#' \code{FALSE} if exactly the same number of observations as the original data
+#' are needed.
+#' @param drop.pci.imp In time-inhomogeneous models fitted using the \code{pci}
+#' option to \code{\link{msm}}, censored observations are inserted into the
+#' data by \code{\link{msm}} at the times where the intensity changes, but
+#' dropped by default when simulating from the fitted model using this
+#' function. Set this argument to \code{FALSE} to keep these observations and
+#' the corresponding indicator variable.
+#' @return A dataset with variables as described in \code{\link{simmulti.msm}}.
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @seealso \code{\link{simmulti.msm}}, \code{\link{sim.msm}},
+#' \code{\link{pearson.msm}}, \code{\link{msm}}.
+#' @keywords models
+#' @export simfitted.msm
 simfitted.msm <- function(x, drop.absorb=TRUE, drop.pci.imp=TRUE){
     sim.df <- x$data$mf
     x$data <- expand.data(x)

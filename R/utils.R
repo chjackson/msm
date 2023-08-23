@@ -3,6 +3,86 @@
 
 ### Delta method for approximating the covariance matrix of f(X) given cov(X)
 
+
+
+#' The delta method
+#' 
+#' Delta method for approximating the standard error of a transformation
+#' \eqn{g(X)} of a random variable \eqn{X = (x_1, x_2, \ldots)}{X = (x1, x2,
+#' \ldots)}, given estimates of the mean and covariance matrix of \eqn{X}.
+#' 
+#' The delta method expands a differentiable function of a random variable
+#' about its mean, usually with a first-order Taylor approximation, and then
+#' takes the variance. For example, an approximation to the covariance matrix
+#' of \eqn{g(X)} is given by
+#' 
+#' \deqn{ Cov(g(X)) = g'(\mu) Cov(X) [g'(\mu)]^T }{ Cov(g(X)) = g'(mu) Cov(X)
+#' [g'(mu)]^T }
+#' 
+#' where \eqn{\mu}{mu} is an estimate of the mean of \eqn{X}.  This function
+#' uses symbolic differentiation via \code{\link{deriv}}.
+#' 
+#' A limitation of this function is that variables created by the user are not
+#' visible within the formula \code{g}.  To work around this, it is necessary
+#' to build the formula as a string, using functions such as \code{sprintf},
+#' then to convert the string to a formula using \code{as.formula}.  See the
+#' example below.
+#' 
+#' If you can spare the computational time, bootstrapping is a more accurate
+#' method of calculating confidence intervals or standard errors for
+#' transformations of parameters. See \code{\link{boot.msm}}.  Simulation from
+#' the asymptotic distribution of the MLEs (see e.g. Mandel 2013) is also a
+#' convenient alternative.
+#' 
+#' @param g A formula representing the transformation. The variables must be
+#' labelled \code{x1, x2,\dots{}} For example,
+#' 
+#' \code{~ 1 / (x1 + x2)}
+#' 
+#' If the transformation returns a vector, then a list of formulae representing
+#' (\eqn{g_1, g_2, \ldots}{g1, g2, \ldots}) can be provided, for example
+#' 
+#' \code{list( ~ x1 + x2, ~ x1 / (x1 + x2) )}
+#' @param mean The estimated mean of \eqn{X}
+#' @param cov The estimated covariance matrix of \eqn{X}
+#' @param ses If \code{TRUE}, then the standard errors of \eqn{g_1(X),
+#' g_2(X),\ldots}{g1(X), g2(X),\ldots} are returned. Otherwise the covariance
+#' matrix of \eqn{g(X)} is returned.
+#' @return A vector containing the standard errors of \eqn{g_1(X), g_2(X),
+#' \ldots}{g1(X), g2(X), \ldots} or a matrix containing the covariance of
+#' \eqn{g(X)}.
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @references Oehlert, G. W. (1992) \emph{A note on the delta method}.
+#' American Statistician 46(1).
+#' 
+#' Mandel, M. (2013) \emph{Simulation based confidence intervals for functions
+#' with complicated derivatives.} The American Statistician 67(2):76-81.
+#' @keywords math
+#' @examples
+#' 
+#' 
+#' ## Simple linear regression, E(y) = alpha + beta x 
+#' x <- 1:100
+#' y <- rnorm(100, 4*x, 5)
+#' toy.lm <- lm(y ~ x)
+#' estmean <- coef(toy.lm)
+#' estvar <- summary(toy.lm)$cov.unscaled * summary(toy.lm)$sigma^2
+#' 
+#' ## Estimate of (1 / (alphahat + betahat))
+#' 1 / (estmean[1] + estmean[2])
+#' ## Approximate standard error
+#' deltamethod (~ 1 / (x1 + x2), estmean, estvar) 
+#' 
+#' ## We have a variable z we would like to use within the formula.
+#' z <- 1
+#' ## deltamethod (~ z / (x1 + x2), estmean, estvar) will not work.
+#' ## Instead, build up the formula as a string, and convert to a formula.
+#' form <- sprintf("~ %f / (x1 + x2)", z)
+#' form
+#' deltamethod(as.formula(form), estmean, estvar)
+#' 
+#' 
+#' @export deltamethod
 deltamethod <- function(g,       # a formula or list of formulae (functions) giving the transformation g(x) in terms of x1, x2,  etc
                         mean,    # mean, or maximum likelihood estimate, of x
                         cov,     # covariance matrix of x
@@ -40,6 +120,80 @@ deltamethod <- function(g,       # a formula or list of formulae (functions) giv
 ### Matrix exponential
 ### If a vector of multipliers t is supplied then a list of matrices is returned.
 
+
+
+#' Matrix exponential
+#' 
+#' Calculates the exponential of a square matrix.
+#' 
+#' See the \code{\link[expm]{expm}} documentation for details of the algorithms
+#' it uses.
+#' 
+#' Generally the exponential \eqn{E} of a square matrix \eqn{M} can often be
+#' calculated as
+#' 
+#' \deqn{E = U \exp(D) U^{-1}}{E = U exp(D) U^{-1}}
+#' 
+#' where \eqn{D} is a diagonal matrix with the eigenvalues of \eqn{M} on the
+#' diagonal, \eqn{\exp(D)}{exp(D)} is a diagonal matrix with the exponentiated
+#' eigenvalues of \eqn{M} on the diagonal, and \eqn{U} is a matrix whose
+#' columns are the eigenvectors of \eqn{M}.
+#' 
+#' This method of calculation is used if \code{"pade"} or \code{"series"} is
+#' supplied but \eqn{M} has distinct eigenvalues.  I If \eqn{M} has repeated
+#' eigenvalues, then its eigenvector matrix may be non-invertible. In this
+#' case, the matrix exponential is calculated using the Pade approximation
+#' defined by Moler and van Loan (2003), or the less robust power series
+#' approximation,
+#' 
+#' \deqn{\exp(M) = I + M + M^2/2 + M^3 / 3! + M^4 / 4! + ...}{exp(M) = I + M +
+#' M^2/2 + M^3 / 3! + M^4 / 4! + ...}
+#' 
+#' For a continuous-time homogeneous Markov process with transition intensity
+#' matrix \eqn{Q}, the probability of occupying state \eqn{s} at time \eqn{u +
+#' t} conditional on occupying state \eqn{r} at time \eqn{u} is given by the
+#' \eqn{(r,s)} entry of the matrix \eqn{\exp(tQ)}{exp(tQ)}.
+#' 
+#' If \code{mat} is a valid transition intensity matrix for a continuous-time
+#' Markov model (i.e. diagonal entries non-positive, off-diagonal entries
+#' non-negative, rows sum to zero), then for certain simpler model structures,
+#' there are analytic formulae for the individual entries of the exponential of
+#' \code{mat}.  These structures are listed in the PDF manual and the formulae
+#' are coded in the \pkg{msm} source file \code{src/analyticp.c}.  These
+#' formulae are only used if \code{method="analytic"}.  This is more efficient,
+#' but it is not the default in \code{MatrixExp} because the code is not robust
+#' to extreme values.  However it is the default when calculating likelihoods
+#' for models fitted by \code{\link{msm}}.
+#' 
+#' The implementation of the Pade approximation used by \code{method="pade"}
+#' was taken from JAGS by Martyn Plummer
+#' (\url{https://mcmc-jags.sourceforge.io}).
+#' 
+#' @param mat A square matrix
+#' @param t An optional scaling factor for \code{mat}.
+#' @param method Under the default of \code{NULL}, this simply wraps the
+#' \code{\link[expm]{expm}} function from the \pkg{expm} package.  This is
+#' recommended.  Options to \code{\link{expm}} can be supplied to
+#' \code{\link{MatrixExp}}, including \code{method}.
+#' 
+#' Otherwise, for backwards compatibility, the following options, which use
+#' code in the \pkg{msm} package, are available: \code{"pade"} for a Pade
+#' approximation method, \code{"series"} for the power series approximation, or
+#' \code{"analytic"} for the analytic formulae for simpler Markov model
+#' intensity matrices (see below).  These options are only used if \code{mat}
+#' has repeated eigenvalues, thus the usual eigen-decomposition method cannot
+#' be used.
+#' @param ... Arguments to pass to \code{\link{expm}}.
+#' @return The exponentiated matrix \eqn{\exp(mat)}{exp(mat)}. Or, if \code{t}
+#' is a vector of length 2 or more, an array of exponentiated matrices.
+#' @references Cox, D. R. and Miller, H. D. \emph{The theory of stochastic
+#' processes}, Chapman and Hall, London (1965)
+#' 
+#' Moler, C and van Loan, C (2003).  Nineteen dubious ways to compute the
+#' exponential of a matrix, twenty-five years later.  \emph{SIAM Review}
+#' \bold{45}, 3--49.
+#' @keywords math
+#' @export MatrixExp
 MatrixExp <- function(mat, t = 1, method=NULL,...){
     if (!is.matrix(mat) || (nrow(mat)!= ncol(mat)))
         stop("\"mat\" must be a square matrix")
@@ -77,6 +231,8 @@ is.qmatrix <- function(Q) {
 
 ### Truncated normal distribution
 
+#' @rdname tnorm
+#' @export
 dtnorm <- function(x, mean=0, sd=1, lower=-Inf, upper=Inf, log=FALSE)
   {
       ret <- numeric(length(x))
@@ -92,6 +248,8 @@ dtnorm <- function(x, mean=0, sd=1, lower=-Inf, upper=Inf, log=FALSE)
       ret
   }
 
+#' @rdname tnorm
+#' @export
 ptnorm <- function(q, mean=0, sd=1, lower=-Inf, upper=Inf, lower.tail=TRUE, log.p=FALSE)
   {
       ret <- numeric(length(q))
@@ -115,6 +273,8 @@ ptnorm <- function(q, mean=0, sd=1, lower=-Inf, upper=Inf, lower.tail=TRUE, log.
       ret
   }
 
+#' @rdname tnorm
+#' @export
 qtnorm <- function(p, mean=0, sd=1, lower=-Inf, upper=Inf, lower.tail=TRUE, log.p=FALSE)
 {
     qgeneric(ptnorm, p=p, mean=mean, sd=sd, lower=lower, upper=upper, lbound=lower, ubound=upper, lower.tail=lower.tail, log.p=log.p)
@@ -123,6 +283,8 @@ qtnorm <- function(p, mean=0, sd=1, lower=-Inf, upper=Inf, lower.tail=TRUE, log.
 ## Rejection sampling algorithm by Robert (Stat. Comp (1995), 5, 121-5)
 ## for simulating from the truncated normal distribution.
 
+#' @rdname tnorm
+#' @export
 rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
     if (length(n) > 1)
         n <- length(n)
@@ -209,6 +371,8 @@ rtnorm <- function (n, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
 
 ### Normal distribution with measurement error and optional truncation
 
+#' @rdname medists
+#' @export
 dmenorm <- function(x, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0, log = FALSE)
 {
     sumsq <- sd*sd + sderr*sderr
@@ -222,6 +386,8 @@ dmenorm <- function(x, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0, 
       nc * nctmp * dnorm(x, meanerr + mean, sqrt(sumsq), 0)
 }
 
+#' @rdname medists
+#' @export
 pmenorm <- function(q, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0, lower.tail = TRUE, log.p = FALSE)
 {
     ret <- numeric(length(q))
@@ -236,12 +402,16 @@ pmenorm <- function(q, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0, 
 }
 
 
+#' @rdname medists
+#' @export
 qmenorm <- function(p, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0, lower.tail=TRUE, log.p=FALSE)
 {
     qgeneric(pmenorm, p=p, mean=mean, sd=sd, lower=lower, upper=upper, sderr=sderr, meanerr=meanerr,
              lbound=lower, ubound=upper, lower.tail=lower.tail, log.p=log.p)
 }
 
+#' @rdname medists
+#' @export
 rmenorm <- function(n, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0)
 {
     rnorm(n, meanerr + rtnorm(n, mean, sd, lower, upper), sderr)
@@ -249,6 +419,8 @@ rmenorm <- function(n, mean=0, sd=1, lower=-Inf, upper=Inf, sderr=0, meanerr=0)
 
 ### Uniform distribution with measurement error
 
+#' @rdname medists
+#' @export
 dmeunif <- function(x, lower=0, upper=1, sderr=0, meanerr=0, log = FALSE)
 {
     if (log)
@@ -257,6 +429,8 @@ dmeunif <- function(x, lower=0, upper=1, sderr=0, meanerr=0, log = FALSE)
       ( pnorm(x, meanerr + lower, sderr) - pnorm(x, meanerr + upper, sderr) ) / (upper - lower)
 }
 
+#' @rdname medists
+#' @export
 pmeunif <- function(q, lower=0, upper=1, sderr=0, meanerr=0, lower.tail = TRUE, log.p = FALSE)
 {
     ret <- numeric(length(q))
@@ -269,12 +443,16 @@ pmeunif <- function(q, lower=0, upper=1, sderr=0, meanerr=0, lower.tail = TRUE, 
     ret
 }
 
+#' @rdname medists
+#' @export
 qmeunif <- function(p, lower=0, upper=1, sderr=0, meanerr=0, lower.tail=TRUE, log.p=FALSE)
 {
     qgeneric(pmeunif, p=p, lower=lower, upper=upper, sderr=sderr, meanerr=meanerr,
              lbound=lower, ubound=upper, lower.tail=lower.tail, log.p=log.p)
 }
 
+#' @rdname medists
+#' @export
 rmeunif <- function(n, lower=0, upper=1, sderr=0, meanerr=0)
 {
     rnorm(n, meanerr + runif(n, lower, upper), sderr)
@@ -285,6 +463,8 @@ rmeunif <- function(n, lower=0, upper=1, sderr=0, meanerr=0)
 ## of parameters given by rate, change times given by t (first should
 ## be 0)
 
+#' @rdname pexp
+#' @export
 dpexp <- function (x, rate = 1, t = 0, log = FALSE)
   {
       if (length(t) != length(rate)) stop("length of t must be equal to length of rate")
@@ -306,6 +486,8 @@ dpexp <- function (x, rate = 1, t = 0, log = FALSE)
       ret
   }
 
+#' @rdname pexp
+#' @export
 ppexp <- function(q, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE)
   {
       if (length(t) != length(rate))
@@ -327,6 +509,8 @@ ppexp <- function(q, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE)
       ret
   }
 
+#' @rdname pexp
+#' @export
 qpexp <- function (p, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE) {
     qgeneric(ppexp, p=p, rate=rate, t=t, special=c("rate", "t"), lower.tail=lower.tail, log.p=log.p)
 }
@@ -335,6 +519,8 @@ qpexp <- function (p, rate = 1, t = 0, lower.tail = TRUE, log.p = FALSE) {
 ## rate changing at t.  Simulate from exponentials in turn, simulated
 ## value is retained if it is less than the next change time.
 
+#' @rdname pexp
+#' @export
 rpexp <- function(n=1, rate=1, t=0, start=min(t))
 {
     if (length(t) != length(rate))
@@ -362,6 +548,57 @@ rpexp <- function(n=1, rate=1, t=0, start=min(t))
     return(t[i]+(e-H[i])/rate[i])
 }
 
+
+
+#' Generic function to find quantiles of a distribution
+#' 
+#' Generic function to find the quantiles of a distribution, given the
+#' equivalent probability distribution function.
+#' 
+#' This function is intended to enable users to define \code{"q"} functions for
+#' new distributions, in cases where the distribution function \code{pdist} is
+#' available analytically, but the quantile function is not.
+#' 
+#' It works by finding the root of the equation \eqn{h(q) = pdist(q) - p = 0}.
+#' Starting from the interval \eqn{(-1, 1)}, the interval width is expanded by
+#' 50\% until \eqn{h()} is of opposite sign at either end.  The root is then
+#' found using \code{\link{uniroot}}.
+#' 
+#' This assumes a suitably smooth, continuous distribution.
+#' 
+#' An identical function is provided in the \pkg{flexsurv} package.
+#' 
+#' @param pdist Probability distribution function, for example,
+#' \code{\link{pnorm}} for the normal distribution, which must be defined in
+#' the current workspace.  This should accept and return vectorised parameters
+#' and values.  It should also return the correct values for the entire real
+#' line, for example a positive distribution should have \code{pdist(x)==0} for
+#' \eqn{x<0}.
+#' @param p Vector of probabilities to find the quantiles for.
+#' @param special Vector of character strings naming arguments of the
+#' distribution function that should not be vectorised over. Used, for example,
+#' for the \code{rate} and \code{t} arguments in \code{\link{qpexp}}.
+#' @param ...  The remaining arguments define parameters of the distribution
+#' \code{pdist}.  These MUST be named explicitly.
+#' 
+#' This may also contain the standard arguments \code{log.p} (logical; default
+#' \code{FALSE}, if \code{TRUE}, probabilities p are given as log(p)), and
+#' \code{lower.tail} (logical; if \code{TRUE} (default), probabilities are P[X
+#' <= x] otherwise, P[X > x].).
+#' 
+#' If the distribution is bounded above or below, then this should contain
+#' arguments \code{lbound} and \code{ubound} respectively, and these will be
+#' returned if \code{p} is 0 or 1 respectively.  Defaults to \code{-Inf} and
+#' \code{Inf} respectively.
+#' @return Vector of quantiles of the distribution at \code{p}.
+#' @author Christopher Jackson <chris.jackson@@mrc-bsu.cam.ac.uk>
+#' @keywords distribution
+#' @examples
+#' 
+#' qnorm(c(0.025, 0.975), 0, 1)
+#' qgeneric(pnorm, c(0.025, 0.975), mean=0, sd=1) # must name the arguments
+#' 
+#' @export qgeneric
 qgeneric <- function(pdist, p, special=NULL, ...)
 {
     args <- list(...)

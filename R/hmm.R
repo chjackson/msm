@@ -1,12 +1,14 @@
 ### FUNCTIONS FOR HIDDEN MARKOV MODELS IN CONTINUOUS TIME
 ### WITH ARBITRARY RESPONSE DISTRIBUTION
 
+#' @export
 print.hmmMVdist <- function(x, ...)
 {
     cat(sprintf("Multivariate hidden Markov model with %d outcomes:\n", length(x)))
     for (i in x) print(i)
 }
 
+#' @export
 print.hmmdist <- function(x, ...)
 {
     cat("Hidden Markov model", x$label, "distribution\n\n")
@@ -276,6 +278,7 @@ msm.econstr2hconstr <- function(econstr, hmodel)
       match(constr, unique(constr))
   }
 
+#' @export
 print.hmodel <- function(x, ...)
   {
       ci <- (x$fitted && x$foundse)
