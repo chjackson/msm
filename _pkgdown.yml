@@ -1,4 +1,94 @@
 url: https://chjackson.github.io/msm/
 template:
   bootstrap: 5
-
+reference:
+- title: Summarising data
+- contents:
+  - statetable.msm
+- title: Fitting models
+- contents:
+  - msm
+  - crudeinits.msm
+  - hmm-dists
+  - hmmMV
+  - msm2Surv
+- title: Output from fitted models
+- contents:
+  - qmatrix.msm
+  - pmatrix.msm
+  - pmatrix.piecewise.msm
+  - sojourn.msm
+  - totlos.msm
+  - pnext.msm
+  - ppass.msm
+  - efpt.msm
+  - qratio.msm
+  - hazard.msm
+  - coef.msm
+  - boot.msm
+  - ematrix.msm
+  - odds.msm
+  - viterbi.msm
+  - phasemeans.msm
+  - plot.msm
+  - print.msm
+  - printold.msm
+  - summary.msm
+  - print.summary.msm
+  - msm.form.qoutput
+  - msm.form.eoutput
+- title: Model checking and comparison
+- contents:
+  - prevalence.msm
+  - plot.prevalence.msm
+  - plot.survfit.msm
+  - plotprog.msm
+  - logLik.msm
+  - lrtest.msm
+  - pearson.msm
+  - draic.msm
+  - drlcv.msm
+  - scoreresid.msm
+  - surface.msm
+- title: Simulation of data
+- contents:
+  - sim.msm
+  - simmulti.msm
+  - simfitted.msm
+- title: Probability distributions
+- contents:
+  - pexp
+  - tnorm
+  - twophase
+  - medists
+  - qgeneric
+- title: Datasets
+- contents:
+  - cav
+  - psor
+  - aneur
+  - bos
+  - bos3
+  - bos4
+  - fev
+- title: Miscellaneous utilities
+- contents:
+  - deltamethod
+  - MatrixExp
+  - model.frame.msm
+  - recreate.olddata
+  - transient.msm
+- title: Package internals (advanced)
+- contents:
+  - msm.object
+  - cmodel.object
+  - qmodel.object
+  - qcmodel.object
+  - emodel.object
+  - ecmodel.object
+  - hmodel.object
+  - paramdata.object
+  - updatepars.msm
+- title: Package overview
+- contents:
+  - msm-package

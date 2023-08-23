@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{updatepars.msm}
 \alias{updatepars.msm}
-\title{updatepars.msm}
+\title{Update the maximum likelihood estimates in a fitted model object.}
 \usage{
 updatepars.msm(x, pars)
 }
@@ -29,8 +29,8 @@ This function is used, for example, when computing confidence intervals from
 \code{ci="normal"} method.
 }
 \description{
-Update the maximum likelihood estimates in a fitted model object.  Developer
-use only.
+Update the maximum likelihood estimates in a fitted model object.  Intended for
+developer use only.
 }
 \author{
 C. H. Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk}

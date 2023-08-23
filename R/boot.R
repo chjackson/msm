@@ -355,11 +355,10 @@ expected.ci.msm <- function(x,
 
 
 
-#' updatepars.msm
+#' Update the maximum likelihood estimates in a fitted model object.
 #' 
-#' Update the maximum likelihood estimates in a fitted model object.  Developer
-#' use only.
-#' 
+#' Update the maximum likelihood estimates in a fitted model object.  Intended for
+#' developer use only.
 #' 
 #' @param x A fitted multi-state model object, as returned by
 #' \code{\link{msm}}.
