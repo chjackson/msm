@@ -42,3 +42,4 @@ docs
 ^docs$
 ^pkgdown$
 ^\.github$
+^codecov\.yml$

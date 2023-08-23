@@ -15,7 +15,14 @@ License: GPL (>= 2)
 Imports:
     survival,mvtnorm,expm
 Suggests:
-    mstate,minqa,doParallel,foreach,numDeriv,testthat,flexsurv
+    mstate,
+    minqa,
+    doParallel,
+    foreach,
+    numDeriv,
+    testthat,
+    flexsurv,
+    covr
 URL: https://github.com/chjackson/msm,
     https://chjackson.github.io/msm/
 BugReports: https://github.com/chjackson/msm/issues
