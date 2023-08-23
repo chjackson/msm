@@ -418,15 +418,12 @@ test_that("prevalence.msm",{
     expect_error(prevalence.msm("foo"))
     expect_error(summary.msm("foo"))
 
-    ## lisa edwards bug - can't reproduce
-#    library(msm, lib.loc="~/work/msm/src/1.2")
-#    library(msm, lib.loc="~/work/msm/src/1.3")
-#    p <- prevalence.msm(psor.msm, covariates=list(hieffusn=0, ollwsdrt=1))
-#    b.age <- sample(18:75, size=nrow(psor), replace=TRUE)
-#    psor.contcov.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = ~b.age)
-#    p <- prevalence.msm(psor.contcov.msm)
-#    p <- prevalence.msm(psor.contcov.msm, covariates=list(b.age=10))
-#    p <- prevalence.msm(psor.contcov.msm, covariates="population")
+    p <- prevalence.msm(psor.msm, covariates=list(hieffusn=0, ollwsdrt=1))
+    expect_equal(p$Observed[1,1], 1)
+    
+    p <- prevalence.msm(psor.msm, covariates=list(hieffusn=0, ollwsdrt=1),
+                        ci="normal", B=10)
+    expect_true(is.numeric(p[[2]]$ci[,,"2.5%"][1,1]))
 })
 
 test_that("pmatrix.piecewise.msm",{

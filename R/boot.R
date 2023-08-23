@@ -344,10 +344,14 @@ expected.ci.msm <- function(x,
     e.list <- boot.msm(x, function(x){
         expected.msm(x, times, timezero, initstates, covariates, misccovariates, piecewise.times, piecewise.covariates, risk)
     }, B=B, cores=cores)
-    e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), dim=c(dim(e.list[[1]][[1]]), length(e.list)))
-    e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), dim=c(dim(e.list[[1]][[2]]), length(e.list)))
-    e.tab.ci <- apply(e.tab.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
-    e.perc.ci <- apply(e.perc.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
+    e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), 
+                         dim=c(x$qmodel$nstates+1, length(times), B))
+    e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), 
+                          dim=c(x$qmodel$nstates, length(times), B))
+    e.tab.ci <- apply(e.tab.array, c(1,2), 
+                      function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
+    e.perc.ci <- apply(e.perc.array, c(1,2), 
+                       function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     res <- list(aperm(e.tab.ci, c(2,3,1)),  aperm(e.perc.ci, c(2,3,1)))
     names(res) <- c("Expected", "Expected percentages")
     res
@@ -504,8 +508,10 @@ expected.normci.msm <- function(x,
     e.list <- normboot.msm(x, function(x){
         expected.msm(x, times, timezero, initstates, covariates, misccovariates, piecewise.times, piecewise.covariates, risk)
     }, B)
-    e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), dim=c(dim(e.list[[1]][[1]]), length(e.list)))
-    e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), dim=c(dim(e.list[[1]][[2]]), length(e.list)))
+    e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), 
+                         dim=c(x$qmodel$nstates+1, length(times), B))
+    e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), 
+                          dim=c(x$qmodel$nstates, length(times), B))
     e.tab.ci <- apply(e.tab.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     e.perc.ci <- apply(e.perc.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     res <- list(aperm(e.tab.ci, c(2,3,1)),  aperm(e.perc.ci, c(2,3,1)))

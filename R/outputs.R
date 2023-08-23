@@ -2612,7 +2612,7 @@ expected.msm <- function(x,
     }
     if (length(times) >= start) {
         for (j in start:length(times)) {
-            if (x$qcmodel$ncovs>0 && covariates=="population") {
+            if (x$qcmodel$ncovs>0 && isTRUE(covariates=="population")) {
                 covmat <- get.covhist(x, subset=subset)$example
                 for (i in 1:length(unique(covmat$subject))) {
                     ## sum expected prevalences for each covariate history observed in the data
