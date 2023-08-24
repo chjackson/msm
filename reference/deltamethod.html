@@ -133,10 +133,10 @@ with complicated derivatives.</em> The American Statistician 67(2):76-81.</p>
 <span class="r-in"><span><span class="co">## Estimate of (1 / (alphahat + betahat))</span></span></span>
 <span class="r-in"><span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">estmean</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">estmean</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.227237 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.5092935 </span>
 <span class="r-in"><span><span class="co">## Approximate standard error</span></span></span>
 <span class="r-in"><span><span class="fu">deltamethod</span> <span class="op">(</span><span class="op">~</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span><span class="op">)</span>, <span class="va">estmean</span>, <span class="va">estvar</span><span class="op">)</span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05123183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2695985</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## We have a variable z we would like to use within the formula.</span></span></span>
 <span class="r-in"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
@@ -146,7 +146,7 @@ with complicated derivatives.</em> The American Statistician 67(2):76-81.</p>
 <span class="r-in"><span><span class="va">form</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "~ 1.000000 / (x1 + x2)"</span>
 <span class="r-in"><span><span class="fu">deltamethod</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="va">form</span><span class="op">)</span>, <span class="va">estmean</span>, <span class="va">estvar</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05123183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2695985</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
