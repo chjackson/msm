@@ -726,3 +726,7 @@ test_that("error handling: plot",{
     expect_error(plot.msm(psor.msm, range="foo"))
     expect_error(plot.msm(psor.msm, range=1:6),"range must be a numeric vector of two elements")
 })
+
+test_that("recreate.olddata",{
+  expect_error(recreate.olddata(psor.msm), NA)
+})
