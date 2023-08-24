@@ -66,11 +66,14 @@ test_that("bootstrap CIs with factor subject IDs and factor covariates",{
                                     covariates=list(hieffusn=0, ollwsdrt="foo"))))
 })
 
-test_that("bootstrap CIs with parallel processing",{
+if (!covr::in_covr()){
+  test_that("bootstrap CIs with parallel processing",{
     skip_on_cran()
     expect_error({
       t.par <- system.time(pmatrix.msm(psor.msm, ci="boot", cores=4, B=8))
-#    t.ser <- system.time(pmatrix.msm(psor.msm, ci="boot", cores=1, B=8))
-#    expect_true(t.par["elapsed"] < t.ser["elapsed"]) # if B is bigger 
+                                        #    t.ser <- system.time(pmatrix.msm(psor.msm, ci="boot", cores=1, B=8))
+                                        #    expect_true(t.par["elapsed"] < t.ser["elapsed"]) # if B is bigger 
     }, NA)
-})
+  })
+}
+
