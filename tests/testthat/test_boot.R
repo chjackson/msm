@@ -54,7 +54,8 @@ test_that("bootstrap CIs with factor covariates",{
 
 psor2$ptnum <- factor(psor2$ptnum)
 
-test_that("bootstrap CIs with factor subject IDs and factor covariates",{
+if (!covr::in_covr()){
+  test_that("bootstrap CIs with factor subject IDs and factor covariates",{
     skip_on_cran()
     psor2.msm <- msm(state ~ months, subject=ptnum, data=psor2, 
                      
@@ -66,7 +67,6 @@ test_that("bootstrap CIs with factor subject IDs and factor covariates",{
                                     covariates=list(hieffusn=0, ollwsdrt="foo"))))
 })
 
-if (!covr::in_covr()){
   test_that("bootstrap CIs with parallel processing",{
     skip_on_cran()
     expect_error({
