@@ -43,3 +43,6 @@ docs
 ^pkgdown$
 ^\.github$
 ^codecov\.yml$
+^.*\.gcov$
+^.*\.gcda$
+^.*\.gcno$

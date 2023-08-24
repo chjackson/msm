@@ -72,6 +72,7 @@ test_that("bootstrap CIs with factor covariates",{
   test_that("bootstrap CIs with parallel processing",{
     skip_on_cran()
     expect_error({
+      psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
       t.par <- system.time(pmatrix.msm(psor.msm, ci="boot", cores=4, B=8))
                                         #    t.ser <- system.time(pmatrix.msm(psor.msm, ci="boot", cores=1, B=8))
                                         #    expect_true(t.par["elapsed"] < t.ser["elapsed"]) # if B is bigger 

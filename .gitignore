@@ -14,4 +14,7 @@ vignettes/auto
 R/#*
 inst/#*
 .Rprofile
+*.gcov
+*.gcda
+*.gcno
 

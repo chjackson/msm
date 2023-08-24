@@ -20,7 +20,6 @@ print.hmmdist <- function(x, ...)
 
 msm.check.hmodel <- function(hmodel, nstates)
   {
-      if (is.null(hmodel)) stop("Hidden model not specified")
       if (!is.list(hmodel)) stop("Hidden model should be a list")
       if (length(hmodel) != nstates) stop("hmodel of length ", length(hmodel), ", expected ", nstates)
       for (i in hmodel) {

@@ -38,7 +38,8 @@ test_that("HMMs with multiple responses from the same distribution",{
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
     expect_equal(hmm$minus2loglik, 4387.58552977954, tol=1e-06)
-    expect_lt(deriv_error(hmm), err)    
+    expect_lt(deriv_error(hmm), err)
+    print(hmmBinom(size=40, prob=0.2))
 })
 
 test_that("HMMs with multiple responses: cbind() in formula",{
@@ -64,6 +65,8 @@ test_that("HMMs with multiple responses from different distributions",{
                                          hmmBinom(size=40, prob=0.3))),
                      fixedpars=TRUE),
                  "Only one column in state outcome data")
+    print(hmmMV(hmmBinom(size=40, prob=0.3),
+                hmmBinom(size=40, prob=0.3)))
 })
 
 test_that("HMMs with multiple responses from different distributions: non-default initprobs, different probs",{
@@ -134,3 +137,14 @@ test_that("HMMs with multiple responses: exact death and hmmIdent",{
 })
 
 ## censoring? 
+
+
+
+test_that("hmm errors",{
+  expect_error(msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
+                   hmodel = "wrong"), "should be a list")
+  expect_error(msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
+                   hmodel = list(hmmBinom(size=40, prob=0.2),
+                                 hmmBinom(size=40, prob=0.2)), hcovariates="Wrong", fixedpars=TRUE),
+               "should be a list")
+})

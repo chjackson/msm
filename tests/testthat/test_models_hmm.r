@@ -163,3 +163,52 @@ test_that("error handling in HMM fits",{
     expect_error(fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev, qmatrix=three.q, deathexact=3, hmodel=hmodel3, hcovariates=list(~acute, ~acute, NULL), hcovinits = list(-8, -8, NULL), hconstraint = list(sderr=c("wrong length"), acute = c(1,1))), "constraint for \"sderr\" of length 1, should be 2")
 
 })
+
+test_that("HMM normal model fit",{
+  three.q <- rbind(c(0, exp(-6), exp(-9)), c(0, 0, exp(-6)), c(0, 0, 0))
+  hmodel1 <- list(hmmNorm(mean=100, sd=16), hmmNorm(mean=54, sd=18), hmmIdent(999))
+  fev1.msm <- msm(fev ~ days, subject=ptnum, data=fev[1:500,], qmatrix=three.q, death=3, hmodel=hmodel1,
+                  hcovariates=list(~acute, ~acute, NULL), hcovinits = list(-8, -8, NULL),
+                  hconstraint = list(acute = c(1,1)), center=FALSE)
+  print(fev1.msm)
+  expect_equal(4269.77165605886, fev1.msm$minus2loglik, tol=1e-06)
+  
+  fev1.msm <- msm(fev ~ days, subject=ptnum, data=fev[1:1000,], qmatrix=three.q, death=3, hmodel=hmodel1,
+                  hcovariates=list(~acute, ~acute, NULL), hcovinits = list(-8, -8, NULL),
+                  hconstraint = list(acute = c(1,1)), center=FALSE,
+                  hranges = list(mean=list(lower=c(60,50),upper=c(110,80)),
+                                 sd=list(lower=c(11,13),upper=c(20,20))))
+  expect_gt(fev1.msm$hmodel$pars[1], 60)
+  expect_lt(fev1.msm$hmodel$pars[1], 110)
+})
+
+test_that("HMM categorical model fit",{
+  skip_on_cran()
+  misccov.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:1000,],  
+                     qmatrix = oneway4.q, ematrix=ematrix, death = 4, 
+                     misccovariates = ~dage + sex, fixedpars=c(11, 17))
+  misccovnew.msm <- msm(state ~ years, subject = PTNUM, data = cav[1:1000,],  
+                        qmatrix = oneway4.q, death = 4,
+                        fixedpars=c(11,17), # sex on state 2|1, 2|3
+                        hmodel=list(
+                          hmmCat(prob=c(0.9, 0.1, 0, 0)),
+                          hmmCat(prob=c(0.1, 0.8, 0.1, 0)),
+                          hmmCat(prob=c(0, 0.1, 0.9, 0)), hmmIdent()),
+                        hcovariates=list(~dage + sex, ~dage + sex, ~dage + sex, ~1)
+  )
+  print(misccovnew.msm)
+  expect_equal(misccov.msm$minus2loglik, misccovnew.msm$minus2loglik)
+})
+
+
+test_that("initcovariates",{
+  expect_error({
+    (fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev,
+                     qmatrix=three.q, deathexact=3, hmodel=hmodel3, fixedpars=TRUE,
+                     initcovariates = ~acute))
+    (fev3.hid <- msm(fev ~ days, subject=ptnum, data=fev,
+                     qmatrix=three.q, deathexact=3, hmodel=hmodel3, fixedpars=TRUE,
+                     initprobs = c(0.9, 0.1, 0.1), est.initprobs = TRUE,
+                     initcovariates = ~acute, initcovinits = list(acute=c(0.1,0.1))))
+  }, NA)
+})
