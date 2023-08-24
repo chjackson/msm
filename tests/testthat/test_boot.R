@@ -3,6 +3,7 @@
 ## e.g. width should be greater than asymp SE from Hessian. 
 
 set.seed(1)
+psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
 psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q, 
                 covariates = ~ollwsdrt+hieffusn,
                 constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), fixedpars=FALSE)
