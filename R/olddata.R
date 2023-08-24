@@ -20,7 +20,6 @@
 #' @return A list of vectors and matrices in the undocumented ad-hoc format
 #' used for the \code{data} component of \code{msm} objects in \pkg{msm}
 #' versions 1.3.1 and earlier.
-#' @export recreate.olddata
 recreate.olddata <- function(x) {
 
     x$data <- expand.data(x)
