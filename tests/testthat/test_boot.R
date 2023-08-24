@@ -2,7 +2,9 @@
 ## hard to check e.g. coverage
 ## e.g. width should be greater than asymp SE from Hessian. 
 
-set.seed(1)
+if (!covr::in_covr()){
+  
+  set.seed(1)
 psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
 psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q, 
                 covariates = ~ollwsdrt+hieffusn,
@@ -53,9 +55,8 @@ test_that("bootstrap CIs with factor covariates",{
                                     covariates=list(hieffusn=0, ollwsdrt="foo"))))
 })
 
-psor2$ptnum <- factor(psor2$ptnum)
+  psor2$ptnum <- factor(psor2$ptnum)
 
-if (!covr::in_covr()){
   test_that("bootstrap CIs with factor subject IDs and factor covariates",{
     skip_on_cran()
     psor2.msm <- msm(state ~ months, subject=ptnum, data=psor2, 
