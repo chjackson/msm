@@ -5,11 +5,14 @@ test_that("MatrixExp",{
     me <- MatrixExp(A, method="pade")
     res <- c(0.896703832431769, 0.171397960992687, 0, 0.00856989804963433, 0.81957474998506, 0, 0.00094726269518597, 9.0272890222537e-05, 1)
     expect_equal(res, as.numeric(me), tol=1e-06)
-    me <- MatrixExp(A, method="series")
-    expect_equal(res, as.numeric(me), tol=1e-06)
     ev <- eigen(A)
     me2 <- ev$vectors %*% diag(exp(ev$values)) %*% solve(ev$vectors)
     expect_equal(me2, me, tol=1e-06)
+    ## repeated eigenvalues
+    A <- matrix(c(-0.1, 0.1, 0,  0.1, -0.1, 0,  0, 0, 0), nrow=3, byrow=TRUE)
+    me <- MatrixExp(A, method="series")
+    mep <- MatrixExp(A, method="pade")
+    expect_equal(me, mep, tol=1e-06)
 })
 
 test_that("truncated normal",{

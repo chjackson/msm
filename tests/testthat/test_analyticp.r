@@ -90,6 +90,9 @@ test_that("3 state analytic P matrices",{
     (sim.mod2 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0, 0, exp(-1)), c(0, 0, exp(-1)), c(exp(-2), 0, 0)), fixedpars=TRUE, analyticp=FALSE))
     expect_equal(sim.mod1$minus2loglik, sim.mod2$minus2loglik)
 
+    (three.q <- fixq(rbind(c(0, 0, exp(-3)), c(0, 0, exp(-3)), c(exp(-6), 0, 0))))
+    expect_equal(MatrixExp(three.q, method="analytic"), MatrixExp(three.q, method="pade"))
+    
                                         #1,2,4,6
     (three.q <- fixq(rbind(c(0, exp(-3), exp(-3)), c(0, 0, exp(-3)), c(0, exp(-3), 0))))
     set.seed(22061976)
@@ -193,7 +196,28 @@ test_that("5 state analytic P matrices",{
     (sim.mod1 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,0), c(0,0,exp(-2),0,0), c(0,0,0,exp(-2),0), c(0,0,0,0,exp(-2)), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=TRUE))
     (sim.mod2 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,0), c(0,0,exp(-2),0,0), c(0,0,0,exp(-2),0), c(0,0,0,0,exp(-2)), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=FALSE))
     expect_equal(sim.mod1$minus2loglik, sim.mod2$minus2loglik)
-
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,0), 
+                          c(0,0,exp(-2),0,0), 
+                          c(0,0,0,exp(-3),0), 
+                          c(0,0,0,0,exp(-3)), 
+                          c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,0), 
+                          c(0,0,exp(-3),0,0), 
+                          c(0,0,0,exp(-2),0), 
+                          c(0,0,0,0,exp(-3)), 
+                          c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,0), 
+                          c(0,0,exp(-3),0,0), 
+                          c(0,0,0,exp(-3),0), 
+                          c(0,0,0,0,exp(-2)), 
+                          c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
                                         #1_4_6_8_11_12_16
     (five.q <- fixq(rbind(c(0,exp(-2),0,0,exp(-2)), c(0,0,exp(-2),0,exp(-2)), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,exp(-2)), c(0,0,0,0,0))))
     set.seed(22061976)
@@ -237,7 +261,26 @@ test_that("5 state analytic P matrices",{
     (sim.mod1 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,exp(-2)), c(0,0,exp(-2),0,exp(-2)), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,2*exp(-2)), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=TRUE))
     (sim.mod2 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,exp(-2)), c(0,0,exp(-2),0,exp(-2)), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,2*exp(-2)), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=FALSE))
     expect_equal(sim.mod1$minus2loglik, sim.mod2$minus2loglik)
-
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,exp(-2)), 
+                          c(0,0,exp(-3),0,exp(-1)), 
+                          c(0,0,0,exp(-2),exp(-3)), 
+                          c(0,0,0,0,exp(-5)), c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,exp(-2)), 
+                          c(0,0,exp(-2),0,exp(-1)), 
+                          c(0,0,0,exp(-3),exp(-1)), 
+                          c(0,0,0,0,exp(-3)), c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,exp(-2)), 
+                          c(0,0,exp(-2),0,exp(-1)), 
+                          c(0,0,0,exp(-1),exp(-2)), 
+                          c(0,0,0,0,exp(-4)), c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+    
+    
                                         #1_6_7_11_12
     (five.q <- fixq(rbind(c(0,exp(-2),0,0,0), c(0,0,exp(-2),exp(-2),0), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,0), c(0,0,0,0,0))))
     set.seed(22061976)
@@ -259,4 +302,12 @@ test_that("5 state analytic P matrices",{
     (sim.mod1 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,0), c(0,0,exp(-2),exp(-2),0), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,0), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=TRUE))
     (sim.mod2 <- msm(state ~ time, subject=subject, data=sim2.df, qmatrix = rbind(c(0,exp(-2),0,0,0), c(0,0,exp(-2),exp(-2),0), c(0,0,0,exp(-2),exp(-2)), c(0,0,0,0,0), c(0,0,0,0,0)), fixedpars=TRUE, analyticp=FALSE))
     expect_equal(sim.mod1$minus2loglik, sim.mod2$minus2loglik)
+    
+    (five.q <- fixq(rbind(c(0,exp(-2),0,0,0), 
+                          c(0,0,exp(-1),exp(-1),0), 
+                          c(0,0,0,exp(-0.5),exp(-1.5)), 
+                          c(0,0,0,0,0), 
+                          c(0,0,0,0,0))))
+    expect_equal(MatrixExp(five.q, method="analytic"), MatrixExp(five.q, method="pade"))
+
 })

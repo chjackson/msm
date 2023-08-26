@@ -70,6 +70,7 @@ void MatInvDGE(Matrix A, Matrix Ainv, int n)
     Free(work); Free(pivot); Free(temp);
 }
 
+/* # nocov start */
 void MatInvDQR(Matrix A, Matrix Ainv, int n)
 {
     int i, rank;
@@ -88,6 +89,7 @@ void MatInvDQR(Matrix A, Matrix Ainv, int n)
 	REprintf("error code %d from Linpack routine dqrcf\n", info);
     Free(temp); Free(work); Free(qraux); Free(ident);Free(pivot);
 }
+/* # nocov end */
 
 void MatInv(Matrix A, Matrix Ainv, int n)
 {
@@ -351,8 +353,9 @@ void MatrixExpMSM(Matrix mat, int n, Matrix expmat, double t,
 	break;
       }
     if (repeated_entries (revals, n) || (err != 0) || degen || complex_evals){
-	if (method == MEXP_SERIES)
+	if (method == MEXP_SERIES){
 	    MatrixExpSeries(mat, n, expmat, t);
+	}
 	else
 	    MatrixExpPade(expmat, mat, n, t);
     }
