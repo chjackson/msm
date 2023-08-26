@@ -5,6 +5,13 @@ test_that("pearson.msm help example",{
                   constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)))
   p <- pearson.msm(psor.msm, timegroups=2, intervalgroups=2, covgroups=2)
   expect_equal(p$test[["p"]],0)
+
+  # with exact death times
+  set.seed(1)
+  cav.msm <- msm( state ~ years, subject=PTNUM, data = cav[1:1000,],
+                  qmatrix = twoway4.q, deathexact = TRUE, fixedpars=FALSE)
+  p <- pearson.msm(cav.msm)
+  expect_equal(p$test[["stat"]],67,tol=1)
 })
 
 #test_that("pearson with bootstrap",{

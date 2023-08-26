@@ -11,11 +11,15 @@ test_that("cav misclassification model with no covariates",{
                        hmmCat(prob=c(0, 0.1, 0.9, 0)), hmmIdent())
                        )
     expect_equal(miscnew.msm$minus2loglik, misc.msm$minus2loglik)  
+    print(misc.msm)
+    eo <- msm.form.eoutput(misc.msm)
+    expect_equal(eo$base.Estimate[1], ematrix.msm(misc.msm)$estimates["Well","Well"])
 })
 
 test_that("cav misclassification model with covariates on transition rates",{
     misccov.msm <- msm(state ~ years, subject = PTNUM, data = cav, qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4, fixedpars = TRUE, covariates = ~ sex, covinits=list(sex=rep(0.1, 5)))
     expect_equal(4299.38058878142, misccov.msm$minus2loglik, tol=1e-06)
+    expect_equal(odds.msm(misccov.msm), "No covariates on misclassification probabilities")
 })
 
 test_that("cav misclassification model with covariates on misclassification probabilities",{
@@ -23,6 +27,7 @@ test_that("cav misclassification model with covariates on misclassification prob
                        qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4, fixedpars=TRUE,
                        misccovariates = ~dage + sex, misccovinits = list(dage=c(0.01,0.02,0.03,0.04), sex=c(-0.013,-0.014,-0.015,-0.016)))
     expect_equal(4306.3077053482, misccov.msm$minus2loglik, tol=1e-06)
+    expect_equal(odds.msm(misccov.msm)$dage[[1]], exp(0.01))
     misccovnew.msm <- msm(state ~ years, subject = PTNUM, data = cav,
                           qmatrix = oneway4.q, deathexact = 4, fixedpars=TRUE, center=TRUE,
                           hmodel=list(
@@ -63,7 +68,8 @@ test_that("misclassification model with est.initprobs",{
                              initprobs=c(0.8, 0.1, 0.1, 0), est.initprobs=TRUE,
                              method="BFGS",
                              control=list(fnscale=4000, maxit=10000), fixedpars=1:9)
-        miscinits.msm
+        print(miscinits.msm)
+        print(summary(miscinits.msm))
     }, NA)
 })
 

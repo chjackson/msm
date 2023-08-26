@@ -696,8 +696,8 @@ mattotrans <- function(x, matrix, lower, upper, fixed, keep.diag=FALSE, intmisc=
     rnames <- if (intmisc=="intens") paste(fromlabs, "-", tolabs) else paste("Obs", tolabs, "|", fromlabs)
     dimnames(res) <- list(rnames, c("Estimate", "L", "U","Fixed"))
     res[,1] <- matrix[keep]
-    res[,2] <- lower[keep]
-    res[,3] <- upper[keep]
+    if (!is.null(lower)) res[,2] <- lower[keep]
+    if (!is.null(upper)) res[,3] <- upper[keep]
     res[,4] <- fixed[keep]
     res
 }
@@ -1249,6 +1249,8 @@ print.msm.est <- function(x, digits=NULL, ...)
     else print(unclass(x), digits=digits)
 }
 
+## Unused, remove eventually
+# nocov start
 print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
 {
     inc <- if (diag) (x$estimates>0 | x$estimates<0) else (x$estimates>0)
@@ -1259,6 +1261,7 @@ print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
     colnames(res) <- c("Estimate", "LCL", "UCL")
     res
 }
+# nocov end
 
 #' @export
 "[.msm.est" <- function(x, i, j, drop=FALSE){

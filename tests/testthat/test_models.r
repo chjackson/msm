@@ -1,13 +1,15 @@
 context("msm simple model likelihoods")
 
-test_that("simple model, death",{
+test_that("simple model, exact death times",{
     cav.msm <- msm( state ~ years, subject=PTNUM, data = cav,
                    qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE,
                    method="BFGS", control=list(trace=5, REPORT=1))
+    print(cav.msm)
+    printold.msm(cav.msm)
     expect_equal(4908.81676837903, cav.msm$minus2loglik)
 })
 
-test_that("simple model, no death",{
+test_that("simple model, not exact death times",{
     cav.msm <- msm( state ~ years, subject=PTNUM, data = cav,
                    qmatrix = twoway4.q, deathexact = FALSE, fixedpars=TRUE)
     expect_equal(4833.00640639644, cav.msm$minus2loglik)
@@ -35,15 +37,20 @@ test_that("data as global variables",{
 psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = ~ollwsdrt+hieffusn, constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), control=list(fnscale=1))
 
 test_that("psor model: covariates, constraints",{
-    expect_equal(1114.89946121717, psor.msm$minus2loglik, tol=1e-06)
-    expect_equal(0.0959350004999946, psor.msm$Qmatrices$baseline[1,2], tol=1e-06)
-    expect_equal(exp(psor.msm$Qmatrices$logbaseline[c(5,10,15)]), psor.msm$Qmatrices$baseline[c(5,10,15)], tol=1e-06)
+  print(psor.msm)
+  printold.msm(psor.msm)
+  expect_equal(1114.89946121717, psor.msm$minus2loglik, tol=1e-06)
+  expect_equal(0.0959350004999946, psor.msm$Qmatrices$baseline[1,2], tol=1e-06)
+  expect_equal(exp(psor.msm$Qmatrices$logbaseline[c(5,10,15)]), psor.msm$Qmatrices$baseline[c(5,10,15)], tol=1e-06)
 })
 
 test_that("psor model: transition-specific covariates",{
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = list("2-3"=~ollwsdrt, "3-4"=~hieffusn), control=list(fnscale=1))
     expect_equal(hazard.msm(psor.msm)$ollwsdrt["State 1 - State 2","HR"], 1)
     expect_equal(hazard.msm(psor.msm)$hieffusn["State 2 - State 3","HR"], 1)
+    expect_error(msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
+                    covariates = list("meep"=~ollwsdrt, "3-4"=~hieffusn), control=list(fnscale=1)),
+                 "not in format \"number-number\"")
 })
 
 test_that("psor model: transition-specific covariates with pci",{
@@ -269,7 +276,11 @@ context("output functions")
 test_that("qmatrix.msm for psor model, defaults",{
     expect_equal(c(-0.0959350004999946, 0, 0, 0, 0.0959350004999946, -0.164306508892574, 0, 0, 0, 0.164306508892574, -0.254382807485639, 0, 0, 0, 0.254382807485639, 0), as.numeric(qmatrix.msm(psor.msm)$estimates), tol=1e-03)
     expect_equal(c(0.0115942726096754, 0, 0, 0, 0.0115942726096754, 0.0196169975000406, 0, 0, 0, 0.0196169975000406, 0.0375066077515386, 0, 0, 0, 0.0375066077515386, 0), as.numeric(qmatrix.msm(psor.msm)$SE), tol=1e-03)
+    expect_error(qmatrix.msm(psor.msm, ci="normal", cl=-1), "expected cl")
+    expect_equivalent(qmatrix.msm(psor.msm, sojourn=TRUE)$sojourn[1:3], 
+                      sojourn.msm(psor.msm)$estimates)
     qmatrix.msm(psor.msm, ci="normal", B=2)
+    qmatrix.msm(psor.msm, sojourn=TRUE, ci="normal", B=2)
     expect_error(qmatrix.msm("foo"), "expected .+ msm model")
     expect_error(qmatrix.msm(psor.msm, covariates="foo"), "covariates argument must be")
     expect_warning(qmatrix.msm(psor.msm, covariates=list(foo=1)), "ignoring")
@@ -344,6 +355,12 @@ test_that("pmatrix.msm",{
     expect_warning(pmatrix.msm(psor.msm, 1, covariates=list(foo=1)), "ignoring")
 })
 
+test_that("pnext.msm",{
+  expect_equal(pnext.msm(psor.msm, ci="none")$estimate[1,2], 1)
+  expect_equal(pnext.msm(psor.msm, ci="delta")$estimate[1,2], 1)
+  expect_equal(pnext.msm(psor.msm, ci="normal", B=2)$estimate[1,2], 1)
+})
+
 test_that("qratio.msm",{
     q <- qratio.msm(psor.msm, c(1,2), c(2,3))
     expect_equal(c(0.583878474075081, 0.0996029045389022, 0.417943274168735, 0.815694601537263), as.numeric(q), tol=1e-04)
@@ -360,6 +377,12 @@ test_that("qratio.msm",{
     expect_error(qratio.msm(psor.msm, c(1,2), c(1,0)))
     expect_error(qratio.msm(psor.msm, c(1,2), c(2,3), cl="foo"))
     expect_error(qratio.msm(psor.msm, c(1,2), c(2,3), cl=2), "expected cl in")
+    qq <- qratio.msm(psor.msm, c(1,2), c(2,2))
+    QQ <- qmatrix.msm(psor.msm)
+    expect_equal(qq[["estimate"]], (QQ[1,2]/QQ[2,2])[["estimate"]])
+    qq <- qratio.msm(psor.msm, c(1,1), c(2,2))
+    QQ <- qmatrix.msm(psor.msm)
+    expect_equal(qq[["estimate"]], (QQ[1,1]/QQ[2,2])[["estimate"]])
 })
 
 test_that("coef.msm",{
@@ -424,6 +447,8 @@ test_that("prevalence.msm",{
     p <- prevalence.msm(psor.msm, covariates=list(hieffusn=0, ollwsdrt=1),
                         ci="normal", B=10)
     expect_true(is.numeric(p[[2]]$ci[,,"2.5%"][1,1]))
+    
+    plot.prevalence.msm(psor.msm)
 })
 
 test_that("pmatrix.piecewise.msm",{
@@ -469,10 +494,24 @@ test_that("pmatrix.piecewise.msm given just Q matrices",{
   expect_equal(round(p1), rbind(c(166, 238), c(99, 304)))
 })
 
-test_that("logLik.msm",{
-    expect_equivalent(unclass(logLik.msm(psor.msm)), psor.msm$minus2loglik / -2)
-    expect_error(logLik.msm("foo"))
+test_that("totlos.msm",{
+  tl <- totlos.msm(psor.msm, ci="normal", B=2)
+  sj <- sojourn.msm(psor.msm, ci="none")
+  expect_equal(tl[1,1], sj$estimates[[1]])
+  en <- envisits.msm(psor.msm, ci="normal", B=2)
+  expect_equal(en[1,2], 1)
+})
 
+test_that("logLik.msm",{
+  expect_equivalent(unclass(logLik.msm(psor.msm)), psor.msm$minus2loglik / -2)
+  expect_error(logLik.msm("foo"))
+})
+
+test_that("lrtest.msm",{
+  psor2.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
+                   covariates = ~ollwsdrt, constraint = list(ollwsdrt=c(1,1,2)), control=list(fnscale=1))
+  expect_equal(lrtest.msm(psor2.msm, psor.msm)[1,"-2 log LR"],
+               psor2.msm$minus2loglik - psor.msm$minus2loglik)
 })
 
 test_that("qmatrix subset function",{
@@ -729,4 +768,33 @@ test_that("error handling: plot",{
 
 test_that("recreate.olddata",{
   expect_error(recreate.olddata(psor.msm), NA)
+})
+
+test_that("form.output",{
+  qo <- msm.form.qoutput(psor.msm)
+  expect_equal(qo$base.Estimate[2], 
+               qmatrix.msm(psor.msm, covariates="mean")$estimates[1,2])
+  print(qmatrix.msm(psor.msm))
+})
+
+test_that("plots",{
+  skip_on_cran()
+  expect_error({
+    plot.msm(psor.msm)
+    plotprog.msm(state ~ months, subject=ptnum, data=psor)
+    plot.survfit.msm(psor.msm)
+    contour.msm(psor.msm)
+    persp.msm(psor.msm)
+    image.msm(psor.msm)
+    surface.msm(psor.msm, xrange=c(-2.4,-2.3))
+  }, NA)
+})
+
+test_that("miscellaneous",{
+  expect_error(msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
+                   covariates = ~ollwsdrt+hieffusn, 
+                   constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), control=list(fnscale=1),
+                   na.action=na.fail))
+  expect_error(model.matrix(psor.msm), NA)
+  expect_error(model.frame(psor.msm), NA)
 })
