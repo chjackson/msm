@@ -4,7 +4,14 @@
 \alias{boot.msm}
 \title{Bootstrap resampling for multi-state models}
 \usage{
-boot.msm(x, stat = pmatrix.msm, B = 1000, file = NULL, cores = NULL)
+boot.msm(
+  x,
+  stat = pmatrix.msm,
+  B = 1000,
+  file = NULL,
+  cores = NULL,
+  remove.errors = TRUE
+)
 }
 \arguments{
 \item{x}{A fitted msm model, as output by \code{\link{msm}}.}
@@ -26,6 +33,12 @@ parallel processing is not used. If \code{cores} is set to the string
 \code{"default"}, the default methods of \code{\link[parallel]{makeCluster}}
 (on Windows) or \code{\link[doParallel]{registerDoParallel}} (on Unix-like)
 are used.}
+
+\item{remove.errors}{If \code{TRUE} then bootstrap refits which resulted in an
+error are removed from the returned list, and a message is returned which states the
+proportion of failed fits and the first error message.  If \code{FALSE}, then 
+the error message for failed refits is placed in the
+corresponding component of the returned list.}
 }
 \value{
 A list with \code{B} components, containing the result of calling
