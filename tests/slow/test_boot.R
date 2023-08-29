@@ -30,6 +30,15 @@ test_that("bootstrap CIs run for all functions that support them",{
     expect_error(pmatrix.msm(pci.msm, ci="boot", B=2), NA) 
 })
 
+test_that("bootstrap iterations that returned an error are dropped",{
+  psor.msm <- msm(state ~ months, subject=ptnum, data=psor[1:100,], qmatrix = psor.q, 
+                  covariates = ~ollwsdrt+hieffusn,fixedpars=FALSE, control=list(maxit=10))
+  random_error <- function(x){if (rbinom(1,1,0.5)) stop("Error") else 1}
+  set.seed(1)
+  q.list <- boot.msm(psor.msm, random_error, B=10)
+  expect_equal(length(q.list), 6)
+})
+
 test_that("normal CIs run for all functions that support them",{
     qmatrix.msm(psor.msm, ci="normal", B=10)
     pmatrix.msm(psor.msm, ci="normal", B=10)
@@ -55,9 +64,9 @@ test_that("bootstrap CIs with factor covariates",{
                                     covariates=list(hieffusn=0, ollwsdrt="foo"))))
 })
 
-  psor2$ptnum <- factor(psor2$ptnum)
+psor2$ptnum <- factor(psor2$ptnum)
 
-  test_that("bootstrap CIs with factor subject IDs and factor covariates",{
+test_that("bootstrap CIs with factor subject IDs and factor covariates",{
     skip_on_cran()
     psor2.msm <- msm(state ~ months, subject=ptnum, data=psor2, 
                      

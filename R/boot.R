@@ -177,6 +177,11 @@ bootdata.subject.msm <- function(x) {
 #' \code{"default"}, the default methods of \code{\link[parallel]{makeCluster}}
 #' (on Windows) or \code{\link[doParallel]{registerDoParallel}} (on Unix-like)
 #' are used.
+#' @param remove.errors If \code{TRUE} then bootstrap refits which resulted in an
+#' error are removed from the returned list, and a message is returned which states the
+#' proportion of failed fits and the first error message.  If \code{FALSE}, then 
+#' the error message for failed refits is placed in the
+#' corresponding component of the returned list. 
 #' @return A list with \code{B} components, containing the result of calling
 #' function \code{stat} on each of the refitted models.  If \code{stat} is
 #' \code{NULL}, then each component just contains the refitted model.  If one
@@ -213,7 +218,7 @@ bootdata.subject.msm <- function(x) {
 #' }
 #' 
 #' @export boot.msm
-boot.msm <- function(x, stat=pmatrix.msm, B=1000, file=NULL, cores=NULL){
+boot.msm <- function(x, stat=pmatrix.msm, B=1000, file=NULL, cores=NULL, remove.errors=TRUE){
     boot.fn <- function(dummy){
         boot.data <- if (x$hmodel$hidden || x$cmodel$ncens) bootdata.subject.msm(x) else bootdata.trans.msm(x)
         x$call$data <- substitute(boot.data)
@@ -246,7 +251,18 @@ boot.msm <- function(x, stat=pmatrix.msm, B=1000, file=NULL, cores=NULL){
             if (!is.null(file)) save(boot.list, file=file)
         }
     }
+    if (remove.errors) boot.list <- handle_refit_errors(boot.list)
     boot.list
+}
+
+handle_refit_errors <- function(blist){
+  errors <- vapply(blist, function(x)inherits(x, "try-error"), TRUE)
+  nerrors <- sum(errors)
+  if (nerrors > 0) {
+    message(sprintf("%s/%s bootstrap refits ended in an error", nerrors, length(blist)))
+    message(sprintf("First error: %s", blist[[min(which(errors))]]))
+  }
+  blist[!errors]
 }
 
 ### Utilities for calculating bootstrap CIs for particular statistics
@@ -345,9 +361,9 @@ expected.ci.msm <- function(x,
         expected.msm(x, times, timezero, initstates, covariates, misccovariates, piecewise.times, piecewise.covariates, risk)
     }, B=B, cores=cores)
     e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), 
-                         dim=c(x$qmodel$nstates+1, length(times), B))
+                         dim=c(x$qmodel$nstates+1, length(times), length(e.list)))
     e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), 
-                          dim=c(x$qmodel$nstates, length(times), B))
+                          dim=c(x$qmodel$nstates, length(times), length(e.list)))
     e.tab.ci <- apply(e.tab.array, c(1,2), 
                       function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     e.perc.ci <- apply(e.perc.array, c(1,2), 
