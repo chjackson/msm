@@ -51,7 +51,14 @@ resamples, and calculate statistics on the refitted models.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">boot.msm</span><span class="op">(</span><span class="va">x</span>, stat <span class="op">=</span> <span class="va">pmatrix.msm</span>, B <span class="op">=</span> <span class="fl">1000</span>, file <span class="op">=</span> <span class="cn">NULL</span>, cores <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">boot.msm</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  stat <span class="op">=</span> <span class="va">pmatrix.msm</span>,</span>
+<span>  B <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  remove.errors <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,6 +91,14 @@ parallel processing is not used. If <code>cores</code> is set to the string
 <code>"default"</code>, the default methods of <code><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></code>
 (on Windows) or <code><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></code> (on Unix-like)
 are used.</p></dd>
+
+
+<dt>remove.errors</dt>
+<dd><p>If <code>TRUE</code> then bootstrap refits which resulted in an
+error are removed from the returned list, and a message is returned which states the
+proportion of failed fits and the first error message.  If <code>FALSE</code>, then 
+the error message for failed refits is placed in the
+corresponding component of the returned list.</p></dd>
 
 </dl></div>
     <div class="section level2">
