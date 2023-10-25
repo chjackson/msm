@@ -568,6 +568,14 @@
 #' assume that covariates are piecewise-constant and change at the times when
 #' they are observed.  \code{pci} is for when you want all intensities to
 #' change at the same pre-specified times for all subjects.
+#'
+#' \code{pci} is not supported for multivariate hidden Markov models specified with
+#' \code{\link{hmmMV}}.   An approximate equivalent can be constructed by
+#' creating a variable in the data to represent the time period, and treating
+#' that as a covariate using the \code{covariates} argument to \code{msm}.
+#' This will assume that the value of this variable is constant between
+#' observations. 
+#' 
 #' @param phase.states Indices of states which have a two-phase sojourn
 #' distribution.  This defines a semi-Markov model, in which the hazard of an
 #' onward transition depends on the time spent in the state.
@@ -882,7 +890,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     if (dmodel$ndeath > 0 && exacttimes) warning("Ignoring death argument, as all states have exact entry times")
 
 ### CENSORING MODEL
-    cmodel <- msm.form.cmodel(censor, censor.states, qmodel$qmatrix)
+    cmodel <- msm.form.cmodel(censor, censor.states, qmodel$qmatrix, hmodel)
 
 ### SOME CHECKS    
     if (!inherits(formula, "formula")) stop("formula is not a formula")
@@ -970,6 +978,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     ## the data, and add the corresponding term to the formula.
     ## NOTE pci kept pre-imputed data as msmdata.obs.orig
     if (!is.null(pci)) {
+        if (isTRUE(hmodel$mv)) stop("`pci` not supported for multivariate hidden Markov models.  As an approximation, create a variable in your data representing the time period, and treat it as a covariate")
         tdmodel <- msm.pci(pci, mf, qmodel, cmodel, covariates)
         if (!is.null(tdmodel)) {
             mf <- tdmodel$mf; covariates <- tdmodel$covariates; cmodel <- tdmodel$cmodel
@@ -1717,13 +1726,14 @@ msm.form.dmodel <- function(death, qmodel, hmodel)
     list(ndeath=ndeath, states=states, obs=obs)
 }
 
-msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix)
+msm.form.cmodel <- function(censor=NULL, censor.states=NULL, qmatrix, hmodel=NULL)
 {
     if (is.null(censor)) {
         ncens <- 0
         if (!is.null(censor.states)) warning("censor.states supplied but censor not supplied")
     }
     else {
+        if (isTRUE(hmodel$mv)) stop("`censor` not supported with multivariate hidden Markov models")
         if (!is.numeric(censor)) stop("censor must be numeric")
         if (any(censor %in% 1:nrow(qmatrix))) warning("some censoring indicators are the same as actual states")
         ncens <- length(censor)

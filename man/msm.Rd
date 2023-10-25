@@ -609,7 +609,14 @@ Note that you do not need to use \code{pci} in order to model the effect of
 a time-dependent covariate in the data.  \code{msm} will automatically
 assume that covariates are piecewise-constant and change at the times when
 they are observed.  \code{pci} is for when you want all intensities to
-change at the same pre-specified times for all subjects.}
+change at the same pre-specified times for all subjects.
+
+\code{pci} is not supported for multivariate hidden Markov models specified with
+\code{\link{hmmMV}}.   An approximate equivalent can be constructed by
+creating a variable in the data to represent the time period, and treating
+that as a covariate using the \code{covariates} argument to \code{msm}.
+This will assume that the value of this variable is constant between
+observations.}
 
 \item{phase.states}{Indices of states which have a two-phase sojourn
 distribution.  This defines a semi-Markov model, in which the hazard of an
