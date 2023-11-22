@@ -2800,6 +2800,8 @@ na.find.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     nm <- names(object)
     omit <- FALSE
     for (j in seq_along(object)) {
+        if (is.matrix(object[[j]]) && ncol(object[[j]])==1)
+            object[[j]] <- as.vector(object[[j]])
         ## Drop all NAs in time, subject as usual
         if (nm[j] %in% c("(time)", "(subject)"))
             omit <- omit | is.na(object[[j]])

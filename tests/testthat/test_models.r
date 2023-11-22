@@ -798,3 +798,13 @@ test_that("miscellaneous",{
   expect_error(model.matrix(psor.msm), NA)
   expect_error(model.frame(psor.msm), NA)
 })
+
+test_that("single-column matrix in covariates",{
+  psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
+  psor$matcov <- matrix(psor$ollwsdrt, ncol=1)
+  psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
+                  covariates = ~matcov, fixedpars=TRUE)
+  psor2.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
+                  covariates = ~ollwsdrt, fixedpars=TRUE)
+  expect_equal(psor.msm$minus2loglik, psor2.msm$minus2loglik)
+})  
