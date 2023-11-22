@@ -651,7 +651,13 @@ and time period indicators.  These can be used to construct such models.</p>
 a time-dependent covariate in the data.  <code>msm</code> will automatically
 assume that covariates are piecewise-constant and change at the times when
 they are observed.  <code>pci</code> is for when you want all intensities to
-change at the same pre-specified times for all subjects.</p></dd>
+change at the same pre-specified times for all subjects.</p>
+<p><code>pci</code> is not supported for multivariate hidden Markov models specified with
+<code><a href="hmmMV.html">hmmMV</a></code>.   An approximate equivalent can be constructed by
+creating a variable in the data to represent the time period, and treating
+that as a covariate using the <code>covariates</code> argument to <code>msm</code>.
+This will assume that the value of this variable is constant between
+observations.</p></dd>
 
 
 <dt>phase.states</dt>
