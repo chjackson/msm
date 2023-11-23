@@ -817,7 +817,7 @@
 #' pmatrix.msm(cav.msm, t=10)
 #' sojourn.msm(cav.msm)
 #' 
-#' @export msm
+#' @export
 msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
                 ematrix=NULL,  hmodel=NULL, obstype=NULL, obstrue=NULL,
                 covariates = NULL, covinits = NULL, constraint = NULL,
@@ -2485,7 +2485,7 @@ msm.form.houtput <- function(hmodel, p, msmdata, cmodel)
 #' statetable.msm(state, PTNUM, data=cav)
 #' 
 #' 
-#' @export statetable.msm
+#' @export
 statetable.msm <- function(state, subject, data=NULL)
 {
     if(!is.null(data)) {
@@ -2568,7 +2568,7 @@ statetable.msm <- function(state, subject, data=NULL)
 #' statetable.msm(state, PTNUM, data=cav)
 #' crudeinits.msm(state ~ years, PTNUM, data=cav, qmatrix=twoway4.q)
 #' 
-#' @export crudeinits.msm
+#' @export
 crudeinits.msm <- function(formula, subject, qmatrix, data=NULL, censor=NULL, censor.states=NULL)
 {
     cens <- msm.form.cmodel(censor, censor.states, qmatrix)

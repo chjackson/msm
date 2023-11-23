@@ -91,7 +91,7 @@
 #' @seealso \code{\link{pmatrix.msm}}, \code{\link{sojourn.msm}},
 #' \code{\link{deltamethod}}, \code{\link{ematrix.msm}}
 #' @keywords models
-#' @export qmatrix.msm
+#' @export
 qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","normal","bootstrap","none"), cl=0.95, B=1000, cores=NULL)
 {   
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
@@ -253,7 +253,7 @@ qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","norma
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{qmatrix.msm}}
 #' @keywords models
-#' @export ematrix.msm
+#' @export
 ematrix.msm <- function(x, covariates="mean", ci=c("delta","normal","bootstrap","none"), cl=0.95, B=1000, cores=NULL)
 {
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
@@ -633,7 +633,7 @@ msm.fill.pci.covs <- function(x, covariates="mean"){
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{print.msm}}
 #' @keywords models
-#' @export printold.msm
+#' @export
 printold.msm <- function(x, ...)
 {
     cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
@@ -735,7 +735,7 @@ mattotrans <- function(x, matrix, lower, upper, fixed, keep.diag=FALSE, intmisc=
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{print.msm}}
 #' @keywords models
-#' @export msm.form.qoutput
+#' @export
 msm.form.qoutput <- function(x, covariates="mean", cl=0.95, digits=4, ...){
     qbase <- qmatrix.msm(x, covariates=covariates, cl=cl)
     if (is.null(x$QmatricesFixed)) x <- msm.form.output(x, "intens") # for back-compat with pre 1.4.1 model objects
@@ -1105,7 +1105,7 @@ plot.msm <- function(x, from=NULL, to=NULL, range=NULL, covariates="mean", legen
 #' @seealso \code{\link[survival]{survfit}},
 #' \code{\link[survival]{plot.survfit}}
 #' @keywords models
-#' @export plotprog.msm
+#' @export
 plotprog.msm <- function(formula, subject, data, legend.pos=NULL, xlab="Time", ylab="1 - incidence probability", lwd=1, xlim=NULL,
                          mark.time=TRUE, ...) {
     data <- na.omit(data)
@@ -1198,7 +1198,7 @@ plotprog.msm <- function(formula, subject, data, legend.pos=NULL, xlab="Time", y
 #' @seealso \code{\link{msm}}, \code{\link{contour}},
 #' \code{\link{filled.contour}}, \code{\link{persp}}, \code{\link{image}}.
 #' @keywords models
-#' @export surface.msm
+#' @export
 surface.msm <- function(x, params=c(1,2), np=10, type=c("contour","filled.contour","persp","image"),
                         point=NULL, xrange=NULL, yrange=NULL,...)
 {
@@ -1462,7 +1462,7 @@ lsum <- function(inds, coefs)
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{qmatrix.msm}}
 #' @keywords models
-#' @export qratio.msm
+#' @export
 qratio.msm <- function(x, ind1, ind2,
                        covariates = "mean",
                        ci=c("delta","normal","bootstrap","none"),
@@ -1608,7 +1608,7 @@ qratio.msm <- function(x, ind1, ind2,
 #' functions with complicated derivatives." The American Statistician
 #' 67(2):76-81
 #' @keywords models
-#' @export pmatrix.msm
+#' @export
 pmatrix.msm <- function(x=NULL, # fitted msm model
                         t = 1, # time interval
                         t1 = 0, # start time for pci models
@@ -1750,7 +1750,7 @@ pmatrix.msm <- function(x=NULL, # fitted msm model
 #' pmatrix.piecewise.msm(x, 0, 15, times, covariates)
 #' }
 #' 
-#' @export pmatrix.piecewise.msm
+#' @export
 pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
                                   t1, # start time
                                   t2, # stop time
@@ -1889,7 +1889,7 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
 #' @seealso \code{\link{msm}}, \code{\link{qmatrix.msm}},
 #' \code{\link{deltamethod}}
 #' @keywords models
-#' @export sojourn.msm
+#' @export
 sojourn.msm <- function(x, covariates = "mean", ci=c("delta","normal","bootstrap","none"), cl=0.95, B=1000)
 {
     ci <- match.arg(ci)
@@ -1981,7 +1981,7 @@ sojourn.msm <- function(x, covariates = "mean", ci=c("delta","normal","bootstrap
 #' @seealso
 #' \code{\link{qmatrix.msm}},\code{\link{pmatrix.msm}},\code{\link{qratio.msm}}
 #' @keywords models
-#' @export pnext.msm
+#' @export
 pnext.msm <- function(x, covariates="mean", ci=c("normal","bootstrap","delta","none"), cl=0.95, B=1000, cores=NULL)
 {
     ci <- match.arg(ci)
@@ -2041,7 +2041,7 @@ pnext.msm <- function(x, covariates="mean", ci=c("normal","bootstrap","delta","n
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{msm}}
 #' @keywords models
-#' @export coef.msm
+#' @export
 coef.msm <- function(object, ...)
 {
     if (!inherits(object, "msm")) stop("expected object to be a msm model")

@@ -4,7 +4,7 @@
 \alias{qmatrix.msm}
 \title{Transition intensity matrix}
 \usage{
-qmatrix.msm(
+\method{qmatrix}{msm}(
   x,
   covariates = "mean",
   sojourn = FALSE,
