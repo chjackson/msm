@@ -1,9 +1,10 @@
 Package: msm
 Version: 1.7.1
-Date: 2023-11-22
+Date: 2023-11-23
 Title: Multi-State Markov and Hidden Markov Models in Continuous Time
-Author: Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
-Maintainer: Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
+Authors@R: c(person("Christopher", "Jackson",
+         email="chris.jackson@mrc-bsu.cam.ac.uk",
+         role=c("aut", "cre")))
 Description: Functions for fitting continuous-time Markov and hidden
     Markov multi-state models to longitudinal data.  Designed for
     processes observed at arbitrary times in continuous time (panel data)

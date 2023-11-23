@@ -2332,7 +2332,7 @@ lik.msm <- function(params, ...)
     Ccall.msm(params, do.what="lik", ...)
 }
 
-deriv.msm <- function(params, ...)
+grad.msm <- function(params, ...)
 {
     Ccall.msm(params, do.what="deriv", ...)
 }
@@ -2902,7 +2902,7 @@ msm.form.hmm.agg <- function(mf){
 
 ### FORM DESIGN MATRICES FOR COVARIATE MODELS.
 msm.form.mm.cov <- function(x){
-    mm.cov <- model.matrix.wrap(x$covariates, x$data$mf)
+    mm.cov <- model_matrix_wrap(x$covariates, x$data$mf)
     msm.center.covs(mm.cov, attr(x$data$mf,"covmeans"), x$center)
 }
 
@@ -2912,7 +2912,7 @@ msm.form.mm.cov.agg <- function(x){
 }
 
 msm.form.mm.mcov <- function(x){
-    mm.mcov <- if (x$emodel$misc) model.matrix.wrap(x$misccovariates, x$data$mf) else NULL
+    mm.mcov <- if (x$emodel$misc) model_matrix_wrap(x$misccovariates, x$data$mf) else NULL
     msm.center.covs(mm.mcov, attr(x$data$mf,"covmeans"), x$center)
 }
 
@@ -2925,7 +2925,7 @@ msm.form.mm.hcov <- function(x){
             hcov <- rep(list(~1), nst)
         for (i in seq_len(nst)){
             if (is.null(hcov[[i]])) hcov[[i]] <- ~1
-            mm.hcov[[i]] <- model.matrix.wrap(hcov[[i]], x$data$mf)
+            mm.hcov[[i]] <- model_matrix_wrap(hcov[[i]], x$data$mf)
             mm.hcov[[i]] <- msm.center.covs(mm.hcov[[i]], attr(x$data$mf,"covmeans"), x$center)
         }
     } else mm.hcov <- NULL
@@ -2935,12 +2935,12 @@ msm.form.mm.hcov <- function(x){
 msm.form.mm.icov <- function(x){
     if (x$hmodel$hidden) {
         if (is.null(x$initcovariates)) x$initcovariates <- ~1
-        mm.icov <- model.matrix.wrap(x$initcovariates, x$data$mf[!duplicated(x$data$mf$"(subject)"),])
+        mm.icov <- model_matrix_wrap(x$initcovariates, x$data$mf[!duplicated(x$data$mf$"(subject)"),])
     } else mm.icov <- NULL
     msm.center.covs(mm.icov, attr(x$data$mf,"covmeans"), x$center)
 }
 
-model.matrix.wrap <- function(formula, data){
+model_matrix_wrap <- function(formula, data){
     mm <- model.matrix(formula, data)
     polys <- unlist(attr(mm, "contrasts") == "contr.poly")
     covlist <- paste(names(polys),collapse=",")

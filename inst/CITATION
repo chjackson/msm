@@ -1,8 +1,8 @@
 citHeader("To cite msm in publications use:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "Multi-State Models for Panel Data: The {msm} Package for {R}",
-  author       = personList(as.person("Christopher H. Jackson")),
+  author       = person("Christopher H. Jackson"),
   journal      = "Journal of Statistical Software",
   year         = "2011",
   volume       = "38",

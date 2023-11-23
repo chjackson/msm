@@ -23,3 +23,7 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Christopher Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk}
+
+}

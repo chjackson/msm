@@ -1,4 +1,4 @@
-deriv.supported <- function(msmdata, hmodel, cmodel){
+deriv_supported <- function(msmdata, hmodel, cmodel){
     single_outcome <- (is.null(ncol(msmdata$mf$"(state)")) || (ncol(msmdata$mf$"(state)")==1))
     (!hmodel$hidden || (hmodel$hidden &&
                         ## Models where derivatives not supported: 
@@ -13,9 +13,9 @@ deriv.supported <- function(msmdata, hmodel, cmodel){
                         ))
 }
 
-info.supported <- function(msmdata, hmodel, cmodel){
+info_supported <- function(msmdata, hmodel, cmodel){
     ## only panel data and either non-hidden or misclassification models
-    deriv.supported(msmdata, hmodel, cmodel) &&
+    deriv_supported(msmdata, hmodel, cmodel) &&
         all(msmdata$mf$"(obstype)"==1) &&
             (!hmodel$hidden || (hmodel$hidden &&
                                 all(.msm.HMODELS[hmodel$models] %in% .msm.HMODELS.INFO)))
@@ -25,7 +25,7 @@ info.supported <- function(msmdata, hmodel, cmodel){
 
 msm.optim <- function(opt.method, p, hessian, use.deriv, msmdata, qmodel, qcmodel, cmodel, hmodel, ...){
     p$params <- p$allinits
-    gr <- if (deriv.supported(msmdata,hmodel,cmodel) && use.deriv) deriv.msm else NULL
+    gr <- if (deriv_supported(msmdata,hmodel,cmodel) && use.deriv) grad.msm else NULL
     optfn <- paste("msm.optim", opt.method, sep=".")
     if (!exists(optfn)) stop("Unknown optimisation method \"", opt.method, "\"")
 
@@ -37,16 +37,16 @@ msm.optim <- function(opt.method, p, hessian, use.deriv, msmdata, qmodel, qcmode
     assign("nliks", 0, envir=msm.globals)
 
     if (isTRUE(getOption("msm.test.analytic.derivatives"))){
-        if (!deriv.supported(msmdata,hmodel,cmodel)) warning("Analytic derivatives not available for this model")
-        else p$deriv.test <- deriv.test(msmdata, qmodel, qcmodel, cmodel, hmodel, msm.unfixallparams(p))
+        if (!deriv_supported(msmdata,hmodel,cmodel)) warning("Analytic derivatives not available for this model")
+        else p$deriv_test <- deriv_test(msmdata, qmodel, qcmodel, cmodel, hmodel, msm.unfixallparams(p))
     }
     ## Attach derivative and information matrix at the MLE.
     ## If all parameters fixed, do this at the initial values for all.
     pp <- if (opt.method=="fixed") msm.unfixallparams(p) else p
     pi <- pp$params[pp$optpars]
-    if (deriv.supported(msmdata,hmodel,cmodel)) {
-        p$deriv <- deriv.msm(pi, msmdata, qmodel, qcmodel, cmodel, hmodel, pp)
-        if (info.supported(msmdata,hmodel,cmodel)) {
+    if (deriv_supported(msmdata,hmodel,cmodel)) {
+        p$deriv <- grad.msm(pi, msmdata, qmodel, qcmodel, cmodel, hmodel, pp)
+        if (info_supported(msmdata,hmodel,cmodel)) {
             p$information <- information.msm(pi, msmdata, qmodel, qcmodel, cmodel, hmodel, pp)
         }
     }
@@ -79,7 +79,7 @@ msm.optim.fixed <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, hm
 msm.optim.optim <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, hmodel, ...) {
     optim.args <- list(...)
     if (is.null(optim.args$method))
-        optim.args$method <- if (deriv.supported(msmdata, hmodel, cmodel) || (length(p$inits)==1)) "BFGS" else "Nelder-Mead"
+        optim.args$method <- if (deriv_supported(msmdata, hmodel, cmodel) || (length(p$inits)==1)) "BFGS" else "Nelder-Mead"
 
     if (is.null(optim.args$control)) optim.args$control <- list()
 
@@ -119,7 +119,7 @@ msm.optim.nlm <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, hmod
         ret <- lik.msm(par, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
                        cmodel=cmodel, hmodel=hmodel, paramdata=p)
         if (!is.null(gr))
-            attr(ret, "gradient") <- deriv.msm(par, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
+            attr(ret, "gradient") <- grad.msm(par, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
                                                cmodel=cmodel, hmodel=hmodel, paramdata=p)
         ret
     }
@@ -165,7 +165,7 @@ msm.optim.fisher <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, h
         if (ctrace) cat("-2loglik=",-lik.old,", pars=",theta,"\n")
         Info <- information.msm(theta, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
                               cmodel=cmodel, hmodel=hmodel, paramdata=p)
-        V <- -deriv.msm(theta, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
+        V <- -grad.msm(theta, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
                               cmodel=cmodel, hmodel=hmodel, paramdata=p)
         Info <- Info + diag(damp, nrow(Info))
         theta <- theta + solve(Info, V)
@@ -215,8 +215,8 @@ msm.optim.bobyqa <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, h
 
 ### Test analytic against numeric derivatives
 
-deriv.test <- function(msmdata, qmodel, qcmodel, cmodel, hmodel, p){
-    an.d <- deriv.msm(p$inits, msmdata, qmodel, qcmodel, cmodel, hmodel, p)
+deriv_test <- function(msmdata, qmodel, qcmodel, cmodel, hmodel, p){
+    an.d <- grad.msm(p$inits, msmdata, qmodel, qcmodel, cmodel, hmodel, p)
 
 #    if (0){
     ## fiddly method using stats::numericDeriv

@@ -308,7 +308,7 @@ print.hmodel <- function(x, ...)
                   for (j in 1:x$nout[i]){
                       cat("Outcome", j, "-", x$labels[j,i], "distribution\n")
                       if (x$labels[j,i]=="categorical")
-                          pars <- print.hmmcat(x, i, j, mv=TRUE)   ## TESTME
+                          pars <- print_hmmcat(x, i, j, mv=TRUE)   ## TESTME
                       else {
                           inds <- x$parstate==i & x$parout==j
                           pars <- as.matrix(x$pars[inds])
@@ -323,7 +323,7 @@ print.hmodel <- function(x, ...)
                   cat("State", i, "-", x$labels[i], "distribution\n")
                   cat("Parameters: \n")
                   if (x$label[i]=="categorical")
-                      pars <- print.hmmcat(x, i)
+                      pars <- print_hmmcat(x, i)
                   else {
                       pars <- as.matrix(x$pars[x$parstate==i])
                       if (ci) pars <- cbind(pars, matrix(x$ci[x$parstate==i ,], ncol=2))
@@ -342,7 +342,7 @@ print.hmodel <- function(x, ...)
       }
   }
 
-print.hmmcat <- function(x, i, j=NULL, mv=FALSE)
+print_hmmcat <- function(x, i, j=NULL, mv=FALSE)
 {
     inds <- if (mv) x$parstate==i & x$parout==j else x$parstate==i
     pars <- x$pars[inds]

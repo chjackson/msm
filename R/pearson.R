@@ -24,7 +24,7 @@
 #' See the references for further details of the methods.  The method used for
 #' censored states is a modification of the method in the appendix to Titman
 #' and Sharples (2008), described at
-#' \url{http://www.mrc-bsu.cam.ac.uk/wp-content/uploads/robustcensoring.pdf}
+#' \url{https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/robustcensoring.pdf}
 #' (Titman, 2007).
 #' 
 #' Groupings of the time since initiation, the time interval and the impact of

@@ -150,14 +150,25 @@ and we want the vector \eqn{\mathbf{x}}{x} giving the expected lengths of
 stay in each state.  The corresponding integral has the following solution
 (van Loan 1978; van Rosmalen et al. 2013)
 
-\deqn{\mathbf{x} = \left[\begin{array}{ll}1 & \mathbf{0}_K }{x = [1, 0_K]
-Exp(t Q') [0_K, I_K]'}\deqn{ \end{array}\right] Exp(t Q')
-\left[\begin{array}{ll} \mathbf{0}_K\\I_K }{x = [1, 0_K] Exp(t Q') [0_K,
-I_K]'}\deqn{ \end{array}\right]}{x = [1, 0_K] Exp(t Q') [0_K, I_K]'}
+\deqn{\mathbf{x} =
+\left[
+\begin{array}{ll}
+1  &  \mathbf{0}_K
+\end{array}
+\right]
+Exp(t Q')
+\left[
+\begin{array}{l} \mathbf{0}_K\\I_K
+\end{array}
+\right]
+}{x = [1, 0_K] Exp(t Q') [0_K, I_K]'}
 
-where \deqn{Q' = \left[\begin{array}{ll} 0 & \mathbf{\pi}_0\\ \mathbf{0}_K
-}{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K)),}\deqn{ & Q -
-rI_K\end{array}\right]}{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K)),}
+where \deqn{Q' = \left[
+\begin{array}{ll} 0 & \mathbf{\pi}_0\\
+\mathbf{0}_K  &  Q - rI_K
+\end{array}
+\right]
+}{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K))}
 
 \eqn{\pi_0}{pi_0} is the row vector of initial state probabilities supplied
 in \code{start}, \eqn{\mathbf{0}_K}{0_K} is the row vector of K zeros,

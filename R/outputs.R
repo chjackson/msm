@@ -648,7 +648,7 @@ printold.msm <- function(x, ...)
                 if (i == "baseline") paste("Transition intensity matrix",covmessage,"\n")
                 else paste("Log-linear effects of", i, "\n")
             cat (title, "\n")
-            print.ci(x$Qmatrices[[i]], x$QmatricesL[[i]], x$QmatricesU[[i]])
+            print_ci(x$Qmatrices[[i]], x$QmatricesL[[i]], x$QmatricesU[[i]])
             cat("\n")
         }
         if (x$emodel$misc) {
@@ -660,7 +660,7 @@ printold.msm <- function(x, ...)
                     if (i == "baseline") paste("Misclassification matrix",misccovmessage,"\n")
                     else paste("Effects of", i, "on log (P(state r)/P(baseline state))\n")
                 cat (title, "\n")
-                print.ci(x$Ematrices[[i]], x$EmatricesL[[i]], x$EmatricesU[[i]])
+                print_ci(x$Ematrices[[i]], x$EmatricesL[[i]], x$EmatricesU[[i]])
                 cat("\n")
             }
             if (any(x$paramdata$plabs[x$paramdata$optpars] == "initp")) {
@@ -894,6 +894,36 @@ print.msm <- function(x, covariates=NULL, digits=4, ...)
 #' @export
 printnew.msm <- print.msm
 
+
+
+
+#' Summarise a fitted multi-state model
+#' 
+#' Summary method for fitted \code{\link{msm}} models. This is simply a wrapper
+#' around \code{\link{prevalence.msm}} which produces a table of observed and
+#' expected state prevalences for each time, and for models with covariates,
+#' \code{\link{hazard.msm}} to print hazard ratios with 95\% confidence
+#' intervals for covariate effects.
+#' 
+#' @name summary.msm
+#' @aliases summary.msm print.summary.msm
+#' @param object A fitted multi-state model object, as returned by
+#' \code{\link{msm}}.
+#' @param hazard.scale Vector with same elements as number of covariates on
+#' transition rates. Corresponds to the increase in each covariate used to
+#' calculate its hazard ratio. Defaults to all 1.
+#' @param ... Further arguments passed to \code{\link{prevalence.msm}}.
+#' @return A list of class \code{summary.msm}, with components:
+#' 
+#' \item{prevalences}{Output from \code{\link{prevalence.msm}}.}
+#' 
+#' \item{hazard}{Output from \code{\link{hazard.msm}}.}
+#' 
+#' \item{hazard.scale}{Value of the \code{hazard.scale} argument.}
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @seealso \code{\link{msm}},\code{\link{prevalence.msm}},
+#' \code{\link{hazard.msm}}
+#' @keywords models
 #' @export
 summary.msm <- function(object, # fitted model
                         hazard.scale = 1,
@@ -1245,7 +1275,7 @@ expand.interactions.msm <- function(covariates, covlabels){
 print.msm.est <- function(x, digits=NULL, ...)
 {
     if (is.list(x))
-        print.ci(x$estimates, x$L, x$U, x$fixed, digits=digits)
+        print_ci(x$estimates, x$L, x$U, x$fixed, digits=digits)
     else print(unclass(x), digits=digits)
 }
 
@@ -1306,7 +1336,7 @@ format.ci <- function(x, l, u, noci=NULL, digits=NULL, ...)
     res
 }
 
-print.ci <- function(x, l, u, fixed=NULL, digits=NULL){
+print_ci <- function(x, l, u, fixed=NULL, digits=NULL){
     res <- format.ci(x, l, u, fixed, digits)
     print(res, quote=FALSE)
 }
@@ -2129,14 +2159,25 @@ lrtest.msm <- function(...){
 #' stay in each state.  The corresponding integral has the following solution
 #' (van Loan 1978; van Rosmalen et al. 2013)
 #' 
-#' \deqn{\mathbf{x} = \left[\begin{array}{ll}1 & \mathbf{0}_K }{x = [1, 0_K]
-#' Exp(t Q') [0_K, I_K]'}\deqn{ \end{array}\right] Exp(t Q')
-#' \left[\begin{array}{ll} \mathbf{0}_K\\I_K }{x = [1, 0_K] Exp(t Q') [0_K,
-#' I_K]'}\deqn{ \end{array}\right]}{x = [1, 0_K] Exp(t Q') [0_K, I_K]'}
-#' 
-#' where \deqn{Q' = \left[\begin{array}{ll} 0 & \mathbf{\pi}_0\\ \mathbf{0}_K
-#' }{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K)),}\deqn{ & Q -
-#' rI_K\end{array}\right]}{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K)),}
+#' \deqn{\mathbf{x} =
+#' \left[
+#' \begin{array}{ll}
+#' 1  &  \mathbf{0}_K
+#' \end{array}
+#' \right]
+#' Exp(t Q')
+#' \left[
+#' \begin{array}{l} \mathbf{0}_K\\I_K
+#' \end{array}
+#' \right]
+#' }{x = [1, 0_K] Exp(t Q') [0_K, I_K]'}
+#'
+#' where \deqn{Q' = \left[
+#' \begin{array}{ll} 0 & \mathbf{\pi}_0\\
+#' \mathbf{0}_K  &  Q - rI_K
+#' \end{array}
+#' \right]
+#' }{Q' = rbind(c(0, pi_0), cbind(0_K, Q - r I_K))}
 #' 
 #' \eqn{\pi_0}{pi_0} is the row vector of initial state probabilities supplied
 #' in \code{start}, \eqn{\mathbf{0}_K}{0_K} is the row vector of K zeros,
@@ -3443,7 +3484,7 @@ viterbi.msm <- function(x, normboot=FALSE, newdata=NULL)
 #' @export scoreresid.msm
 scoreresid.msm <- function(x, plot=FALSE){
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
-    if (!deriv.supported(x$data, x$hmodel, x$cmodel))
+    if (!deriv_supported(x$data, x$hmodel, x$cmodel))
         stop("Score residuals not available, since analytic derivatives not implemented for this model")
     derivs <- Ccall.msm(x$paramdata$opt$par, do.what="deriv.subj", expand.data(x), x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata)
     cov <- x$paramdata$covmat[x$paramdata$optpars,x$paramdata$optpars]

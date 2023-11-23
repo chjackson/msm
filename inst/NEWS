@@ -6,7 +6,7 @@ USER-VISIBLE CHANGES
 (For detailed changes see https://github.com/chjackson/msm from Nov 2016 onwards, and the ChangeLog in the source package before that)
 
 
-Version 1.7.1  (2023-11-22)
+Version 1.7.1  (2023-11-23)
 -------------
 
 o Fix of a bug in the Viterbi algorithm for the calculation of the fitted state at the initial time for each subject.
@@ -16,6 +16,8 @@ o Bug fix for pmatrix.piecewise.msm given just intensity matrices instead of a f
 o Auto-generated initial values set to a small positive number rather than zero when there are no observed data for a particular permitted transition.  This fixes consistency checks (e.g. for qconstraint) in this situation.
 
 o Fix when covariates come into the data as one-column matrices instead of vectors.
+
+o Modernised to use roxygen, and pkgdown website created at https://chjackson.github.io/msm
 
 
 Version 1.7  (2022-11-27)
