@@ -91,7 +91,7 @@
 #' @seealso \code{\link{pmatrix.msm}}, \code{\link{sojourn.msm}},
 #' \code{\link{deltamethod}}, \code{\link{ematrix.msm}}
 #' @keywords models
-#' @export
+#' @export qmatrix.msm
 qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","normal","bootstrap","none"), cl=0.95, B=1000, cores=NULL)
 {   
     if (!inherits(x, "msm")) stop("expected x to be a msm model")
