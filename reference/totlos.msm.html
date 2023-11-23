@@ -221,11 +221,24 @@ probabilities of being in each state at time 0, supplied in <code>start</code>,
 and we want the vector \(\mathbf{x}\) giving the expected lengths of
 stay in each state.  The corresponding integral has the following solution
 (van Loan 1978; van Rosmalen et al. 2013)</p>
-<p>$$\mathbf{x} = \left[\begin{array}{ll}1 &amp; \mathbf{0}_K $$$$ \end{array}\right] Exp(t Q')
-\left[\begin{array}{ll} \mathbf{0}_K\\I_K $$$$ \end{array}\right]$$</p>
-<p>where $$Q' = \left[\begin{array}{ll} 0 &amp; \mathbf{\pi}_0\\ \mathbf{0}_K
-$$$$ &amp; Q -
-rI_K\end{array}\right]$$</p>
+<p>$$\mathbf{x} =
+\left[
+\begin{array}{ll}
+1  &amp;  \mathbf{0}_K
+\end{array}
+\right]
+Exp(t Q')
+\left[
+\begin{array}{l} \mathbf{0}_K\\I_K
+\end{array}
+\right]
+$$</p>
+<p>where $$Q' = \left[
+\begin{array}{ll} 0 &amp; \mathbf{\pi}_0\\
+\mathbf{0}_K  &amp;  Q - rI_K
+\end{array}
+\right]
+$$</p>
 <p>\(\pi_0\) is the row vector of initial state probabilities supplied
 in <code>start</code>, \(\mathbf{0}_K\) is the row vector of K zeros,
 \(r\) is the discount rate, \(I_K\) is the K x K identity matrix,

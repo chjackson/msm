@@ -40,7 +40,7 @@ phase-type distribution with two phases."><!-- mathjax --><script src="https://c
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Coxian phase-type distribution with two phases</h1>
-      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/msm-package.R" class="external-link"><code>R/msm-package.R</code></a>, <a href="https://github.com/chjackson/msm/blob/HEAD/R/phase.R" class="external-link"><code>R/phase.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/phase.R" class="external-link"><code>R/phase.R</code></a></small>
       <div class="d-none name"><code>twophase.Rd</code></div>
     </div>
 
@@ -130,12 +130,10 @@ state 2 (with intensity \(\lambda_1\)) state 1 to state 3
 <p>$$F(t | \lambda_1, \mu_1) = 1 - e^{-(\lambda_1+\mu_1) t} (1 + \lambda_1
 t)$$</p>
 <p>if \(\lambda_1 + \mu_1 = \mu_2\), and</p>
-<p>$$F(t | \lambda_1, \mu_1, \mu_2) = 1 - \frac{e^{-(\lambda_1+\mu_1) }{F(t
-| l1, mu1, mu2) = 1 - (exp(-(l1+mu1)*t)*(-mu1+mu2) +
-l1*exp(-mu2*t))/(l1+mu1-mu2)}\deqn{ t} (\mu_2 - \mu_1) + \lambda_1 e^{-\mu_2
-}{F(t | l1, mu1, mu2) = 1 - (exp(-(l1+mu1)*t)*(-mu1+mu2) +
-l1*exp(-mu2*t))/(l1+mu1-mu2)}\deqn{ t}}{\lambda_1+\mu_1-\mu_2}$$
-otherwise.  Quantiles are calculated by numerically inverting the
+<p>$$F(t | \lambda_1, \mu_1, \mu_2) =
+1  -  \frac{e^{-(\lambda_1 + \mu_1)t} (\mu_2 - \mu_1)  +  \lambda_1 e^{-\mu_2 t}}{
+\lambda_1 + \mu_1 - \mu_2}$$</p>
+<p>otherwise.  Quantiles are calculated by numerically inverting the
 distribution function.</p>
 <p>The mean is \((1 + \lambda_1/\mu_2) / (\lambda_1 + \mu_1)\).</p>
 <p>The variance is \((2 + 2\lambda_1(\lambda_1+\mu_1+ \mu_2)/\mu_2^2 - (1 +

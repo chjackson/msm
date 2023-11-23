@@ -40,7 +40,7 @@ subject to a Normally distributed measurement error."><!-- mathjax --><script sr
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Measurement error distributions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/msm-package.R" class="external-link"><code>R/msm-package.R</code></a>, <a href="https://github.com/chjackson/msm/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/medists.R" class="external-link"><code>R/medists.R</code></a></small>
       <div class="d-none name"><code>medists.Rd</code></div>
     </div>
 
@@ -175,16 +175,14 @@ respectively.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The normal distribution with measurement error has density</p>
-<p>$$ $$$$
-\frac{\Phi(u, \mu_2, \sigma_3) - \Phi(l, \mu_2, }{(Phi(upper, mu2, sigma3) -
-Phi(lower, mu2, sigma3)) / (Phi(upper, mean, sd) - Phi(lower, mean, sd)) *
-phi(x, mean + meanerr, sigma2)}\deqn{ \sigma_3)}{\Phi(u, \mu_0, \sigma_0) -
-\Phi(l, \mu_0, \sigma_0)} $$$$ \phi(x, \mu_0 + \mu_\epsilon, \sigma_2)
-$$$$
-$$ where
-$$\sigma_2^2 = \sigma_0^2 + \sigma_\epsilon^2,$$ $$\sigma_3 = \sigma_0 \sigma_\epsilon / \sigma_2,$$ $$\mu_2 = (x - \mu_\epsilon) \sigma_0^2 + \mu_0
-$$$$
-\sigma_\epsilon^2,$$</p>
+<p>$$
+\frac{\Phi(u, \mu_2, \sigma_3) - \Phi(l, \mu_2, \sigma_3)}{\Phi(u, \mu_2, \sigma_3) -
+\Phi(l, \mu_2, \sigma_3)} \phi(x, \mu_0 + \mu_\epsilon, \sigma_2)$$</p>
+<p>where</p>
+<p>$$\sigma_2^2 = \sigma_0^2 + \sigma_\epsilon^2,$$</p>
+<p>$$\sigma_3 = \sigma_0 \sigma_\epsilon / \sigma_2,$$</p>
+<p>$$\mu_2 = (x - \mu_\epsilon) \sigma_0^2 + \mu_0 \sigma_\epsilon^2,
+$$</p>
 <p>\(\mu_0\) is the mean of the original Normal distribution before
 truncation, <br> \(\sigma_0\) is the corresponding standard deviation,
 <br> \(u\) is the upper truncation point, <br> \(l\) is the lower
@@ -199,8 +197,7 @@ normal distribution.</p>
 \sigma_\epsilon)) $$$$ / (u - l)$$</p>
 <p>These are calculated from the original truncated Normal or Uniform density
 functions \(f(. | \mu, \sigma, l, u)\) as</p>
-<p>$$\int f(y $$$$ | \mu, \sigma, l, u) \phi(x, y $$$$ + \mu_\epsilon, \sigma_\epsilon)
-dy$$</p>
+<p>$$ \int f(y | \mu, \sigma, l, u) \phi(x, y + \mu_\epsilon, \sigma_\epsilon) dy $$</p>
 <p>If <code>sderr</code> and <code>meanerr</code> are not specified they assume the default
 values of 0, representing no measurement error variance, and no constant
 shift in the measurement error, respectively.</p>
