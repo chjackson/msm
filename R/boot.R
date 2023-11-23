@@ -361,9 +361,9 @@ expected.ci.msm <- function(x,
         expected.msm(x, times, timezero, initstates, covariates, misccovariates, piecewise.times, piecewise.covariates, risk)
     }, B=B, cores=cores)
     e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), 
-                         dim=c(x$qmodel$nstates+1, length(times), length(e.list)))
+                         dim=c(length(times), x$qmodel$nstates+1, length(e.list)))
     e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), 
-                          dim=c(x$qmodel$nstates, length(times), length(e.list)))
+                          dim=c(length(times), x$qmodel$nstates, length(e.list)))
     e.tab.ci <- apply(e.tab.array, c(1,2), 
                       function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     e.perc.ci <- apply(e.perc.array, c(1,2), 
@@ -524,10 +524,12 @@ expected.normci.msm <- function(x,
     e.list <- normboot.msm(x, function(x){
         expected.msm(x, times, timezero, initstates, covariates, misccovariates, piecewise.times, piecewise.covariates, risk)
     }, B)
-    e.tab.array <- array(unlist(lapply(e.list, function(x)x[[1]])), 
-                         dim=c(x$qmodel$nstates+1, length(times), B))
-    e.perc.array <- array(unlist(lapply(e.list, function(x)x[[2]])), 
-                          dim=c(x$qmodel$nstates, length(times), B))
+    e_tab_vec <- unlist(lapply(e.list, function(x)x$"Expected"))
+    e.tab.array <- array(e_tab_vec, 
+                         dim=c(length(times), x$qmodel$nstates+1, B))
+    e_perc_vec <- unlist(lapply(e.list, function(x)x$"Expected percentages"))
+    e.perc.array <- array(e_perc_vec, 
+                          dim=c(length(times), x$qmodel$nstates, B))
     e.tab.ci <- apply(e.tab.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     e.perc.ci <- apply(e.perc.array, c(1,2), function(x)(quantile(x, c(0.5 - cl/2, 0.5 + cl/2))))
     res <- list(aperm(e.tab.ci, c(2,3,1)),  aperm(e.perc.ci, c(2,3,1)))
