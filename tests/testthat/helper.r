@@ -23,5 +23,5 @@ cav.cens3$state[ns==4][1:50] <- 999
 deriv_error <- function(object){
     if (!isTRUE(getOption("msm.test.analytic.derivatives")))
         stop("msm.test.analytic.derivatives option not set")
-    object$paramdata$deriv.test$error["nd"]    
+    object$paramdata$deriv_test$error["nd"]    
 }

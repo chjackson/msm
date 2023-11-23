@@ -5,7 +5,7 @@ context("analytic derivatives of likelihood")
 test_that("derivatives by subject: sum to overall derivative",{
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  covariates = ~ollwsdrt+hieffusn, constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), fixedpars=FALSE)
     q.mle <- psor.msm$paramdata$opt$par
-    deriv.overall <- deriv.msm(q.mle, expand.data(psor.msm), psor.msm$qmodel, psor.msm$qcmodel, psor.msm$cmodel, psor.msm$hmodel, psor.msm$paramdata)
+    deriv.overall <- grad.msm(q.mle, expand.data(psor.msm), psor.msm$qmodel, psor.msm$qcmodel, psor.msm$cmodel, psor.msm$hmodel, psor.msm$paramdata)
     deriv.subj <- Ccall.msm(q.mle, do.what="deriv.subj", expand.data(psor.msm), psor.msm$qmodel, psor.msm$qcmodel, psor.msm$cmodel, psor.msm$hmodel, psor.msm$paramdata)
     expect_equal(deriv.overall, colSums(deriv.subj))
 })
@@ -53,19 +53,19 @@ if (0) {
     psor.1.q <- rbind(c(0,0.1,0,0),c(0,0,0.10001,0),c(0,0,0,0.1001),c(0,0,0,0))
     diag(psor.1.q) <- -rowSums(psor.1.q)
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, fixedpars=TRUE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, fixedpars=TRUE, analyticp=FALSE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, qconstraint=c(1,1,2), fixedpars=TRUE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, qconstraint=c(1,1,2), fixedpars=TRUE, analyticp=FALSE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, covariates = ~ollwsdrt+hieffusn,
                     constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), fixedpars=FALSE, analyticp=TRUE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
     psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.1.q, covariates = ~ollwsdrt+hieffusn,
                     constraint = list(hieffusn=c(1,1,1),ollwsdrt=c(1,1,2)), fixedpars=FALSE, analyticp=FALSE)
-    psor.msm$paramdata$deriv.test
+    psor.msm$paramdata$deriv_test
 }
 
 context("analytic derivatives of likelihood in HMMs")
@@ -175,7 +175,7 @@ test_that("betabinomial",{
     sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=three.q, hmodel = hmodel3)
     sim.hid <- msm(obs ~ time, subject=subject, data=sim2.df[1:2,], qmatrix=three.q, hmodel=hmodel3, fixedpars=TRUE)
     sim.hid
-    sim.hid$paramdata$deriv.test
+    sim.hid$paramdata$deriv_test
     deriv_error(sim.hid)
     expect_lt(deriv_error(sim.hid), err)
     sim.hid <- msm(obs ~ time, subject=subject, data=sim2.df, qmatrix=three.q, hmodel=hmodel3)

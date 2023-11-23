@@ -19,6 +19,8 @@ o Fix when covariates come into the data as one-column matrices instead of vecto
 
 o Modernised to use roxygen, and pkgdown website created at https://chjackson.github.io/msm
 
+o Some internal functions (e.g. deriv.msm) that clash with base S3 generics renamed
+
 
 Version 1.7  (2022-11-27)
 ------------
