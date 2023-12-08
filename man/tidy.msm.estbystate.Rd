@@ -2,12 +2,13 @@
 % Please edit documentation in R/tidy.R
 \name{tidy.msm.estbystate}
 \alias{tidy.msm.estbystate}
-\title{Tidy the output of totlos.msm and efpt.msm}
+\title{Tidy the output of totlos.msm and similar functions}
 \usage{
 \method{tidy}{msm.estbystate}(x, ...)
 }
 \arguments{
-\item{x}{Output of \code{\link{totlos.msm}} or \code{\link{efpt.msm}}.}
+\item{x}{Output of \code{\link{totlos.msm}}, \code{\link{envisits.msm}}
+or \code{\link{efpt.msm}}, which return objects of class \code{"msm.estbystate"}.}
 
 \item{...}{Further arguments (unused).}
 }
@@ -16,6 +17,6 @@ A tibble with one row per state, and columns for the estimate, and
  confidence intervals if available.
 }
 \description{
-Note this should be called as `tidy()` not `tidy.msm.totlos()`, as this is 
-a method for the generic `tidy()` function.
+Note this should be called as \code{tidy()} not \code{tidy.msm.totlos()} or anything else, as this is 
+a method for the generic \code{tidy()} function.
 }

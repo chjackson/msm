@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">msm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.7.1" id="version-171-2023-11-23">Version 1.7.1 (2023-11-23)<a class="anchor" aria-label="anchor" href="#version-171-2023-11-23"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.8" id="version-18-in-development">Version 1.8 (in development)<a class="anchor" aria-label="anchor" href="#version-18-in-development"></a></h2>
+<ul><li>
+<p>Tidying methods added for <code>msm</code> objects and most of msm’s output functions (<code>prevalence.msm</code>, <code>qmatrix.msm</code> and related functions, and <code>totlos.msm</code> and related functions). These methods convert the output to a tidy data frame (tibble), in the manner of the <a href="https://broom.tidymodels.org/" class="external-link">broom</a> package.</p>
+<p>To use these methods, just call <code>tidy(x)</code>, where <code>x</code> is the result of calling, e.g. <code>msm</code>, <code>prevalence.msm</code>, or <code>qmatrix.msm</code>.</p>
+</li>
+<li><p>Hence the msm package now imports the <code>generics</code> and <code>tibble</code> packages.</p></li>
+<li><p>Objects returned by <code>totlos.msm</code>, <code>efpt.msm</code> and <code>envisits.msm</code> now have class <code>"msm.estbystate"</code></p></li>
+<li><p>Objects returned by <code>prevalence.msm</code> now have class <code>"msm.prevalence"</code></p></li>
+<li><p>Fix of bugs for models containing a covariate named <code>"baseline"</code> or <code>"Baseline"</code>.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.7.1" id="version-171-2023-11-23">Version 1.7.1 (2023-11-23)<a class="anchor" aria-label="anchor" href="#version-171-2023-11-23"></a></h2><p class="text-muted">CRAN release: 2023-11-23</p>
 <ul><li><p>Fix of a bug in the Viterbi algorithm for the calculation of the fitted state at the initial time for each subject.</p></li>
 <li><p>Bug fix for <code>pmatrix.piecewise.msm</code> given just intensity matrices instead of a fitted model.</p></li>
 <li><p>Auto-generated initial values set to a small positive number rather than zero when there are no observed data for a particular permitted transition. This fixes consistency checks (e.g. for <code>qconstraint</code>) in this situation.</p></li>

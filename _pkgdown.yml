@@ -37,6 +37,12 @@ reference:
   - print.summary.msm
   - msm.form.qoutput
   - msm.form.eoutput
+- title: Tidy model outputs
+- contents:
+  - tidy.msm
+  - tidy.msm.est
+  - tidy.msm.estbystate
+  - tidy.msm.prevalence
 - title: Model checking and comparison
 - contents:
   - prevalence.msm

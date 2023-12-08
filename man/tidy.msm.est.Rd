@@ -2,20 +2,21 @@
 % Please edit documentation in R/tidy.R
 \name{tidy.msm.est}
 \alias{tidy.msm.est}
-\title{Tidy the output of a msm.est object, a list of matrices with estimates, L and U components}
+\title{Tidy the output of pmatrix.msm and similar functions}
 \usage{
 \method{tidy}{msm.est}(x, ...)
 }
 \arguments{
 \item{x}{Output of \code{\link{qmatrix.msm}}, \code{\link{pmatrix.msm}}, 
 \code{\link{ematrix.msm}}, \code{\link{pnext.msm}} or \code{\link{ppass.msm}},
- which all return objects of class `"msm.est"`.}
+ which all return objects of class \code{"msm.est"}.}
 
 \item{...}{Further arguments (unused).}
 }
 \description{
 This is the method for the generic `tidy` function that is 
-used for tidying the output of `qmatrix.msm`, `pmatrix.msm`, `ematrix.msm`,
-`pnext.msm` and `ppass.msm`.  This should be called as 
-`tidy()`, not `tidy.msm.est()` or `tidy.qmatrix()` or anything else.
+used for tidying the output of \code{\link{qmatrix.msm}}, \code{\link{pmatrix.msm}}, 
+\code{\link{ematrix.msm}}, \code{\link{pnext.msm}} or \code{\link{ppass.msm}}.
+ This should be called as 
+\code{tidy()}, not \code{tidy.msm.est()} or \code{tidy.qmatrix()} or anything else.
 }

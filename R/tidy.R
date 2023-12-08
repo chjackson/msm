@@ -11,7 +11,7 @@
 ##' * `parclass`: Class of parameters: `intens` (transition intensities), `hr`
 ##'   (hazard ratios representing effects of covariates on intensities), and
 ##'   their transformed versions `logintens` (log intensities) and `loghr` (log
-##'   hazard ratios)
+##'   hazard ratios).
 ##'
 ##'   For "misclassification" models fitted with the `ematrix` argument to `msm`,
 ##'   other classes of parameters include `misc` (misclassification
@@ -28,12 +28,8 @@
 ##'   in class `initp` (or `initlogodds` for the log odds transforms of these),
 ##'   and any covariates on these probabilities are included in class `initpcov`.
 ##'
-##'   Note that the "baseline" intensities are the intensities with covariates
-##'   set to their mean values in the data (stored in `x$qcmodel$covmeans`),
-##'   unless `msm` was called with `center=FALSE`.
-##'
 ##' * `state`: Starting state of the transition for transition intensities, and
-##     true state for misclassification probabilities or hidden Markov model parameters.
+##'    true state for misclassification probabilities or hidden Markov model parameters.
 ##'
 ##' * `tostate`: Ending state of the transition for transition intensities, and 
 ##'    observed state for misclassification probabilities 
@@ -42,7 +38,7 @@
 ##'   baseline intensity or analogous parameter value. 
 ##'   Note that the "baseline" parameters are the parameters with covariates
 ##'   set to their mean values in the data (stored in e.g. `x$qcmodel$covmeans`),
-##'   unless msm was called with `center=FALSE`.
+##'   unless `msm` was called with `center=FALSE`.
 ##'
 ##' * `estimate`, `std.error`, `conf.low`, `conf.high`:  Parameter estimate, 
 ##'   standard error, and lower and upper confidence limits. 
@@ -177,16 +173,17 @@ tidy_mats <- function(x, qkeep=NULL){
   resq
 }
 
-##' Tidy the output of a msm.est object, a list of matrices with estimates, L and U components
+##' Tidy the output of pmatrix.msm and similar functions
 ##' 
 ##' This is the method for the generic `tidy` function that is 
-##' used for tidying the output of `qmatrix.msm`, `pmatrix.msm`, `ematrix.msm`,
-##' `pnext.msm` and `ppass.msm`.  This should be called as 
-##' `tidy()`, not `tidy.msm.est()` or `tidy.qmatrix()` or anything else.
+##' used for tidying the output of \code{\link{qmatrix.msm}}, \code{\link{pmatrix.msm}}, 
+##' \code{\link{ematrix.msm}}, \code{\link{pnext.msm}} or \code{\link{ppass.msm}}.
+##'  This should be called as 
+##' \code{tidy()}, not \code{tidy.msm.est()} or \code{tidy.qmatrix()} or anything else.
 ##' 
 ##' @param x Output of \code{\link{qmatrix.msm}}, \code{\link{pmatrix.msm}}, 
 ##' \code{\link{ematrix.msm}}, \code{\link{pnext.msm}} or \code{\link{ppass.msm}},
-##'  which all return objects of class `"msm.est"`.
+##'  which all return objects of class \code{"msm.est"}.
 ##' 
 ##' @param ... Further arguments (unused).
 ##' 
@@ -296,8 +293,8 @@ tidy.hmodel <- function(x){
 
 #' Tidy the output of prevalence.msm
 #' 
-#' Note this should be called as `tidy()` not `tidy.msm.prevalence()`, as this is 
-#' a method for the generic `tidy()` function.
+#' Note this should be called as \code{tidy()} not \code{tidy.msm.prevalence()} or anything else, as this is 
+#' a method for the generic \code{tidy()} function.
 #' 
 #' @param x Output of \code{\link{prevalence.msm}}.
 #' 
@@ -374,12 +371,13 @@ tidy_msm_prevalence_ci <- function(x,...){
 }
 
 
-#' Tidy the output of totlos.msm and efpt.msm
+#' Tidy the output of totlos.msm and similar functions
 #' 
-#' Note this should be called as `tidy()` not `tidy.msm.totlos()`, as this is 
-#' a method for the generic `tidy()` function.
+#' Note this should be called as \code{tidy()} not \code{tidy.msm.totlos()} or anything else, as this is 
+#' a method for the generic \code{tidy()} function.
 #' 
-#' @param x Output of \code{\link{totlos.msm}} or \code{\link{efpt.msm}}.
+#' @param x Output of \code{\link{totlos.msm}}, \code{\link{envisits.msm}}
+#' or \code{\link{efpt.msm}}, which return objects of class \code{"msm.estbystate"}.
 #' 
 #' @return A tibble with one row per state, and columns for the estimate, and
 #'  confidence intervals if available.

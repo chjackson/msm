@@ -19,7 +19,7 @@ columns describing the parameter.
 \item \code{parclass}: Class of parameters: \code{intens} (transition intensities), \code{hr}
 (hazard ratios representing effects of covariates on intensities), and
 their transformed versions \code{logintens} (log intensities) and \code{loghr} (log
-hazard ratios)
+hazard ratios).
 
 For "misclassification" models fitted with the \code{ematrix} argument to \code{msm},
 other classes of parameters include \code{misc} (misclassification
@@ -35,18 +35,15 @@ location parameter of these distributions are included in class \code{hmmcov}.
 If initial state occupancy probabilities are estimated, these are included
 in class \code{initp} (or \code{initlogodds} for the log odds transforms of these),
 and any covariates on these probabilities are included in class \code{initpcov}.
-
-Note that the "baseline" intensities are the intensities with covariates
-set to their mean values in the data (stored in \code{x$qcmodel$covmeans}),
-unless \code{msm} was called with \code{center=FALSE}.
 \item \code{state}: Starting state of the transition for transition intensities, and
+true state for misclassification probabilities or hidden Markov model parameters.
 \item \code{tostate}: Ending state of the transition for transition intensities, and
 observed state for misclassification probabilities
 \item \code{term}: Name of the covariate for covariate effects, or "baseline" for the
 baseline intensity or analogous parameter value.
 Note that the "baseline" parameters are the parameters with covariates
 set to their mean values in the data (stored in e.g. \code{x$qcmodel$covmeans}),
-unless msm was called with \code{center=FALSE}.
+unless \code{msm} was called with \code{center=FALSE}.
 \item \code{estimate}, \code{std.error}, \code{conf.low}, \code{conf.high}:  Parameter estimate,
 standard error, and lower and upper confidence limits.
 \item \code{statistic}, \code{p.value}: For covariate effects, the Z-test statistic and p-value

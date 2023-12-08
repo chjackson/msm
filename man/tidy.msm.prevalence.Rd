@@ -17,6 +17,6 @@ and state, and columns for observed value, expected value and confidence
 limits for the expected value (if available).
 }
 \description{
-Note this should be called as `tidy()` not `tidy.msm.prevalence()`, as this is 
-a method for the generic `tidy()` function.
+Note this should be called as \code{tidy()} not \code{tidy.msm.prevalence()} or anything else, as this is 
+a method for the generic \code{tidy()} function.
 }
