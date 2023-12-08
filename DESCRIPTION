@@ -1,6 +1,6 @@
 Package: msm
-Version: 1.7.1
-Date: 2023-11-23
+Version: 1.8
+Date: 2023-12-08
 Title: Multi-State Markov and Hidden Markov Models in Continuous Time
 Authors@R: c(person("Christopher", "Jackson",
          email="chris.jackson@mrc-bsu.cam.ac.uk",
@@ -14,7 +14,11 @@ Description: Functions for fitting continuous-time Markov and hidden
     in time.
 License: GPL (>= 2)
 Imports:
-    survival,mvtnorm,expm
+    survival,
+    mvtnorm,
+    expm,
+    generics,
+    tibble
 Suggests:
     mstate,
     minqa,

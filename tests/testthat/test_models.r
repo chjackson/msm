@@ -287,8 +287,10 @@ test_that("qmatrix.msm for psor model, defaults",{
 })
 
 test_that("qmatrix.msm defaults to Qmatrices in object",{
-    expect_equal(psor.msm$Qmatrices$baseline, qmatrix.msm(psor.msm, covariates="mean", ci="none"))
-    expect_equal(psor.nocen.msm$Qmatrices$baseline, qmatrix.msm(psor.nocen.msm, covariates=0, ci="none"))
+    expect_equivalent(psor.msm$Qmatrices$baseline, 
+                      unclass(qmatrix.msm(psor.msm, covariates="mean", ci="none")))
+    expect_equivalent(psor.nocen.msm$Qmatrices$baseline, 
+                      unclass(qmatrix.msm(psor.nocen.msm, covariates=0, ci="none")))
 })
 
 test_that("qmatrix.msm with supplied covariates",{
@@ -324,7 +326,8 @@ test_that("qmatrix.msm bug for user-supplied covariates fixed in 1.1.3",{
 })
 
 test_that("qmatrix.msm: unspecified covariate values default to zero",{
-    expect_equal(psor.nocen.msm$Qmatrices$baseline, qmatrix.msm(psor.nocen.msm, covariates=list(ollwsdrt=0), ci="none")) # missing covs default to zero
+    expect_equivalent(psor.nocen.msm$Qmatrices$baseline, 
+                      unclass(qmatrix.msm(psor.nocen.msm, covariates=list(ollwsdrt=0), ci="none"))) # missing covs default to zero
     expect_equal(qmatrix.msm(psor.msm, covariates=list(hieffusn=0)),
                  qmatrix.msm(psor.msm, covariates=list(ollwsdrt=0, hieffusn=0)))
     expect_equal(qmatrix.msm(psor.nocen.msm, covariates=list(hieffusn=0)),
@@ -529,14 +532,19 @@ test_that("qmatrix subset function",{
 
 test_that("efpt.msm",{
     Q <- twoway4.q
-    expect_equal(efpt.msm(qmatrix=Q, tostate=3), c(Inf,Inf,0,Inf))
+    expect_equivalent(unclass(efpt.msm(qmatrix=Q, tostate=3)), 
+                      c(Inf,Inf,0,Inf))
     Q <- rbind(c(-0.25,0.25,0), c(0.166, -0.332, 0.166), c(0, 0.25, -0.25))
     expect_equal(efpt.msm(qmatrix=Q, tostate=3)[c(1,2)], solve(-Q[1:2,1:2], c(1,1)),tol=1e-06)
     Q <- twoway4.q; Q[2,4] <- Q[2,1] <- 0; diag(Q) <- 0; diag(Q) <- -rowSums(Q)
-    expect_equal(efpt.msm(qmatrix=Q, tostate=3), c(Inf, 6.02409638554217, 0, Inf), tol=1e-05)
-    expect_equal(efpt.msm(psor.msm, tostate=c(2)), c(10.4237243422138, 0, Inf, Inf), tol=1e-05)
-    expect_equal(efpt.msm(psor.msm, tostate=c(3)), c(16.5099104995137, 6.08618615729989, 0, Inf), tol=1e-05)
-    expect_equal(efpt.msm(psor.msm, tostate=c(2,3)), c(10.4237243422138, 0, 0, Inf), tol=1e-05)
+    expect_equivalent(unclass(efpt.msm(qmatrix=Q, tostate=3)), 
+                      c(Inf, 6.02409638554217, 0, Inf), tol=1e-05)
+    expect_equivalent(unclass(efpt.msm(psor.msm, tostate=c(2))),
+                      c(10.4237243422138, 0, Inf, Inf), tol=1e-05)
+    expect_equivalent(unclass(efpt.msm(psor.msm, tostate=c(3))), 
+                      c(16.5099104995137, 6.08618615729989, 0, Inf), tol=1e-05)
+    expect_equivalent(unclass(efpt.msm(psor.msm, tostate=c(2,3))),
+                      c(10.4237243422138, 0, 0, Inf), tol=1e-05)
 })
 
 test_that("ppass.msm",{
@@ -808,3 +816,4 @@ test_that("single-column matrix in covariates",{
                   covariates = ~ollwsdrt, fixedpars=TRUE)
   expect_equal(psor.msm$minus2loglik, psor2.msm$minus2loglik)
 })  
+

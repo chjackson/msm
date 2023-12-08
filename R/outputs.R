@@ -169,7 +169,13 @@ qmatrix.msm <- function(x, covariates="mean", sojourn=FALSE, ci=c("delta","norma
     else semat <- lmat <- umat <- sojse <- sojl <- soju <- NULL
 
     dimnames(mat) <-  dimnames(x$qmodel$qmatrix)
-    if (ci=="none") res <- if (sojourn) soj else mat
+    if (ci=="none"){
+      if (sojourn) res <- soj
+      else {
+        res <- mat
+        class(res) <- "msm.est"
+      }
+    }
     else {
         if (sojourn)
             res <- list(estimates=mat, SE=semat, L=lmat, U=umat, fixed=fixed, sojourn=soj, sojournSE=sojse, sojournL=sojl, sojournU=soju)
@@ -315,8 +321,8 @@ ematrix.msm <- function(x, covariates="mean", ci=c("delta","normal","bootstrap",
     if (ci=="none") res <- mat
     else {
         res <- list(estimates=mat, SE=semat, L=lmat, U=umat, fixed=fixed)
-        class(res) <- "msm.est"
     }
+    class(res) <- "msm.est"
     res
 }
 
@@ -685,7 +691,7 @@ printold.msm <- function(x, ...)
 
 ### Convert three-transition-matrices (estimate,lower,upper) format to three-columns format
 
-mattotrans <- function(x, matrix, lower, upper, fixed, keep.diag=FALSE, intmisc="intens"){
+mattotrans <- function(x, matrix, lower=NULL, upper=NULL, fixed=NULL, keep.diag=FALSE, intmisc="intens"){
     imat <- if (intmisc=="intens") x$qmodel$imatrix else x$emodel$imatrix
     if (keep.diag) diag(imat) <- as.numeric(rowSums(imat) > 0)
     keep <- which(t(imat)==1, arr.ind=TRUE)
@@ -698,7 +704,7 @@ mattotrans <- function(x, matrix, lower, upper, fixed, keep.diag=FALSE, intmisc=
     res[,1] <- matrix[keep]
     if (!is.null(lower)) res[,2] <- lower[keep]
     if (!is.null(upper)) res[,3] <- upper[keep]
-    res[,4] <- fixed[keep]
+    if (!is.null(fixed)) res[,4] <- fixed[keep]
     res
 }
 
@@ -742,17 +748,23 @@ msm.form.qoutput <- function(x, covariates="mean", cl=0.95, digits=4, ...){
     y <- mattotrans(x, qbase$estimates, qbase$L, qbase$U, qbase$fixed, keep.diag=TRUE)
     ret <- data.frame(base=y)
     fres <- matrix("", nrow=nrow(y), ncol=x$qcmodel$ncovs+1)
-    colnames(fres) <- c("Baseline", x$qcmodel$covlabels)
+    covlabels <-  make.unique(c("Baseline", x$qcmodel$covlabels))[-(1)]
+    colnames(fres) <- c("Baseline", covlabels)
     rownames(fres) <- rownames(y)
     fres[,1] <- format.ci(y[,1],y[,2],y[,3],y[,4],digits=digits,...)
     im <- t(x$qmodel$imatrix); diag(im) <- -colSums(im); nd <- which(im[im!=0]==1)
     for (i in seq(length.out=x$qcmodel$ncovs)){
-        nm <- x$qcmodel$covlabels[[i]]
-        hrs <- mattotrans(x, x$Qmatrices[[nm]], x$QmatricesL[[nm]], x$QmatricesU[[nm]], x$QmatricesFixed[[nm]], keep.diag=FALSE)
-        hrs[,1:3] <- exp(hrs[,1:3])
-        ret[nm] <- matrix(ncol=3, nrow=nrow(ret), dimnames=list(NULL,colnames(hrs)[1:3]))
-        ret[nd,nm] <- hrs[,1:3,drop=FALSE]
-        fres[nd,1+i] <- format.ci(hrs[,1], hrs[,2], hrs[,3], hrs[,4], digits=digits, ...)
+      nm <- x$qcmodel$covlabels[[i]]
+      nmout <- covlabels[[i]]
+      ## FIXME if Baseline is a cov, then Qmatrices are unaffected
+      ## but output should be changed. ret sohuld be named by covlabels
+      
+      hrs <- mattotrans(x, x$Qmatrices[[nm]], x$QmatricesL[[nm]], x$QmatricesU[[nm]],
+                          x$QmatricesFixed[[nm]], keep.diag=FALSE)
+      hrs[,1:3] <- exp(hrs[,1:3])
+      ret[nmout] <- matrix(ncol=3, nrow=nrow(ret), dimnames=list(NULL,colnames(hrs)[1:3]))
+      ret[nd,nmout] <- hrs[,1:3,drop=FALSE]
+      fres[nd,1+i] <- format.ci(hrs[,1], hrs[,2], hrs[,3], hrs[,4], digits=digits, ...)
     }
     attr(ret, "formatted") <- fres # as strings with formatted CIs instead of numbers
     ret
@@ -1298,8 +1310,13 @@ print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
     Narg <- nargs() - (!missing(drop)) # number of args including x, excluding drop
     if ((missing(i) && missing(j)))
         res <- x
-    else if (!is.list(x))
-        res <- unclass(x)[i,j]
+    else if (!is.list(x)){ 
+      res <- unclass(x)
+      if (missing(j) && (Narg==2))
+        res <- res[i]
+      else
+        res <- res[i,j]
+    }
     else {
         if (missing(j) && (Narg==2))
             stop("Two dimensions must be supplied, found only one")
@@ -1319,6 +1336,7 @@ print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
 format.ci <- function(x, l, u, noci=NULL, digits=NULL, ...)
 {
     if (is.null(noci)) noci <- rep(FALSE, length(x))
+    noci[is.na(noci)] <- FALSE
     if (is.null(digits)) digits <- 4
     ## note format() aligns nicely on point, unlike formatC
     est <- format(x, digits=digits, ...)
@@ -1985,7 +2003,7 @@ sojourn.msm <- function(x, covariates = "mean", ci=c("delta","normal","bootstrap
 pnext.msm <- function(x, covariates="mean", ci=c("normal","bootstrap","delta","none"), cl=0.95, B=1000, cores=NULL)
 {
     ci <- match.arg(ci)
-    Q <- qmatrix.msm(x, covariates, ci="none")
+    Q <- unclass(qmatrix.msm(x, covariates, ci="none"))
     pnext <- - Q / diag(Q)
     pnext[x$qmodel$imatrix==0] <- 0
     p.ci <- array(0, dim=c(dim(pnext), 2))
@@ -2387,7 +2405,19 @@ totlos.msm <- function(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean"
                    bootstrap = totlos.ci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates, piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, discount=discount, env=env, cl=cl, B=B, cores=cores, ...),
                    normal = totlos.normci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates, piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, discount=discount, env=env, cl=cl, B=B, ...),
                    none = NULL)
-    if (ci=="none") res[end] else rbind(res, t.ci)[,end]
+    res <- if (ci=="none") res[end] else rbind(res, t.ci)[,end]
+    class(res) <- "msm.estbystate"
+    res
+}
+
+#' @export
+print.msm.estbystate <- function(x, ...){
+  print(unclass(x))
+}
+
+#' @export
+as.data.frame.msm.estbystate <- function(x,...){
+  as.data.frame(unclass(x))
 }
 
 ## Expected number of visits
@@ -2900,12 +2930,17 @@ prevalence.msm <- function(x,
                           piecewise.times, piecewise.covariates, obs$risk, subset, ci, cl, B, cores)
     res <- list(observed=obs$obstab, expected=expec[[1]], obsperc=obs$obsperc, expperc=expec[[2]])
     names(res) <- c("Observed", "Expected", "Observed percentages", "Expected percentages")
+    class(res) <- "msm.prevalence"
     if (plot) plot.prevalence.msm(x, mintime=min(times), maxtime=max(times), timezero=timezero, initstates=initstates,
                                   interp=interp, censtime=censtime, covariates=covariates, misccovariates=misccovariates,
                                   piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, ...)
     res
 }
 
+#' @export
+print.msm.prevalence <- function(x,...){
+  print(unclass(x))
+}
 
 
 #' Plot of observed and expected prevalences
@@ -2971,6 +3006,7 @@ prevalence.msm <- function(x,
 #' 805--821.
 #' @keywords models
 #' @export plot.prevalence.msm
+#' @export
 plot.prevalence.msm <- function(x, mintime=NULL, maxtime=NULL, timezero=NULL, initstates=NULL,
                                 interp=c("start","midpoint"), censtime=Inf, subset=NULL,
                                 covariates="population", misccovariates="mean",
@@ -3235,16 +3271,17 @@ hazard.msm <- function(x, hazard.scale = 1, cl = 0.95)
     tolabs <- rep(colnames(keep), nst) [keepvec]
     if (x$qcmodel$ncovs > 0) {
         haz.list <- list()
+        covlabels <- attr(x$Qmatrices, "covlabels") # rewritten as baseline.1 if any covariates called "baseline"
         if (x$foundse) {
             for (i in 1:x$qcmodel$ncovs) {
-                cov <- x$qcmodel$covlabels[i]
+                cov <- covlabels[i]
                 haz.rat <- t(exp(hazard.scale[i]*x$Qmatrices[[cov]]))[keepvec]
                 LCL <- t(exp(hazard.scale[i]*(x$Qmatrices[[cov]] - qnorm(1 - 0.5*(1 - cl))*x$QmatricesSE[[cov]]) ))[keepvec]
                 UCL <- t(exp(hazard.scale[i]*(x$Qmatrices[[cov]] + qnorm(1 - 0.5*(1 - cl))*x$QmatricesSE[[cov]]) ))[keepvec]
                 haz.tab <- cbind(haz.rat, LCL, UCL)
                 dimnames(haz.tab) <- list(paste(fromlabs, "-", tolabs),
                                           c("HR", "L", "U"))
-                haz.list[[cov]] <- haz.tab
+                haz.list[[x$qcmodel$covlabels[i]]] <- haz.tab
             }
         }
         else {
@@ -3252,7 +3289,7 @@ hazard.msm <- function(x, hazard.scale = 1, cl = 0.95)
                 cov <- x$qcmodel$covlabels[i]
                 haz.tab <- as.matrix(t(exp(hazard.scale[i]*x$Qmatrices[[cov]]))[keepvec])
                 dimnames(haz.tab) <- list(paste(fromlabs, "-", tolabs), "HR")
-                haz.list[[cov]] <- haz.tab
+                haz.list[[x$qcmodel$covlabels[i]]] <- haz.tab
             }
         }
     }
@@ -3667,7 +3704,9 @@ efpt.msm <- function(x=NULL, qmatrix=NULL, tostate, start="all", covariates="mea
                    bootstrap = efpt.ci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B, cores=cores),
                    normal = efpt.normci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B),
                    none = NULL)
-    if (ci=="none") est else rbind(est, e.ci)
+    res <- if (ci=="none") est else rbind(est, e.ci)
+    class(res) <- "msm.estbystate"
+    res
 }
 
 
@@ -3813,7 +3852,7 @@ ppass.msm <- function(x=NULL, qmatrix=NULL, tot, start="all", covariates="mean",
                    none = NULL)
     if (ci != "none") {
         res <- list(estimates=res, L=p.ci$L, U=p.ci$U)
-        class(res) <- "msm.est"
     }
+    class(res) <- "msm.est"
     res
 }

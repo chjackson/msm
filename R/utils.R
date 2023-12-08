@@ -4,6 +4,7 @@
 ## Tests for a valid continuous-time Markov model transition intensity matrix
 
 is.qmatrix <- function(Q) {
+    Q <- unclass(Q)
     Q2 <- Q; diag(Q2) <- 0
     isTRUE(all.equal(-diag(Q), rowSums(Q2))) && isTRUE(all(diag(Q)<=0)) && isTRUE(all(Q2>=0))
 }

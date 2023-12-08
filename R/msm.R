@@ -2352,8 +2352,9 @@ msm.form.output <- function(x, whichp)
     Matrices <- MatricesSE <- MatricesL <- MatricesU <- MatricesFixed <- list()
     basename <- if (whichp=="intens") "logbaseline" else "logitbaseline"
     fixedpars.logical <- p$constr %in% p$constr[p$fixedpars]
+    covlabels <-  make.unique(c("baseline", "logbaseline", cmodel$covlabels))[-(1:2)]
     for (i in 0:cmodel$ncovs) {
-        matrixname <- if (i==0) basename else cmodel$covlabels[i] # name of the current output matrix.
+        matrixname <- if (i==0) basename else covlabels[i] # name of the current output matrix.
         mat <- t(model$imatrix) # state matrices filled by row, while R fills them by column.
         if (whichp=="intens")
             parinds <- if (i==0) which(p$plabs=="qbase") else which(p$plabs=="qcov")[(i-1)*model$npars + 1:model$npars]
@@ -2395,6 +2396,8 @@ msm.form.output <- function(x, whichp)
         MatricesU[[matrixname]] <- umat
         MatricesFixed[[matrixname]] <- fixed
     }
+    attr(Matrices, "covlabels") <- covlabels
+    attr(Matrices, "covlabels.orig") <- cmodel$covlabels
     nam <- if(whichp=="intens") "Qmatrices" else "Ematrices"
     x[[nam]] <- Matrices; x[[paste0(nam, "SE")]] <- MatricesSE; x[[paste0(nam, "L")]] <- MatricesL
     x[[paste0(nam, "U")]] <- MatricesU; x[[paste0(nam, "Fixed")]] <- MatricesFixed

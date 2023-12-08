@@ -1,5 +1,20 @@
 User-visible changes only.  For internal changes, see Github commits.
 
+# Version 1.8 (in development)
+
+* Tidying methods added for `msm` objects and most of msm's output functions (`prevalence.msm`, `qmatrix.msm` and related functions, and `totlos.msm` and related functions).  These methods convert the output to a tidy data frame (tibble), in the manner of the [broom](https://broom.tidymodels.org/) package.
+
+    To use these methods, just call `tidy(x)`, where `x` is the result of calling, e.g. `msm`, `prevalence.msm`, or `qmatrix.msm`.
+	
+* Hence the msm package now imports the `generics` and `tibble` packages.
+
+* Objects returned by `totlos.msm`, `efpt.msm` and `envisits.msm` now have class `"msm.estbystate"`
+  
+* Objects returned by `prevalence.msm` now have class `"msm.prevalence"`
+
+* Fix of bugs for models containing a covariate named `"baseline"` or `"Baseline"`.
+
+
 # Version 1.7.1  (2023-11-23)
 
 * Fix of a bug in the Viterbi algorithm for the calculation of the fitted state at the initial time for each subject.
