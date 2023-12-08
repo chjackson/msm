@@ -172,89 +172,94 @@ totlos.msm <- function(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean"
                        cores=NULL,
                        ...)
 {
-    if (!inherits(x, "msm")) stop("expected x to be a msm model")
-    nst <- x$qmodel$nstates
-    if (!is.numeric(start) ||
-        ((length(start)==1) && (! start %in% 1 : nst))) stop("start should be a state in 1, ..., ", nst, " or a vector of length ",nst)
-    else if (length(start) == 1) {p0 <- rep(0, nst); p0[start] <- 1; start <- p0}
-    else if (length(start) > 1) {
-        if (length(start) != nst)
-            stop("start should be a state in 1, ..., ", nst, " or a vector of length ",nst)
-    }
-    if (is.null(end)) end <- 1 : nst
-    if (! all(end %in% 1 : nst)) stop("end should be a set of states in 1, ..., ", nst)
-    if (!is.numeric(fromt) || !is.numeric(tot) || length(fromt) != 1 || length(tot) != 1 || fromt < 0 || tot < 0)
-        stop("fromt and tot must be single non-negative numbers")
-    if (fromt > tot) stop("tot must be greater than fromt")
-    if (length(absorbing.msm(x)) == 0)
-        if (tot==Inf) stop("Must specify a finite end time for a model with no absorbing state")
+  if (!inherits(x, "msm")) stop("expected x to be a msm model")
+  nst <- x$qmodel$nstates
+  if (!is.numeric(start) ||
+      ((length(start)==1) && (! start %in% 1 : nst)))
+    stop("start should be a state in 1, ..., ", nst, " or a vector of length ",nst)
+  else if (length(start) == 1) {p0 <- rep(0, nst); p0[start] <- 1; start <- p0}
+  else if (length(start) > 1) {
+    if (length(start) != nst)
+      stop("start should be a state in 1, ..., ", nst, " or a vector of length ",nst)
+  }
+  if (is.null(end)) end <- 1 : nst
+  if (! all(end %in% 1 : nst)) stop("end should be a set of states in 1, ..., ", nst)
+  if (!is.numeric(fromt) || !is.numeric(tot) || length(fromt) != 1 || length(tot) != 1 || fromt < 0 || tot < 0)
+    stop("fromt and tot must be single non-negative numbers")
+  if (fromt > tot) stop("tot must be greater than fromt")
+  if (length(absorbing.msm(x)) == 0)
+    if (tot==Inf) stop("Must specify a finite end time for a model with no absorbing state")
 
-    if (!is.null(x$pci)){
-        piecewise.times <- x$pci
-        piecewise.covariates <- msm.fill.pci.covs(x, covariates)
-    }
-    ncuts <- length(piecewise.times)
-    npieces <- length(piecewise.covariates)
-    if (!is.null(piecewise.times) && (!is.numeric(piecewise.times) || is.unsorted(piecewise.times)))
-        stop("piecewise.times should be a vector of numbers in increasing order")
-    if (!is.null(piecewise.covariates) && (npieces != ncuts + 1))
-        stop("Number of piecewise.covariate lists must be one greater than the number of cut points")
-    if (is.null(piecewise.covariates)) {
-        ## define homogeneous model as piecewise with one piece
-        npieces <- 1
-        covs <- list(covariates)
-        ptimes <- c(fromt, tot)
-    } else {
-        ## ignore all cut points outside [fromt,tot]
-        keep <- which((piecewise.times > fromt) & (piecewise.times < tot))
-        ## cov value between fromt and min(first cut, tot)
-        cov1 <- piecewise.covariates[findInterval(fromt, piecewise.times) + 1]
-        covs <- c(cov1, piecewise.covariates[keep+1])
-        npieces <- length(covs)
-        ptimes <- c(fromt, piecewise.times[keep], tot)
-    }
+  if (!is.null(x$pci)){
+    piecewise.times <- x$pci
+    piecewise.covariates <- msm.fill.pci.covs(x, covariates)
+  }
+  ncuts <- length(piecewise.times)
+  npieces <- length(piecewise.covariates)
+  if (!is.null(piecewise.times) && (!is.numeric(piecewise.times) || is.unsorted(piecewise.times)))
+    stop("piecewise.times should be a vector of numbers in increasing order")
+  if (!is.null(piecewise.covariates) && (npieces != ncuts + 1))
+    stop("Number of piecewise.covariate lists must be one greater than the number of cut points")
+  if (is.null(piecewise.covariates)) {
+    ## define homogeneous model as piecewise with one piece
+    npieces <- 1
+    covs <- list(covariates)
+    ptimes <- c(fromt, tot)
+  } else {
+    ## ignore all cut points outside [fromt,tot]
+    keep <- which((piecewise.times > fromt) & (piecewise.times < tot))
+    ## cov value between fromt and min(first cut, tot)
+    cov1 <- piecewise.covariates[findInterval(fromt, piecewise.times) + 1]
+    covs <- c(cov1, piecewise.covariates[keep+1])
+    npieces <- length(covs)
+    ptimes <- c(fromt, piecewise.times[keep], tot)
+  }
 
-    tmat <- envmat <- matrix(nrow=npieces, ncol=nst)
-    if (tot==Inf) {
-        tmat[,absorbing.msm(x)] <- Inf # set by hand or else integrate() will fail
-        envmat[,absorbing.msm(x)] <- 1
-        rem <- setdiff(seq_len(nst), absorbing.msm(x))
-    }
-    else rem <- seq_len(nst)
-    for (i in 1:npieces) {
-        from.t <- ptimes[i]
-        to.t <- ptimes[i+1]
-        Q <- qmatrix.msm(x, covariates=covs[[i]], ci="none")
-        if (num.integ || to.t==Inf){
-            for (j in rem){
-                f <- function(time) {
-                    y <- numeric(length(time))
-                    for (k in seq_along(y))
-                        y[k] <- (start %*% pmatrix.msm(x, time[k], t1=0, covariates=covs[[i]], ci="none")) [j]
-                    y
-                }
-                tmat[i,j] <- integrate(f, from.t, to.t, ...)$value
-            }
-        } else {
-            QQ <- rbind(c(0, start),
-                        cbind(rep(0,nst), Q - discount*diag(nst)))
-            tmat[i,] <- as.vector(c(1, rep(0, nst)) %*%
-                                  (MatrixExp(to.t*QQ) - MatrixExp(from.t*QQ)) %*%
-                                  rbind(rep(0, nst), diag(nst)))
+  tmat <- envmat <- matrix(nrow=npieces, ncol=nst)
+  if (tot==Inf) {
+    tmat[,absorbing.msm(x)] <- Inf # set by hand or else integrate() will fail
+    envmat[,absorbing.msm(x)] <- 1
+    rem <- setdiff(seq_len(nst), absorbing.msm(x))
+  }
+  else rem <- seq_len(nst)
+  for (i in 1:npieces) {
+    from.t <- ptimes[i]
+    to.t <- ptimes[i+1]
+    Q <- qmatrix.msm(x, covariates=covs[[i]], ci="none")
+    if (num.integ || to.t==Inf){
+      for (j in rem){
+        f <- function(time) {
+          y <- numeric(length(time))
+          for (k in seq_along(y))
+            y[k] <- (start %*% pmatrix.msm(x, time[k], t1=0, covariates=covs[[i]], ci="none")) [j]
+          y
         }
-        Q0 <- Q; diag(Q0) <- 0
-        envmat[i,rem] <- tmat[i,rem] %*% Q0[rem,rem]
+        tmat[i,j] <- integrate(f, from.t, to.t, ...)$value
+      }
+    } else {
+      QQ <- rbind(c(0, start),
+                  cbind(rep(0,nst), Q - discount*diag(nst)))
+      tmat[i,] <- as.vector(c(1, rep(0, nst)) %*%
+                            (MatrixExp(to.t*QQ) - MatrixExp(from.t*QQ)) %*%
+                            rbind(rep(0, nst), diag(nst)))
     }
-    res <- if (env) colSums(envmat) else colSums(tmat)
-    names(res) <- rownames(x$qmodel$qmatrix)
-    ci <- match.arg(ci)
-    t.ci <- switch(ci,
-                   bootstrap = totlos.ci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates, piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, discount=discount, env=env, cl=cl, B=B, cores=cores, ...),
-                   normal = totlos.normci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates, piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, discount=discount, env=env, cl=cl, B=B, ...),
-                   none = NULL)
-    res <- if (ci=="none") res[end] else rbind(res, t.ci)[,end]
-    class(res) <- "msm.estbystate"
-    res
+    Q0 <- Q; diag(Q0) <- 0
+    envmat[i,rem] <- tmat[i,rem] %*% Q0[rem,rem]
+  }
+  res <- if (env) colSums(envmat) else colSums(tmat)
+  names(res) <- rownames(x$qmodel$qmatrix)
+  ci <- match.arg(ci)
+  t.ci <- switch(ci,
+                 bootstrap = totlos.ci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates,
+                                           piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates,
+                                           discount=discount, env=env, cl=cl, B=B, cores=cores, ...),
+                 normal = totlos.normci.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates,
+                                            piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates,
+                                            discount=discount, env=env, cl=cl, B=B, ...),
+                 none = NULL)
+  res <- if (ci=="none") res[end] else rbind(res, t.ci)[,end]
+  class(res) <- "msm.estbystate"
+  res
 }
 
 #' @export
@@ -280,5 +285,8 @@ envisits.msm <- function(x=NULL, start=1, end=NULL, fromt=0, tot=Inf, covariates
                          cores=NULL,
                          ...)
 {
-    totlos.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates, piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, num.integ=num.integ, discount=discount, env=TRUE, ci=ci, cl=cl, B=B, cores=cores, ...)
+  totlos.msm(x=x, start=start, end=end, fromt=fromt, tot=tot, covariates=covariates,
+             piecewise.times=piecewise.times,
+             piecewise.covariates=piecewise.covariates, num.integ=num.integ,
+             discount=discount, env=TRUE, ci=ci, cl=cl, B=B, cores=cores, ...)
 }

@@ -114,57 +114,57 @@
 efpt.msm <- function(x=NULL, qmatrix=NULL, tostate, start="all", covariates="mean",
                      ci=c("none","normal","bootstrap"), cl = 0.95, B = 1000, cores=NULL, ...)
 {
-    ci <- match.arg(ci)
-    if (!is.null(x)) {
-        if (!inherits(x, "msm")) stop("expected x to be a msm model")
-        qmatrix <- qmatrix.msm(x, covariates=covariates, ci="none")
-    }
-    else if (!is.null(qmatrix)) {
-        if (!is.matrix(qmatrix) || (nrow(qmatrix) != ncol(qmatrix)))
-            stop("expected qmatrix to be a square matrix")
-        if (ci != "none") {warning("No fitted model supplied: not calculating confidence intervals."); ci <- "none"}
-    }
-    if (is.character(tostate)) {
-        if (!tostate %in% rownames(qmatrix)) stop(sprintf("state \"%s\" unknown", tostate))
-        tostate <- match(tostate, rownames(qmatrix))
-    }
-    est <- rep(NA, nrow(qmatrix))
-    ## EFPT is zero if we're already in tostate
-    est[tostate] <- 0
-    abstate <- absorbing.msm(qmatrix=qmatrix)
-    ## EFPT is infinite for other absorbing states
-    est[setdiff(abstate,tostate)] <- Inf
-    fromstate <- setdiff(1:nrow(qmatrix), union(abstate,tostate))
-    ## EFPT is infinite if any chance of absorbing elsewhere before
-    ## hitting tostate.  To calculate this, form Q matrix with tostate
-    ## made absorbing, and look at P matrix in unit time.
-    Qred <- qmatrix; Qred[tostate,] <- 0
-    Pmat <- MatrixExp(Qred, ...)
-    Pmat[Pmat < 1e-16] <- 0
-    p.abs <- rowSums(Pmat[fromstate,setdiff(abstate,tostate),drop=FALSE])
-    est[fromstate][p.abs>0] <- Inf
+  ci <- match.arg(ci)
+  if (!is.null(x)) {
+    if (!inherits(x, "msm")) stop("expected x to be a msm model")
+    qmatrix <- qmatrix.msm(x, covariates=covariates, ci="none")
+  }
+  else if (!is.null(qmatrix)) {
+    if (!is.matrix(qmatrix) || (nrow(qmatrix) != ncol(qmatrix)))
+      stop("expected qmatrix to be a square matrix")
+    if (ci != "none") {warning("No fitted model supplied: not calculating confidence intervals."); ci <- "none"}
+  }
+  if (is.character(tostate)) {
+    if (!tostate %in% rownames(qmatrix)) stop(sprintf("state \"%s\" unknown", tostate))
+    tostate <- match(tostate, rownames(qmatrix))
+  }
+  est <- rep(NA, nrow(qmatrix))
+  ## EFPT is zero if we're already in tostate
+  est[tostate] <- 0
+  abstate <- absorbing.msm(qmatrix=qmatrix)
+  ## EFPT is infinite for other absorbing states
+  est[setdiff(abstate,tostate)] <- Inf
+  fromstate <- setdiff(1:nrow(qmatrix), union(abstate,tostate))
+  ## EFPT is infinite if any chance of absorbing elsewhere before
+  ## hitting tostate.  To calculate this, form Q matrix with tostate
+  ## made absorbing, and look at P matrix in unit time.
+  Qred <- qmatrix; Qred[tostate,] <- 0
+  Pmat <- MatrixExp(Qred, ...)
+  Pmat[Pmat < 1e-16] <- 0
+  p.abs <- rowSums(Pmat[fromstate,setdiff(abstate,tostate),drop=FALSE])
+  est[fromstate][p.abs>0] <- Inf
 
-    ## Any states left from which EFPT to tostate is nonzero and finite.
-    ## Use standard linear equation solution
-    ## see, e.g. equation (3) of Harrison and Knottenbelt (2001)
-    if (any(is.na(est))){
-        fromstate <- which(is.na(est))
-        Q <- as.matrix(qmatrix[fromstate, fromstate])
-        est[fromstate] <- solve(-Q, rep(1,nrow(Q)))
-    }
-    if (!is.character(start)) {
-        if (!is.numeric(start) || (length(start)!=nrow(qmatrix)))
-            stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
-        start <- start / sum(start)
-        est <- est %*% start
-    }
-    else if (any(start!="all"))
-        stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
-    e.ci <- switch(ci,
-                   bootstrap = efpt.ci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B, cores=cores),
-                   normal = efpt.normci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B),
-                   none = NULL)
-    res <- if (ci=="none") est else rbind(est, e.ci)
-    class(res) <- "msm.estbystate"
-    res
+  ## Any states left from which EFPT to tostate is nonzero and finite.
+  ## Use standard linear equation solution
+  ## see, e.g. equation (3) of Harrison and Knottenbelt (2001)
+  if (any(is.na(est))){
+    fromstate <- which(is.na(est))
+    Q <- as.matrix(qmatrix[fromstate, fromstate])
+    est[fromstate] <- solve(-Q, rep(1,nrow(Q)))
+  }
+  if (!is.character(start)) {
+    if (!is.numeric(start) || (length(start)!=nrow(qmatrix)))
+      stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
+    start <- start / sum(start)
+    est <- est %*% start
+  }
+  else if (any(start!="all"))
+    stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
+  e.ci <- switch(ci,
+                 bootstrap = efpt.ci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B, cores=cores),
+                 normal = efpt.normci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B),
+                 none = NULL)
+  res <- if (ci=="none") est else rbind(est, e.ci)
+  class(res) <- "msm.estbystate"
+  res
 }

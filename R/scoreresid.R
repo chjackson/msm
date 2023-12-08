@@ -28,16 +28,16 @@
 #' @keywords models
 #' @export scoreresid.msm
 scoreresid.msm <- function(x, plot=FALSE){
-    if (!inherits(x, "msm")) stop("expected x to be a msm model")
-    if (!deriv_supported(x$data, x$hmodel, x$cmodel))
-        stop("Score residuals not available, since analytic derivatives not implemented for this model")
-    derivs <- Ccall.msm(x$paramdata$opt$par, do.what="deriv.subj", expand.data(x), x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata)
-    cov <- x$paramdata$covmat[x$paramdata$optpars,x$paramdata$optpars]
-    sres <- colSums(t(derivs) * cov %*% t(derivs))
-    names(sres) <- unique(x$data$mf$"(subject)")
-    if (plot) {
-        plot(sres, type="n")
-        text(seq_along(sres), sres, names(sres))
-    }
-    sres
+  if (!inherits(x, "msm")) stop("expected x to be a msm model")
+  if (!deriv_supported(x$data, x$hmodel, x$cmodel))
+    stop("Score residuals not available, since analytic derivatives not implemented for this model")
+  derivs <- Ccall.msm(x$paramdata$opt$par, do.what="deriv.subj", expand.data(x), x$qmodel, x$qcmodel, x$cmodel, x$hmodel, x$paramdata)
+  cov <- x$paramdata$covmat[x$paramdata$optpars,x$paramdata$optpars]
+  sres <- colSums(t(derivs) * cov %*% t(derivs))
+  names(sres) <- unique(x$data$mf$"(subject)")
+  if (plot) {
+    plot(sres, type="n")
+    text(seq_along(sres), sres, names(sres))
+  }
+  sres
 }
