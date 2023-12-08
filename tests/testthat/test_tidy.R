@@ -46,6 +46,14 @@ test_that("tidy.msm with misclassification models",{
   x <- tidy(misccov.msm)
   expect_equal(x$conf.high[x$parclass=="misc" & x$state==2 & x$tostate==1],
                ematrix.msm(misccov.msm)[["U"]][2,1])
+  
+  x <- ematrix.msm(misccov.msm)
+  tx <- tidy(x)
+  expect_equal(tx$conf.high[tx$state==3 & tx$tostate==2], x[["U"]][3,2])
+  
+  x <- ematrix.msm(misccov.msm, ci="none")
+  tx <- tidy(x)
+  expect_equal(tx$estimate[tx$state==3 & tx$tostate==2], x[3,2])
 })
 
 psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q,  
@@ -68,14 +76,6 @@ test_that("Tidying extractor function output",{
   x <- pmatrix.msm(psor.msm, ci="normal", B=10)
   tx <- tidy(x)
   expect_equal(tx$conf.low[tx$state==3 & tx$tostate==4], x[["L"]][3,4])
-  
-  x <- ematrix.msm(misccov.msm)
-  tx <- tidy(x)
-  expect_equal(tx$conf.high[tx$state==3 & tx$tostate==2], x[["U"]][3,2])
-  
-  x <- ematrix.msm(misccov.msm, ci="none")
-  tx <- tidy(x)
-  expect_equal(tx$estimate[tx$state==3 & tx$tostate==2], x[3,2])
   
   x <- pnext.msm(psor.msm)
   tx <- tidy(x)
