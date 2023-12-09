@@ -49,8 +49,9 @@
 <ul><li>
 <p>Tidying methods added for <code>msm</code> objects and most of msm’s output functions (<code>prevalence.msm</code>, <code>qmatrix.msm</code> and related functions, and <code>totlos.msm</code> and related functions). These methods convert the output to a tidy data frame (tibble), in the manner of the <a href="https://broom.tidymodels.org/" class="external-link">broom</a> package.</p>
 <p>To use these methods, just call <code>tidy(x)</code>, where <code>x</code> is the result of calling, e.g. <code>msm</code>, <code>prevalence.msm</code>, or <code>qmatrix.msm</code>.</p>
+<p>Hence the msm package now imports the <code>generics</code> and <code>tibble</code> packages.</p>
 </li>
-<li><p>Hence the msm package now imports the <code>generics</code> and <code>tibble</code> packages.</p></li>
+<li><p><code>ppass.msm</code> now supports <code>pci</code> models and other time-inhomogeneous models. Thanks to Jon Fintzi for working on this.</p></li>
 <li><p>Objects returned by <code>totlos.msm</code>, <code>efpt.msm</code> and <code>envisits.msm</code> now have class <code>"msm.estbystate"</code></p></li>
 <li><p>Objects returned by <code>prevalence.msm</code> now have class <code>"msm.prevalence"</code></p></li>
 <li><p>Fix of bugs for models containing a covariate named <code>"baseline"</code> or <code>"Baseline"</code>.</p></li>
