@@ -35,6 +35,12 @@
 ### Models with expected information matrix available
 .msm.HMODELS.INFO <- c("categorical","identity")
 
+.msm.HMODELFNS <- data.frame(
+  label = .msm.HMODELS,
+  hmmname = c("hmmCat", "hmmIdent", "hmmUnif", "hmmNorm", "hmmLNorm", "hmmExp", "hmmGamma", "hmmWeibull", "hmmPois", "hmmBinom", "hmmBetaBinom", "hmmTNorm", "hmmMETNorm", "hmmMEUnif", "hmmNBinom", "hmmBeta", "hmmT"),
+  stringsAsFactors = FALSE
+)
+
 ### Parameter in each distribution that can have covariates on it
 .msm.LOCPARS <- c(categorical="p", identity=NA, uniform=NA, normal="mean", lognormal="meanlog",
                   exponential="rate", gamma="rate", weibull="scale",

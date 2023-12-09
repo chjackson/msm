@@ -119,7 +119,7 @@ covariates.}
 \item{df}{Degrees of freedom of the Student t distribution.}
 }
 \value{
-Each function returns an object of class \code{hmodel}, which is a
+Each function returns an object of class \code{hmmdist}, which is a
 list containing information about the model.  The only component which may
 be useful to end users is \code{r}, a function of one argument \code{n}
 which returns a random sample of size \code{n} from the given distribution.

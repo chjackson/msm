@@ -84,6 +84,7 @@ reference:
   - model.frame.msm
   - recreate.olddata
   - transient.msm
+  - hmodel2list
 - title: Package internals (advanced)
 - contents:
   - msm.object

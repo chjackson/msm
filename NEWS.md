@@ -8,7 +8,9 @@ User-visible changes only.  For internal changes, see Github commits.
 	
     Hence the msm package now imports the `generics` and `tibble` packages.
 	
-* `ppass.msm` now supports `pci` models and other time-inhomogeneous models.  Thanks to Jon Fintzi for working on this.
+* `ppass.msm` now supports `pci` models and other time-inhomogeneous models. Thanks to Jon Fintzi for working on this.
+
+* New function `hmodel2list` to extract HMM constructor function calls from fitted HMMs. Thanks to Will Hulme for working on this.
 
 * Objects returned by `totlos.msm`, `efpt.msm` and `envisits.msm` now have class `"msm.estbystate"`
   

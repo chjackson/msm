@@ -118,7 +118,7 @@
 #' @param meanerr (\code{hmmMETNorm,hmmUnif}) Additional shift in the
 #' measurement error, fixed to 0 by default.  This may be modelled in terms of
 #' covariates.
-#' @return Each function returns an object of class \code{hmodel}, which is a
+#' @return Each function returns an object of class \code{hmmdist}, which is a
 #' list containing information about the model.  The only component which may
 #' be useful to end users is \code{r}, a function of one argument \code{n}
 #' which returns a random sample of size \code{n} from the given distribution.
