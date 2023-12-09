@@ -43,7 +43,7 @@ continuous time Markov model."><!-- mathjax --><script src="https://cdnjs.cloudf
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Passage probabilities</h1>
-      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/outputs.R" class="external-link"><code>R/outputs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/chjackson/msm/blob/HEAD/R/ppass.R" class="external-link"><code>R/ppass.R</code></a></small>
       <div class="d-none name"><code>ppass.msm.Rd</code></div>
     </div>
 
@@ -104,13 +104,21 @@ fitted model <code>x</code>, as supplied to <code><a href="qmatrix.msm.html">qma
 
 
 <dt>piecewise.times</dt>
-<dd><p>Currently ignored: not implemented for
-time-inhomogeneous models.</p></dd>
+<dd><p>For models with time-dependent covariates,
+this defines the cut points in time at which the transition
+intensity matrix changes.  This is not required for models fitted
+with the <code>pci</code> option to <code><a href="msm.html">msm</a></code>, which are
+handled automatically.</p></dd>
 
 
 <dt>piecewise.covariates</dt>
-<dd><p>Currently ignored: not implemented for
-time-inhomogeneous models.</p></dd>
+<dd><p>For models with time-dependent
+covariates, this is the list of covariates for each time period
+defined by <code>piecewise.times</code>, in the format documented for
+the <code>covariates</code> argument to
+<code><a href="pmatrix.piecewise.msm.html">pmatrix.piecewise.msm</a></code>.  This is not required for
+models fitted with the <code>pci</code> option to <code><a href="msm.html">msm</a></code>,
+which are handled automatically.</p></dd>
 
 
 <dt>ci</dt>
@@ -154,20 +162,21 @@ state \(s\) at least once before time \(t\), given the state at time
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The passage probabilities to state \(s\) are computed by setting the
 \(s\)th row of the transition intensity matrix \(Q\) to zero, giving an
-intensity matrix \(Q*\) for a simplified model structure where state
+intensity matrix \(Q^*\) for a simplified model structure where state
 \(s\) is absorbing.  The probabilities of passage are then equivalent to
-row \(s\) of the transition probability matrix \(Exp(tQ*)\) under this
+row \(s\) of the transition probability matrix \(Exp(tQ^*)\) 
+(<code><a href="pmatrix.msm.html">pmatrix.msm</a></code>) under this
 simplified model for \(t=\)<code>tot</code>.</p>
+<p>For time-inhomogenous models, 
+this process is generalised by calculating an intensity matrix for each
+time period, zeroing the appropriate row of each, and calculating and multiplying
+transition probability matrices as in <code><a href="pmatrix.piecewise.msm.html">pmatrix.piecewise.msm</a></code>.</p>
 <p>Note this is different from the probability of occupying each state at
 exactly time \(t\), given by <code><a href="pmatrix.msm.html">pmatrix.msm</a></code>.  The passage
 probability allows for the possibility of having visited the state before
 \(t\), but then occupying a different state at \(t\).</p>
 <p>The mean of the passage distribution is the expected first passage time,
 <code><a href="efpt.msm.html">efpt.msm</a></code>.</p>
-<p>This function currently only handles time-homogeneous Markov models.  For
-time-inhomogeneous models the covariates are held constant at the value
-supplied, by default the column means of the design matrix over all
-observations.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
