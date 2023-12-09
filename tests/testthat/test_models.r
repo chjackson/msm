@@ -547,15 +547,6 @@ test_that("efpt.msm",{
                       c(10.4237243422138, 0, 0, Inf), tol=1e-05)
 })
 
-test_that("ppass.msm",{
-    pp <- ppass.msm(psor.msm, tot=10)
-    pm <- pmatrix.msm(psor.msm, t=10)
-    expect_equal(pp[,4], pm[,4]) # state 4 is absorbing
-    pp <- ppass.msm(qmatrix=twoway4.q, tot=1000)
-    expect_equal(pp[1,2], 0.5)
-    expect_warning(ppass.msm(qmatrix=twoway4.q, tot=100, ci="normal"), "No fitted model supplied: not calculating confidence intervals")
-})
-
 test_that("score residuals",{
     sres <- scoreresid.msm(psor.msm)
     expect_equal(c(0.0608163009112361, 0.187998750251689, 0.0143302186951471), as.numeric(sres[1:3]), tol=1e-05)

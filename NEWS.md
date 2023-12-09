@@ -6,7 +6,9 @@ User-visible changes only.  For internal changes, see Github commits.
 
     To use these methods, just call `tidy(x)`, where `x` is the result of calling, e.g. `msm`, `prevalence.msm`, or `qmatrix.msm`.
 	
-* Hence the msm package now imports the `generics` and `tibble` packages.
+    Hence the msm package now imports the `generics` and `tibble` packages.
+	
+* `ppass.msm` now supports `pci` models and other time-inhomogeneous models.  Thanks to Jon Fintzi for working on this.
 
 * Objects returned by `totlos.msm`, `efpt.msm` and `envisits.msm` now have class `"msm.estbystate"`
   

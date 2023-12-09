@@ -10,7 +10,7 @@ pmatrix.piecewise.msm(
   t1,
   t2,
   times,
-  covariates,
+  covariates = NULL,
   ci = c("none", "normal", "bootstrap"),
   cl = 0.95,
   B = 1000,

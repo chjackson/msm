@@ -46,3 +46,5 @@ docs
 ^.*\.gcov$
 ^.*\.gcda$
 ^.*\.gcno$
+^revdep$
+

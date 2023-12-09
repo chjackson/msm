@@ -1,6 +1,4 @@
-### METHODS FOR MSM OBJECTS
-
-
+### Functions related to extracting intensity and probability matrices from msm models
 
 #' Transition intensity matrix
 #' 
@@ -769,9 +767,6 @@ lsum <- function(inds, coefs)
 }
 
 
-### Extract a ratio of transition intensities at given covariate values
-
-
 
 #' Estimated ratio of transition intensities
 #' 
@@ -879,9 +874,6 @@ qratio.msm <- function(x, ind1, ind2,
     }
     c(estimate=estimate, se=se, L=L, U=U)
 }
-
-
-### Extract the transition probability matrix at given covariate values
 
 
 
@@ -1025,8 +1017,6 @@ pmatrix.msm <- function(x=NULL, # fitted msm model
     res
 }
 
-### Extract the transition probability matrix at given covariate values - where the Q matrix is piecewise-constant
-
 
 
 #' Transition probability matrix for processes with piecewise-constant
@@ -1059,11 +1049,15 @@ pmatrix.msm <- function(x=NULL, # fitted msm model
 #' @param x A fitted multi-state model, as returned by \code{\link{msm}}. This
 #' should be a non-homogeneous model, whose transition intensity matrix depends
 #' on a time-dependent covariate.
+#'
 #' @param t1 The start of the time interval to estimate the transition
 #' probabilities for.
+#'
 #' @param t2 The end of the time interval to estimate the transition
 #' probabilities for.
+#'
 #' @param times Cut points at which the transition intensity matrix changes.
+#' 
 #' @param covariates A list with number of components one greater than the
 #' length of \code{times}.  Each component of the list is specified in the same
 #' way as the \code{covariates} argument to \code{\link{pmatrix.msm}}.  The
@@ -1073,6 +1067,7 @@ pmatrix.msm <- function(x=NULL, # fitted msm model
 #' 
 #' (assuming that all elements of \code{times} are in the interval \code{(t1,
 #' t2)}).
+#'
 #' @param ci If \code{"normal"}, then calculate a confidence interval for the
 #' transition probabilities by simulating \code{B} random vectors from the
 #' asymptotic multivariate normal distribution implied by the maximum
@@ -1086,25 +1081,35 @@ pmatrix.msm <- function(x=NULL, # fitted msm model
 #' \code{\link{boot.msm}} for more details of bootstrapping in \pkg{msm}.
 #' 
 #' If \code{"none"} (the default) then no confidence interval is calculated.
+#'
 #' @param cl Width of the symmetric confidence interval, relative to 1.
+#'
 #' @param B Number of bootstrap replicates, or number of normal simulations
 #' from the distribution of the MLEs
+#'
 #' @param cores Number of cores to use for bootstrapping using parallel
 #' processing. See \code{\link{boot.msm}} for more details.
+#'
 #' @param qlist A list of transition intensity matrices, of length one greater
 #' than the length of \code{times}.  Either this or a fitted model \code{x}
 #' must be supplied.  No confidence intervals are available if (just)
 #' \code{qlist} is supplied.
+#'
 #' @param ... Optional arguments to be passed to \code{\link{MatrixExp}} to
 #' control the method of computing the matrix exponential.
+#'
 #' @return The matrix of estimated transition probabilities \eqn{P(t)} for the
 #' time interval \code{[t1, tn]}.  That is, the probabilities of occupying
 #' state \eqn{s} at time \eqn{t_n}{tn} conditionally on occupying state \eqn{r}
 #' at time \eqn{t_1}{t1}.  Rows correspond to "from-state" and columns to
 #' "to-state".
+#'
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#'
 #' @seealso \code{\link{pmatrix.msm}}
+#'
 #' @keywords models
+#'
 #' @examples
 #' 
 #' \dontrun{
@@ -1131,7 +1136,7 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
                                   t1, # start time
                                   t2, # stop time
                                   times,  # vector of cut points
-                                  covariates, # list of lists of covariates, for (, times1], (times1, times2], ...
+                                  covariates=NULL, # list of lists of covariates, for (, times1], (times1, times2], ...
                                         # of length one greater than times
                                   ci=c("none","normal","bootstrap"),
                                   cl = 0.95, # width of symmetric confidence interval
@@ -1146,9 +1151,7 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
     x$pci <- NULL # to avoid infinite recursion when calling pmatrix.msm
     ## Input checks
     if (t2 < t1) stop("Stop time t2 should be greater than or equal to start time t1")
-    if (!is.numeric(times) || is.unsorted(times)) stop("times should be a vector of numbers in increasing order")
-    if (length(covariates) != length(times) + 1)
-        stop("Number of covariate lists must be one greater than the number of cut points")
+    if (is.null(qlist)) validate_piecewise(times, covariates)
     if (length(times)==0)
         return(pmatrix.msm(x=x, t=t2-t1, t1=t1, covariates=covariates[[1]], ci=ci, cl=cl, B=B, qmatrix=qlist[[1]], ...))
     ## Locate which intervals t1 and t2 fall in, as indices ind1, ind2 into "times".
@@ -1200,8 +1203,12 @@ pmatrix.piecewise.msm <- function(x=NULL, # fitted msm model
     res
 }
 
-### Extract the mean sojourn times for given covariate values
-
+validate_piecewise <- function(times, covariates){
+  if (!is.numeric(times) || is.unsorted(times)) 
+    stop("times should be a vector of numbers in increasing order")
+  if ((length(covariates) != length(times) + 1))
+    stop("Number of covariate lists must be one greater than the number of cut points")
+}
 
 
 #' Mean sojourn times from a multi-state model
@@ -1286,9 +1293,6 @@ sojourn.msm <- function(x, covariates = "mean", ci=c("delta","normal","bootstrap
     else res <- list(estimates=qmatrix[sojstates])
     res
 }
-
-
-### Extract the probabilities of occupying each state next
 
 
 
@@ -1389,9 +1393,6 @@ pnext.msm <- function(x, covariates="mean", ci=c("normal","bootstrap","delta","n
     res
 }
 
-### Extract the coefficients
-
-
 
 #' Extract model coefficients
 #' 
@@ -1425,8 +1426,6 @@ coef.msm <- function(object, ...)
         object[c("Qmatrices", "Ematrices")]
     else object$Qmatrices
 }
-
-### Extract the log-likelihood
 
 
 
@@ -1464,8 +1463,6 @@ logLik.msm <- function(object, by.subject=FALSE, ...)
     }
     val
 }
-
-### Likelihood ratio test between two or more models
 
 
 
@@ -1508,9 +1505,6 @@ lrtest.msm <- function(...){
     }
     res
 }
-
-
-## Return indices of transient states (can either call for a fitted model or a qmatrix)
 
 
 
@@ -1600,8 +1594,6 @@ intervaltrans.msm <- function(x=NULL, qmatrix=NULL, ematrix=NULL, exclude.absabs
     }
     at[order(at[,1],at[,2]),]
 }
-
-### Empirical versus fitted survival curve
 
 
 
@@ -1793,8 +1785,6 @@ plot.survfit.msm <- function(x, from=1, to=NULL, range=NULL, covariates="mean",
     if (survdata) survdat else invisible()
 }
 
-### Obtain hazard ratios from estimated effects of covariates on log-transition rates
-
 
 
 #' Calculate tables of hazard ratios for covariates on transition intensities
@@ -1860,10 +1850,6 @@ hazard.msm <- function(x, hazard.scale = 1, cl = 0.95)
     else haz.list <- "No covariates on transition intensities"
     haz.list
 }
-
-
-### Obtain odds ratios from estimated effects of covariates on logit-misclassification probabilities
-### TODO - equivalent for general HMMs which presents cov effects on natural scale.
 
 
 

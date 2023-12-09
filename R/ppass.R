@@ -1,11 +1,3 @@
-## TODO time-inhomogeneous models.
-## Do msm.fill.pci.covs to get covariate list
-## Get list of Qs by calling qmatrix.msm for each member of this list
-## Zero out the appropriate rows
-## Supply this to pmatrix.piecewise.msm, which will call pmatrix.msm
-
-
-
 #' Passage probabilities
 #' 
 #' Probabilities of having visited each state by a particular time in a
@@ -13,10 +5,16 @@
 #' 
 #' The passage probabilities to state \eqn{s} are computed by setting the
 #' \eqn{s}th row of the transition intensity matrix \eqn{Q} to zero, giving an
-#' intensity matrix \eqn{Q*} for a simplified model structure where state
+#' intensity matrix \eqn{Q^*}{Q*} for a simplified model structure where state
 #' \eqn{s} is absorbing.  The probabilities of passage are then equivalent to
-#' row \eqn{s} of the transition probability matrix \eqn{Exp(tQ*)} under this
-#' simplified model for \eqn{t=}\code{tot}.
+#' row \eqn{s} of the transition probability matrix \eqn{Exp(tQ^*)}{Exp(tQ*)} 
+#' (\code{\link{pmatrix.msm}}) under this
+#' simplified model for \eqn{t=}\code{tot}.   
+#' 
+#' For time-inhomogenous models, 
+#' this process is generalised by calculating an intensity matrix for each
+#' time period, zeroing the appropriate row of each, and calculating and multiplying
+#' transition probability matrices as in \code{\link{pmatrix.piecewise.msm}}.
 #' 
 #' Note this is different from the probability of occupying each state at
 #' exactly time \eqn{t}, given by \code{\link{pmatrix.msm}}.  The passage
@@ -26,15 +24,13 @@
 #' The mean of the passage distribution is the expected first passage time,
 #' \code{\link{efpt.msm}}.
 #' 
-#' This function currently only handles time-homogeneous Markov models.  For
-#' time-inhomogeneous models the covariates are held constant at the value
-#' supplied, by default the column means of the design matrix over all
-#' observations.
-#' 
 #' @param x A fitted multi-state model, as returned by \code{\link{msm}}.
+#'
 #' @param qmatrix Instead of \code{x}, you can simply supply a transition
 #' intensity matrix in \code{qmatrix}.
+#'
 #' @param tot Finite time to forecast the passage probabilites for.
+#'
 #' @param start Starting state (integer).  By default (\code{start="all"}),
 #' this will return a matrix one row for each starting state.
 #' 
@@ -46,12 +42,24 @@
 #' weights of zero are supplied for other states.  The function will calculate
 #' the weighted average of the passage probabilities from each of the
 #' corresponding states.
+#' 
 #' @param covariates Covariate values defining the intensity matrix for the
 #' fitted model \code{x}, as supplied to \code{\link{qmatrix.msm}}.
-#' @param piecewise.times Currently ignored: not implemented for
-#' time-inhomogeneous models.
-#' @param piecewise.covariates Currently ignored: not implemented for
-#' time-inhomogeneous models.
+#'
+#' @param piecewise.times For models with time-dependent covariates,
+#'   this defines the cut points in time at which the transition
+#'   intensity matrix changes.  This is not required for models fitted
+#'   with the \code{pci} option to \code{\link{msm}}, which are
+#'   handled automatically.
+#'
+#' @param piecewise.covariates For models with time-dependent
+#'   covariates, this is the list of covariates for each time period
+#'   defined by \code{piecewise.times}, in the format documented for
+#'   the \code{covariates} argument to
+#'   \code{\link{pmatrix.piecewise.msm}}.  This is not required for
+#'   models fitted with the \code{pci} option to \code{\link{msm}},
+#'   which are handled automatically.
+#'
 #' @param ci If \code{"normal"}, then calculate a confidence interval by
 #' simulating \code{B} random vectors from the asymptotic multivariate normal
 #' distribution implied by the maximum likelihood estimates (and covariance
@@ -63,19 +71,29 @@
 #' \code{\link{boot.msm}} for more details of bootstrapping in \pkg{msm}.
 #' 
 #' If \code{"none"} (the default) then no confidence interval is calculated.
+#'
 #' @param cl Width of the symmetric confidence interval, relative to 1.
+#'
 #' @param B Number of bootstrap replicates.
+#'
 #' @param cores Number of cores to use for bootstrapping using parallel
 #' processing. See \code{\link{boot.msm}} for more details.
+#'
 #' @param ... Arguments to pass to \code{\link{MatrixExp}}.
+#'
 #' @return A matrix whose \eqn{r, s} entry is the probability of having visited
 #' state \eqn{s} at least once before time \eqn{t}, given the state at time
 #' \eqn{0} is \eqn{r}.  The diagonal entries should all be 1.
+#'
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#'
 #' @seealso \code{\link{efpt.msm}}, \code{\link{totlos.msm}},
 #' \code{\link{boot.msm}}.
+#'
 #' @references Norris, J. R. (1997) Markov Chains. Cambridge University Press.
+#'
 #' @keywords models
+#'
 #' @examples
 #' 
 #' Q <- rbind(c(-0.5, 0.25, 0, 0.25), c(0.166, -0.498, 0.166, 0.166),
@@ -106,41 +124,115 @@ ppass.msm <- function(x=NULL, qmatrix=NULL, tot, start="all", covariates="mean",
                       piecewise.times=NULL, piecewise.covariates=NULL,
                       ci=c("none","normal","bootstrap"), cl = 0.95, B = 1000, cores=NULL, ...)
 {
-    ci <- match.arg(ci)
+  ci <- match.arg(ci)
+  if (!is.null(x) && !inherits(x, "msm"))
+    stop("expected x to be a msm model")
+  if (is.null(x$pci) && is.null(piecewise.times)){
     if (!is.null(x)) {
-        if (!inherits(x, "msm")) stop("expected x to be a msm model")
-        qmatrix <- qmatrix.msm(x, covariates=covariates, ci="none")
+      qmatrix <- qmatrix.msm(x, covariates=covariates, ci="none")
     }
     else if (!is.null(qmatrix)) {
-        if (!is.matrix(qmatrix) || (nrow(qmatrix) != ncol(qmatrix)))
-            stop("expected qmatrix to be a square matrix")
-        if (ci != "none") {warning("No fitted model supplied: not calculating confidence intervals."); ci <- "none"}
+      if (!is.matrix(qmatrix) || (nrow(qmatrix) != ncol(qmatrix)))
+        stop("expected qmatrix to be a square matrix")
+      if (ci != "none") {warning("No fitted model supplied: not calculating confidence intervals."); ci <- "none"}
     }
     res <- array(dim=dim(qmatrix))
     if (!is.null(dimnames(qmatrix))) {
-        dimnames(res) <- dimnames(qmatrix)
-        names(dimnames(res)) <- c("from","to")
+      dimnames(res) <- dimnames(qmatrix)
+      names(dimnames(res)) <- c("from","to")
     }
     states <- 1:nrow(qmatrix)
     for (i in states) {
-        Qred <- qmatrix; Qred[states[i],] <- 0
-        res[,i] <- MatrixExp(Qred*tot, ...)[,i]
+      Qred <- qmatrix; Qred[states[i],] <- 0
+      res[,i] <- MatrixExp(Qred*tot, ...)[,i]
     }
     if (!is.character(start)) {
-        if (!is.numeric(start) || (length(start)!=nrow(qmatrix)))
-            stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
-        start <- start / sum(start)
-        res <- matrix(start %*% res, nrow=1, dimnames=list(from="start",to=colnames(res)))
+      if (!is.numeric(start) || (length(start)!=nrow(qmatrix)))
+        stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
+      start <- start / sum(start)
+      res <- matrix(start %*% res, nrow=1, dimnames=list(from="start",to=colnames(res)))
     }
     else if (any(start!="all"))
-        stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
-    p.ci <- switch(ci,
-                   bootstrap = ppass.ci.msm(x=x, qmatrix=qmatrix, tot=tot, start=start, covariates=covariates, cl=cl, B=B, cores=cores),
-                   normal = ppass.normci.msm(x=x, qmatrix=qmatrix, tot=tot, start=start, covariates=covariates, cl=cl, B=B),
-                   none = NULL)
-    if (ci != "none") {
-        res <- list(estimates=res, L=p.ci$L, U=p.ci$U)
-    }
-    class(res) <- "msm.est"
-    res
+      stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmatrix))
+  } else {
+    res <- ppass.td.msm(x=x, tot=tot, start=start, covariates=covariates,
+                         piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, ...)
+  }
+  
+  p.ci <- switch(ci,
+                 bootstrap = ppass.ci.msm(x=x, qmatrix=qmatrix, tot=tot, start=start,
+                                          covariates=covariates,
+                                          piecewise.times=piecewise.times,
+                                          piecewise.covariates=piecewise.covariates,
+                                          cl=cl, B=B, cores=cores),
+                 normal = ppass.normci.msm(x=x, qmatrix=qmatrix, tot=tot, start=start,
+                                           covariates=covariates, 
+                                           piecewise.times=piecewise.times,
+                                           piecewise.covariates=piecewise.covariates,
+                                           cl=cl, B=B),
+                 none = NULL)
+  if (ci != "none") {
+    res <- list(estimates=res, L=p.ci$L, U=p.ci$U)
+  }
+  class(res) <- "msm.est"
+  res
+}
+
+
+## Thanks to Jon Fintzi <https://github.com/fintzij>
+
+ppass.td.msm <- function(x=NULL, tot, start="all", covariates="mean",
+                          piecewise.times=NULL, piecewise.covariates=NULL, ...) {
+  
+  if (!is.null(x$pci)){
+    ## this goes to the times argument in pmatrix.piecewise.msm
+    piecewise.times <- x$pci 
+    
+    ## for defining piecewise constant intensity matrices
+    piecewise.covariates <- msm.fill.pci.covs(x, covariates)
+  } else {
+    ## user-supplied times and covariates for non-pci time-dependent models
+    validate_piecewise(piecewise.times, piecewise.covariates)
+  }
+  
+  ## get temporary qmatrix
+  qmat_temp <- qmatrix.msm(x, covariates = "mean", ci = "none")
+  
+  ## array for storing the first passage probabilities
+  res <- array(dim=dim(qmat_temp))
+  if (!is.null(dimnames(qmat_temp))) {
+    dimnames(res) <- dimnames(qmat_temp)
+    names(dimnames(res)) <- c("from","to")
+  }
+  
+  ## generate list of intensity matrices
+  Q_list = lapply(piecewise.covariates,
+                  function(y) qmatrix.msm(x, covariates = y, ci = "none"))
+  states <- seq_len(nrow(qmat_temp))
+  for (i in states) {
+    
+    ## zero out the appropriate row in the intensity matrices
+    Q_ppass <- 
+      lapply(Q_list, 
+             function(M) {Q = M; Q[i,] = 0; return(Q)})
+    
+    ## supply Q_ppass to pmatrix.piecewise.msm
+    res[,i] <-
+      pmatrix.piecewise.msm(qlist = Q_ppass,
+                            times = piecewise.times, 
+                            covariates = piecewise.covariates,
+                            t1 = 0, t2 = tot, 
+                            ci = "none")[,i]
+  }
+  
+  if (!is.character(start)) {
+    if (!is.numeric(start) || (length(start)!=nrow(qmat_temp)))
+      stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmat_temp))
+    start <- start / sum(start)
+    res <- matrix(start %*% res, nrow=1, dimnames=list(from="start",to=colnames(res)))
+  }
+  else if (any(start!="all"))
+    stop("Expected \"start\" to be \"all\" or a numeric vector of length ", nrow(qmat_temp))
+  
+  res
 }
