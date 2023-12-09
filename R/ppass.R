@@ -85,7 +85,8 @@
 #' state \eqn{s} at least once before time \eqn{t}, given the state at time
 #' \eqn{0} is \eqn{r}.  The diagonal entries should all be 1.
 #'
-#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk} with
+#' contributions from Jon Fintzi. 
 #'
 #' @seealso \code{\link{efpt.msm}}, \code{\link{totlos.msm}},
 #' \code{\link{boot.msm}}.
