@@ -142,6 +142,7 @@ Norris, J. R. (1997) Markov Chains. Cambridge University Press.
 \code{\link{boot.msm}}.
 }
 \author{
-C. H. Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk}
+C. H. Jackson \email{chris.jackson@mrc-bsu.cam.ac.uk} with
+contributions from Jon Fintzi.
 }
 \keyword{models}
