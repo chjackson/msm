@@ -46,6 +46,7 @@ summary.msm <- function(object, # fitted model
     ret
 }
 
+#' @export
 print.summary.msm <- function(x,...)
 {
     if (!is.null(x$prevalences)) {

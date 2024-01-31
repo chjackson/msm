@@ -647,20 +647,6 @@ print.msm.est <- function(x, digits=NULL, ...)
     else print(unclass(x), digits=digits)
 }
 
-## Unused, remove eventually
-# nocov start
-print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
-{
-    inc <- if (diag) (x$estimates>0 | x$estimates<0) else (x$estimates>0)
-    res <- cbind(x$estimates[inc], x$L[inc], x$U[inc])
-    rn <- rownames(x$estimates)[row(inc)[inc]]
-    cn <- colnames(x$estimates)[col(inc)[inc]]
-    rownames(res) <- paste(rn, cn, sep="-")
-    colnames(res) <- c("Estimate", "LCL", "UCL")
-    res
-}
-# nocov end
-
 #' @export
 "[.msm.est" <- function(x, i, j, drop=FALSE){
     Narg <- nargs() - (!missing(drop)) # number of args including x, excluding drop
@@ -689,6 +675,7 @@ print.msm.est.cols <- function(x, digits=NULL, diag=TRUE, ...)
     res
 }
 
+#' @noRd
 format.ci <- function(x, l, u, noci=NULL, digits=NULL, ...)
 {
     if (is.null(noci)) noci <- rep(FALSE, length(x))

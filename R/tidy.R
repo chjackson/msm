@@ -209,6 +209,7 @@ tidy.msm.est <- function(x, ...){
 ## Tidier for a "hmodel" object, which is one of the components of a "msm" object
 ## for a hidden Markov model. 
 
+#' @noRd
 tidy.hmodel <- function(x){
   xh <- x$hmodel
   p <- x$paramdata

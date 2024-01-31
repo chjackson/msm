@@ -3,7 +3,6 @@
 \docType{package}
 \name{msm-package}
 \alias{msm-package}
-\alias{_PACKAGE}
 \title{Multi-State Markov and Hidden Markov Models in Continuous Time}
 \description{
 msm: Functions for fitting continuous-time Markov and hidden Markov
