@@ -714,7 +714,8 @@ ignored.</p></dd>
 
 
 <dt>subject.weights</dt>
-<dd><p>Weights to apply to each subject in the data
+<dd><p>Name of a variable in the data (unquoted) giving
+  weights to apply to each subject in the data
   when calculating the log-likelihood as a weighted sum over
   subjects.  These are taken from the first observation for each
   person, and any weights supplied for subsequent observations are
@@ -959,17 +960,17 @@ S</em>, second edition. Springer.</p>
 <span class="r-in"><span><span class="co">### For further details and background to this example, see</span></span></span>
 <span class="r-in"><span><span class="co">### Jackson (2011) or the PDF manual in the doc directory.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cav</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     PTNUM      age    years dage sex pdiag cumrej state firstobs statemax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  100002 52.49589 0.000000   21   0   IHD      0     1        1        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  100002 53.49863 1.002740   21   0   IHD      2     1        0        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  100002 54.49863 2.002740   21   0   IHD      2     2        0        2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  100002 55.58904 3.093151   21   0   IHD      2     2        0        2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  100002 56.49589 4.000000   21   0   IHD      3     2        0        2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  100002 57.49315 4.997260   21   0   IHD      3     3        0        3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  100002 58.35068 5.854795   21   0   IHD      3     4        0        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  100003 29.50685 0.000000   17   0   IHD      0     1        1        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  100003 30.69589 1.189041   17   0   IHD      1     1        0        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 100003 31.51507 2.008219   17   0   IHD      1     3        0        3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     PTNUM      age    years dage sex pdiag cumrej state firstobs statemax swt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  100002 52.49589 0.000000   21   0   IHD      0     1        1        1 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  100002 53.49863 1.002740   21   0   IHD      2     1        0        1 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  100002 54.49863 2.002740   21   0   IHD      2     2        0        2 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  100002 55.58904 3.093151   21   0   IHD      2     2        0        2 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  100002 56.49589 4.000000   21   0   IHD      3     2        0        2 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  100002 57.49315 4.997260   21   0   IHD      3     3        0        3 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  100002 58.35068 5.854795   21   0   IHD      3     4        0        4 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  100003 29.50685 0.000000   17   0   IHD      0     1        1        1 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  100003 30.69589 1.189041   17   0   IHD      1     1        0        1 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 100003 31.51507 2.008219   17   0   IHD      1     3        0        3 1.2</span>
 <span class="r-in"><span><span class="va">twoway4.q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.25</span>, <span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.166</span>, <span class="op">-</span><span class="fl">0.498</span>, <span class="fl">0.166</span>, <span class="fl">0.166</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.25</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="statetable.msm.html">statetable.msm</a></span><span class="op">(</span><span class="va">state</span>, <span class="va">PTNUM</span>, data<span class="op">=</span><span class="va">cav</span><span class="op">)</span></span></span>

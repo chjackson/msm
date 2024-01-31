@@ -647,7 +647,8 @@
 #' or semi-parametric models can be implemented with \pkg{survival} in
 #' conjunction with \pkg{mstate}.
 #'
-#' @param subject.weights Weights to apply to each subject in the data
+#' @param subject.weights Name of a variable in the data (unquoted) giving
+#'   weights to apply to each subject in the data
 #'   when calculating the log-likelihood as a weighted sum over
 #'   subjects.  These are taken from the first observation for each
 #'   person, and any weights supplied for subsequent observations are

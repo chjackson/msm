@@ -672,7 +672,8 @@ non-phased states are taken from the \code{qmatrix} supplied to msm, and
 entries of this matrix corresponding to transitions out of phased states are
 ignored.}
 
-\item{subject.weights}{Weights to apply to each subject in the data
+\item{subject.weights}{Name of a variable in the data (unquoted) giving
+  weights to apply to each subject in the data
   when calculating the log-likelihood as a weighted sum over
   subjects.  These are taken from the first observation for each
   person, and any weights supplied for subsequent observations are
