@@ -2357,7 +2357,7 @@ grad.msm <- function(params, ...)
   w <- list(...)$msmdata$subject.weights
   if (!is.null(w)){
     deriv <- Ccall.msm(params, do.what="deriv.subj", ...) # npts x npar
-    sum(w * deriv)
+    apply(w * deriv, 2, sum)
   }
   else 
     Ccall.msm(params, do.what="deriv", ...)
