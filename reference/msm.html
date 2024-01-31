@@ -97,6 +97,7 @@ observation process.</p>
 <span>  pci <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  phase.states <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  phase.inits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subject.weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cl <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  fixedpars <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  center <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -710,6 +711,15 @@ destination state, then this may be supplied as a vector.</p>
 non-phased states are taken from the <code>qmatrix</code> supplied to msm, and
 entries of this matrix corresponding to transitions out of phased states are
 ignored.</p></dd>
+
+
+<dt>subject.weights</dt>
+<dd><p>Weights to apply to each subject in the data
+  when calculating the log-likelihood as a weighted sum over
+  subjects.  These are taken from the first observation for each
+  person, and any weights supplied for subsequent observations are
+  not used.</p>
+<p>Weights at the observation level are not supported.</p></dd>
 
 
 <dt>cl</dt>
