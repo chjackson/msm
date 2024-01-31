@@ -63,7 +63,8 @@ msm.optim <- function(opt.method, p, hessian, use.deriv, msmdata, qmodel, qcmode
 ## Trivial one where all the parameters are fixed at their initial values
 
 msm.optim.fixed <- function(p, gr, hessian, msmdata, qmodel, qcmodel, cmodel, hmodel, ...) {
-    p$lik <- lik.msm(p$inits, msmdata, qmodel, qcmodel, cmodel, hmodel, p)
+    p$lik <- lik.msm(p$inits, msmdata=msmdata, qmodel=qmodel, qcmodel=qcmodel,
+                     cmodel=cmodel, hmodel=hmodel, paramdata=p)
     p$opt <- list(par = p$allinits[!duplicated(abs(p$constr))])
     p$params <- msm.rep.constraints(p$params, p, hmodel)
 

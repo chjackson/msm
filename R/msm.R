@@ -646,6 +646,15 @@
 #' flexible than the exponential can be fitted with the \pkg{flexsurv} package,
 #' or semi-parametric models can be implemented with \pkg{survival} in
 #' conjunction with \pkg{mstate}.
+#'
+#' @param subject.weights Weights to apply to each subject in the data
+#'   when calculating the log-likelihood as a weighted sum over
+#'   subjects.  These are taken from the first observation for each
+#'   person, and any weights supplied for subsequent observations are
+#'   not used.
+#'
+#'  Weights at the observation level are not supported.
+#' 
 #' @param cl Width of symmetric confidence intervals for maximum likelihood
 #' estimates, by default 0.95.
 #' @param fixedpars Vector of indices of parameters whose values will be fixed
@@ -828,6 +837,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
                 deathexact = NULL, death = NULL, exacttimes = FALSE, censor=NULL,
                 censor.states=NULL, pci=NULL, phase.states=NULL,
                 phase.inits = NULL, # TODO merge with inits eventually
+                subject.weights = NULL, 
                 cl = 0.95, fixedpars = NULL, center=TRUE,
                 opt.method="optim", hessian=NULL, use.deriv=TRUE,
                 use.expm=TRUE, analyticp=TRUE, na.action=na.omit, ...)
@@ -914,7 +924,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     ## if specified.  Need to build and evaluate a call, instead of
     ## running model.frame() directly, to find subject and other
     ## extras. Not sure why.
-    indx <- match(c("data", "subject", "obstrue"), names(call), nomatch = 0)
+    indx <- match(c("data", "subject", "subject.weights", "obstrue"), names(call), nomatch = 0)
     temp <- call[c(1, indx)]
     temp[[1]] <- as.name("model.frame")
     temp[["state"]] <- as.name(all.vars(formula[[2]]))
@@ -1071,8 +1081,10 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
 ### FORM LIST OF INITIAL PARAMETERS, MATCHING PROVIDED INITS WITH SPECIFIED MODEL, FIXING SOME PARS IF REQUIRED
     p <- msm.form.params(qmodel, qcmodel, emodel, hmodel, fixedpars)
 
+    subject.weights <- msm.form.subject.weights(mf)
     msmdata <- list(mf=mf, mf.agg=mf.agg, mm.cov=mm.cov, mm.cov.agg=mm.cov.agg,
-                    mm.mcov=mm.mcov, mm.hcov=mm.hcov, mm.icov=mm.icov)
+                    mm.mcov=mm.mcov, mm.hcov=mm.hcov, mm.icov=mm.icov,
+                    subject.weights = subject.weights)
 
 ### CALCULATE LIKELIHOOD AT INITIAL VALUES OR DO OPTIMISATION (see optim.R)
     if (p$fixed) opt.method <- "fixed"
@@ -2326,14 +2338,27 @@ Ccall.msm <- function(params, do.what="lik", msmdata, qmodel, qcmodel, cmodel, h
 
 lik.msm <- function(params, ...)
 {
-    ## number of likelihood evaluations so far including this one
-    ## used for error message for iffy initial values in HMMs
-    assign("nliks", get("nliks",msm.globals) + 1, envir=msm.globals)
+  ## number of likelihood evaluations so far including this one
+  ## used for error message for iffy initial values in HMMs
+  assign("nliks", get("nliks",msm.globals) + 1, envir=msm.globals)
+  args <- list(...)
+  w <- args$msmdata$subject.weights
+  if (!is.null(w)){
+    lik <- Ccall.msm(params, do.what="lik.subj", ...)
+    sum(w * lik)
+  }
+  else 
     Ccall.msm(params, do.what="lik", ...)
 }
 
 grad.msm <- function(params, ...)
 {
+  w <- list(...)$msmdata$subject.weights
+  if (!is.null(w)){
+    deriv <- Ccall.msm(params, do.what="deriv.subj", ...) # npts x npar
+    sum(w * deriv)
+  }
+  else 
     Ccall.msm(params, do.what="deriv", ...)
 }
 
@@ -2774,6 +2799,7 @@ msm.form.cri <- function(covlist, qmodel, mf, mm, tdmodel) {
 ## adapted from stats:::na.omit.data.frame.  ignore handling of
 ## non-atomic, matrix within df
 
+#' @noRd
 na.omit.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     xx <- object[!omit, , drop = FALSE]
@@ -2785,6 +2811,7 @@ na.omit.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     xx
 }
 
+#' @noRd
 na.fail.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     if (any(omit))
@@ -2792,6 +2819,7 @@ na.fail.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     else object
 }
 
+#' @noRd
 na.find.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     subj <- as.character(object[,"(subject)"])
     firstobs <- !duplicated(subj)
@@ -2971,7 +2999,22 @@ expand.data <- function(x){
     x$data
 }
 
-
+msm.form.subject.weights <- function(mf){
+  subjw <- mf$"(subject.weights)"
+  subj <- mf$"(subject)"
+  if (!is.null(subjw)){
+    if (!is.numeric(subjw)) stop("`subject.weights` must be numeric")
+    ndistinct <- tapply(subjw, subj, function(x)length(unique(na.omit(x))))
+    badsubj <- unique(subj)[ndistinct > 1]
+    if (length(badsubj) > 0){
+      warning(sprintf("subject %s (and perhaps others) has non-unique weights. Using the weight from their first observation",
+                      badsubj[1]))
+    }
+    ## form short vector
+    w <- subjw[!duplicated(subj)]
+  } else w <- NULL
+  w
+}
 
 #' Extract original data from \code{msm} objects.
 #' 

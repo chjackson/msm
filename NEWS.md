@@ -2,6 +2,8 @@ User-visible changes only.  For internal changes, see Github commits.
 
 # Version 1.8 (in development)
 
+* Subject-level weights supported for likelihood calculation with new `msm()` argument `subject.weights`.
+
 * Tidying methods added for `msm` objects and most of msm's output functions (`prevalence.msm`, `qmatrix.msm` and related functions, and `totlos.msm` and related functions).  These methods convert the output to a tidy data frame (tibble), in the manner of the [broom](https://broom.tidymodels.org/) package.
 
     To use these methods, just call `tidy(x)`, where `x` is the result of calling, e.g. `msm`, `prevalence.msm`, or `qmatrix.msm`.
