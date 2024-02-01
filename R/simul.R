@@ -539,7 +539,7 @@ simhidden.msm <- function(state, hmodel, nstates, beta=NULL, x=NULL)
 simfitted.msm <- function(x, drop.absorb=TRUE, drop.pci.imp=TRUE){
     sim.df <- x$data$mf
     x$data <- expand.data(x)
-    sim.df$"(cens)" <- ifelse(sim.df$"(state)" %in% 1:x$qmodel$nstates, 0, sim.df$"(state)") # 0 if not censored, cens indicator if censored, so that censoring is retained in simulated data.  TODO used in pearson?
+    sim.df$"cens" <- ifelse(sim.df$"(state)" %in% 1:x$qmodel$nstates, 0, sim.df$"(state)") # 0 if not censored, cens indicator if censored, so that censoring is retained in simulated data.  TODO used in pearson?
     if (x$qcmodel$ncovs > 0) {
         sim.df <- cbind(sim.df, x$data$mm.cov)
         cov.effs <- lapply(x$Qmatrices, function(y)t(y)[t(x$qmodel$imatrix)==1])[x$qcmodel$covlabels]
@@ -548,10 +548,11 @@ simfitted.msm <- function(x, drop.absorb=TRUE, drop.pci.imp=TRUE){
         sim.df <- cbind(sim.df, x$data$mm.mcov)
         misccov.effs <- lapply(x$Ematrices, function(y)t(y)[t(x$emodel$imatrix)==1])[x$ecmodel$covlabels]
     } else misccov.effs <- NULL
-    names(sim.df) <- replace(names(sim.df), match(c("(state)","(time)","(subject)"), names(sim.df)),
-                             c("state","time","subject"))
-    if (any(union(names(cov.effs), names(misccov.effs)) %in% c("state","time","subject")))
-        stop("Not supported with covariates named \"state\", \"time\" or \"subject\"") # TODO?
+    names(sim.df) <- replace(names(sim.df), match(c("(time)","(subject)"), names(sim.df)),
+                             c("time","subject"))
+    sim.df$state <- NULL # replace observed with simulated state
+    if (any(union(names(cov.effs), names(misccov.effs)) %in% c("state","time","subject","cens")))
+        stop("Not supported with covariates named \"state\", \"time\", \"subject\" or \"cens\"") # TODO?
     boot.df <- simmulti.msm(data=sim.df,
                             qmatrix=qmatrix.msm(x, covariates=0, ci="none"),
                             covariates=cov.effs,
