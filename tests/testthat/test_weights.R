@@ -36,4 +36,27 @@ test_that("subject weights",{
   expect_no_warning(msm( state ~ years, subject=PTNUM, data = cav,
                         qmatrix = twoway4.q, deathexact = TRUE, fixedpars=TRUE,
                         subject.weights = swt))
+
+})
+
+test_that("subject weights, model fitting",{
+  skip_on_cran()
+  
+  cav.msm <- msm( state ~ years, subject=PTNUM, data = cav,
+                     qmatrix = twoway4.q, deathexact = TRUE, fixedpars=FALSE)
+  
+  cav$swt <- 1
+  cavwt1.msm <- msm( state ~ years, subject=PTNUM, data = cav,
+                     qmatrix = twoway4.q, deathexact = TRUE, fixedpars=FALSE,
+                     subject.weights = swt)
+  expect_equal(cav.msm$minus2loglik, cavwt1.msm$minus2loglik)
+  pmatrix.msm(cavwt1.msm, ci="normal")
+
+  cav$swt[cav$PTNUM <= 100020] <- 1.2
+  cavwt2.msm <- msm( state ~ years, subject=PTNUM, data = cav,
+                     qmatrix = twoway4.q, deathexact = TRUE, fixedpars=FALSE,
+                     subject.weights = swt)
+  pmatrix.msm(cavwt2.msm, ci="normal")
+  
+  expect_true(cav.msm$minus2loglik != cavwt2.msm$minus2loglik)
 })
