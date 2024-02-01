@@ -939,7 +939,12 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     mf <- eval(temp, parent.frame())
     
     ## remember user-specified names for later (e.g. bootstrap/cross validation)
-    usernames <- c(state=all.vars(formula[[2]]), time=all.vars(formula[[3]]), subject=as.character(temp$subject), obstype=as.character(substitute(obstype)), obstrue=as.character(temp$obstrue))
+    usernames <- c(state=all.vars(formula[[2]]),
+                   time=all.vars(formula[[3]]),
+                   subject=as.character(temp$subject),
+                   subject.weights=as.character(temp$subject.weights),
+                   obstype=as.character(substitute(obstype)),
+                   obstrue=as.character(temp$obstrue))
     attr(mf, "usernames") <- usernames
 
     ## handle matrices in state outcome constructed in formula with cbind()

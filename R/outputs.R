@@ -1405,6 +1405,7 @@ pnext.msm <- function(x, covariates="mean", ci=c("normal","bootstrap","delta","n
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{msm}}
 #' @keywords models
+#' @export coef.msm
 #' @export
 coef.msm <- function(object, ...)
 {
@@ -1435,6 +1436,7 @@ coef.msm <- function(object, ...)
 #' @author C. H. Jackson \email{chris.jackson@@mrc-bsu.cam.ac.uk}
 #' @seealso \code{\link{msm}},\code{\link{lrtest.msm}}.
 #' @keywords models
+#' @export logLik.msm
 #' @export
 logLik.msm <- function(object, by.subject=FALSE, ...)
 {

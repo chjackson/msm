@@ -550,6 +550,7 @@ simfitted.msm <- function(x, drop.absorb=TRUE, drop.pci.imp=TRUE){
     } else misccov.effs <- NULL
     names(sim.df) <- replace(names(sim.df), match(c("(time)","(subject)"), names(sim.df)),
                              c("time","subject"))
+    if (!is.null(sim.df$"(subject.weights)")) names(sim.df)[names(sim.df)=="(subject.weights)"] = "subject.weights"
     sim.df$state <- NULL # replace observed with simulated state
     if (any(union(names(cov.effs), names(misccov.effs)) %in% c("state","time","subject","cens")))
         stop("Not supported with covariates named \"state\", \"time\", \"subject\" or \"cens\"") # TODO?
