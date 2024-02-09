@@ -651,7 +651,7 @@
 #'   weights to apply to each subject in the data
 #'   when calculating the log-likelihood as a weighted sum over
 #'   subjects.  These are taken from the first observation for each
-#'   person, and any weights supplied for subsequent observations are
+#'   subject, and any weights supplied for subsequent observations are
 #'   not used.
 #'
 #'  Weights at the observation level are not supported.
@@ -951,6 +951,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     indx <- match(c("formula", "data"), names(call), nomatch = 0)
     temp <- call[c(1, indx)]
     temp[[1]] <- as.name("model.frame")
+    temp$na.action <- na.pass
     mfst <- eval(temp, parent.frame())
     if (is.matrix(mfst[[1]]) && !is.matrix(mf$"(state)"))
         mf$"(state)" <- mfst[[1]]
