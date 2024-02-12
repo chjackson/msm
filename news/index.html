@@ -52,6 +52,7 @@
 <p>To use these methods, just call <code>tidy(x)</code>, where <code>x</code> is the result of calling, e.g. <code>msm</code>, <code>prevalence.msm</code>, or <code>qmatrix.msm</code>.</p>
 <p>Hence the msm package now imports the <code>generics</code> and <code>tibble</code> packages.</p>
 </li>
+<li><p>Subjects with one observation are no longer dropped in HMMs, since they provide information about the distribution of the outcome given the hidden state.</p></li>
 <li><p><code>ppass.msm</code> now supports <code>pci</code> models and other time-inhomogeneous models. Thanks to Jon Fintzi for working on this.</p></li>
 <li><p>New function <code>hmodel2list</code> to extract HMM constructor function calls from fitted HMMs. Thanks to Will Hulme for working on this.</p></li>
 <li><p>Objects returned by <code>totlos.msm</code>, <code>efpt.msm</code> and <code>envisits.msm</code> now have class <code>"msm.estbystate"</code></p></li>
