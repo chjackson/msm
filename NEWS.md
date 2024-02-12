@@ -9,7 +9,9 @@ User-visible changes only.  For internal changes, see Github commits.
     To use these methods, just call `tidy(x)`, where `x` is the result of calling, e.g. `msm`, `prevalence.msm`, or `qmatrix.msm`.
 	
     Hence the msm package now imports the `generics` and `tibble` packages.
-	
+
+* Subjects with one observation are no longer dropped in HMMs, since they provide information about the distribution of the outcome given the hidden state.
+
 * `ppass.msm` now supports `pci` models and other time-inhomogeneous models. Thanks to Jon Fintzi for working on this.
 
 * New function `hmodel2list` to extract HMM constructor function calls from fitted HMMs. Thanks to Will Hulme for working on this.

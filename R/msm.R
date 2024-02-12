@@ -212,6 +212,7 @@
 #' \code{deathexact = death.states} specifies that all observations of
 #' \code{death.states} are of type 3.  \code{deathexact = TRUE} specifies that
 #' all observations in the final absorbing state are of type 3.
+#'
 #' @param obstrue In misclassification models specified with \code{ematrix},
 #' \code{obstrue} is a vector of logicals (\code{TRUE} or \code{FALSE}) or
 #' numerics (1 or 0) specifying which observations (\code{TRUE}, 1) are
@@ -231,6 +232,7 @@
 #' \code{censor}), and \code{obstrue} is set to 1 for observations where the
 #' true state is known to be one of the elements of \code{censor.states} at the
 #' corresponding time.
+#'
 #' @param covariates A formula or a list of formulae representing the
 #' covariates on the transition intensities via a log-linear model. If a single
 #' formula is supplied, like
@@ -251,6 +253,7 @@
 #' the times they are observed, and the transition probability between a pair
 #' of times \eqn{(t1, t2)} is assumed to depend on the covariate value at
 #' \eqn{t1}.
+#'
 #' @param covinits Initial values for log-linear effects of covariates on the
 #' transition intensities. This should be a named list with each element
 #' corresponding to a covariate.  A single element contains the initial values
@@ -274,6 +277,7 @@
 #' 
 #' If not specified or wrongly specified, initial values are assumed to be
 #' zero.
+#'
 #' @param constraint A list of one numeric vector for each named covariate. The
 #' vector indicates which covariate effects on intensities are constrained to
 #' be equal. Take, for example, a model with five transition intensities and
@@ -335,20 +339,24 @@
 #' include all covariates in this formula, and use \code{fixedpars} to fix some
 #' of their effects (for particular probabilities) at their default initial
 #' values of zero.
+#'
 #' @param misccovinits Initial values for the covariates on the
 #' misclassification probabilities, defined in the same way as \code{covinits}.
 #' Only used if the model is specified using \code{ematrix}.
+#'
 #' @param miscconstraint A list of one vector for each named covariate on
 #' misclassification probabilities. The vector indicates which covariate
 #' effects on misclassification probabilities are constrained to be equal,
 #' analogously to \code{constraint}.  Only used if the model is specified using
 #' \code{ematrix}.
+#'
 #' @param hcovariates List of formulae the same length as \code{hmodel},
 #' defining any covariates governing the hidden Markov outcome models.  The
 #' covariates operate on a suitably link-transformed linear scale, for example,
 #' log scale for a Poisson outcome model. If there are no covariates for a
 #' certain hidden state, then insert a NULL in the corresponding place in the
 #' list.  For example, \code{hcovariates = list(~acute + age, ~acute, NULL).}
+#'
 #' @param hcovinits Initial values for the hidden Markov model covariate
 #' effects. A list of the same length as \code{hcovariates}. Each element is a
 #' vector with initial values for the effect of each covariate on that state.
@@ -361,6 +369,7 @@
 #' effects are constrained to be equal using \code{hconstraint}, then the
 #' initial value is taken from the first of the multiple initial values
 #' supplied.
+#'
 #' @param hconstraint A named list. Each element is a vector of constraints on
 #' the named hidden Markov model parameter. The vector has length equal to the
 #' number of times that class of parameter appears in the whole model.
@@ -375,6 +384,7 @@
 #' 
 #' Note this excludes initial state occupancy probabilities and covariate
 #' effects on those probabilities, which cannot be constrained.
+#'
 #' @param hranges Range constraints for hidden Markov model parameters.
 #' Supplied as a named list, with each element corresponding to the named
 #' hidden Markov model parameter.  This element is itself a list with two
@@ -476,8 +486,10 @@
 #' the previous observation, then you should specify \code{obstype=2} for the
 #' death times, or \code{exacttimes=TRUE} if the state is known at all times,
 #' and the \code{deathexact} argument is ignored.
+#'
 #' @param death Old name for the \code{deathexact} argument.  Overridden by
 #' \code{deathexact} if both are supplied. Deprecated.
+#'
 #' @param censor A state, or vector of states, which indicates censoring.
 #' Censoring means that the observed state is known only to be one of a
 #' particular set of states. For example, \code{censor=999} indicates that all
@@ -508,6 +520,7 @@
 #' 
 #' Not supported for multivariate hidden Markov models specified with
 #' \code{\link{hmmMV}}.
+#' 
 #' @param censor.states Specifies the underlying states which censored
 #' observations can represent. If \code{censor} is a single number (the
 #' default) this can be a vector, or a list with one element.  If \code{censor}
@@ -963,7 +976,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     } else if (is.character(mf$"(state)")) stop("state variable is character, should be numeric") 
     msm.check.state(qmodel$nstates, mf$"(state)", cmodel$censor, hmodel)
     if (is.null(mf$"(subject)")) mf$"(subject)" <- rep(1, nrow(mf))
-    msm.check.times(mf$"(time)", mf$"(subject)", mf$"(state)")
+    msm.check.times(mf$"(time)", mf$"(subject)", mf$"(state)", hmodel$hidden)
     obstype <- if (missing(obstype)) NULL else eval(substitute(obstype), data, parent.frame()) # handle separately to allow passing a scalar (1, 2 or 3)
     mf$"(obstype)" <- msm.form.obstype(mf, obstype, dmodel, exacttimes)
     mf$"(obstrue)" <- msm.form.obstrue(mf, hmodel, cmodel)
@@ -1360,7 +1373,7 @@ msm.check.state <- function(nstates, state, censor, hmodel)
     invisible()
 }
 
-msm.check.times <- function(time, subject, state=NULL)
+msm.check.times <- function(time, subject, state=NULL, hidden=FALSE)
 {
     final.rows <- !is.na(subject) & !is.na(time)
     if (!is.null(state)) {
@@ -1381,7 +1394,8 @@ msm.check.times <- function(time, subject, state=NULL)
         badlist <- paste(badsubjs, collapse=", ")
         plural <- if (length(badsubjs)==1) "" else "s"
         has <-  if (length(badsubjs)==1) "has" else "have"
-        warning ("Subject", plural, " ", badlist, andothers, " only ", has, " one complete observation, which doesn't give any information")
+        if (!hidden)
+          warning ("Subject", plural, " ", badlist, andothers, " only ", has, " one complete observation, which doesn't give any information")
     }
 ### Check if observations within a subject are adjacent
     ind <- tapply(seq_along(subj.num), subj.num, length)
@@ -2865,8 +2879,10 @@ na.find.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
             omit <- omit | (is.na(object[[j]]) & !lastobs)
     }
     ## Drop obs with only one subject remaining after NAs have been omitted
-    nobspt <- table(subj[!omit])[subj]
-    omit <- omit | (nobspt==1)
+    if (!hidden){
+      nobspt <- table(subj[!omit])[subj]
+      omit <- omit | (nobspt==1)
+    }
     omit
 }
 

@@ -432,8 +432,7 @@ double likhidden(int pt, /* ordinal subject ID */
     double *pout = Calloc(qm->nst, double);
     double lweight, lik, *hpars, *outcome;
     int i, obsno, nc=1, allzero=1;
-    if (d->firstobs[pt] + 1 == d->firstobs[pt+1])
-	return 0; /* individual has only one observation. Shouldn't happen since 1.3.2 */
+
     /* Likelihood for individual's first observation */
     hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
     outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
@@ -451,16 +450,18 @@ double likhidden(int pt, /* ordinal subject ID */
 	warning("First observation of %f for subject number %d out of %d is impossible for given initial state probabilities and outcome model\n", curr[0], pt+1, d->npts);
     }
     lweight=0;
+
     /* Matrix product loop to accumulate the likelihood for subsequent observations */
-
-    for (obsno = d->firstobs[pt]+1; obsno <= d->firstobs[pt+1] - 1; ++obsno)
-    {
-	R_CheckUserInterrupt();
-    outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
-	update_likhidden(outcome, nc, obsno, d, qm, hm, cump, newp, &lweight,
-			 &pmat[MI3(0,0,d->pcomb[obsno],qm->nst,qm->nst)]);
+    if (d->firstobs[pt] + 1 < d->firstobs[pt+1]) {  /* person has more than one observation */
+	for (obsno = d->firstobs[pt]+1; obsno <= d->firstobs[pt+1] - 1; ++obsno)
+	    {
+		R_CheckUserInterrupt();
+		outcome = GetCensored(&d->obs, obsno, d->nout, cm, &nc, &curr);
+		update_likhidden(outcome, nc, obsno, d, qm, hm, cump, newp, &lweight,
+				 &pmat[MI3(0,0,d->pcomb[obsno],qm->nst,qm->nst)]);
+	    }
     }
-
+    
     for (i = 0, lik = 0; i < qm->nst; ++i) {
 	lik = lik + cump[i];
     }
