@@ -254,7 +254,7 @@ phasemeans.msm <- function(x, covariates="mean", ci=c("none","normal","bootstrap
 #' \eqn{1/(1-p)}.
 #' 
 #' For increasing hazards with \eqn{\lambda_1 + \mu_1 \geq \mu_2}{l1 + mu1 >=
-#' mu2}, the maximum hazard ratio is \eqn{M_1/((1-p)(M_2 - }{M1/((1-p)(M2 -
+#' mu2}, the maximum hazard ratio is \eqn{M_1/((1-p)(M_2 - M_1))}{M1/((1-p)(M2 -
 #' M1))}\eqn{ M_1))}{M1/((1-p)(M2 - M1))}. This is the minimum hazard ratio for
 #' decreasing hazards.
 #' 
@@ -332,6 +332,9 @@ q2phase <- function(p, l1, mu1, mu2, lower.tail=TRUE, log.p=FALSE){
 r2phase <- function(n, l1, mu1, mu2){
     if (length(n) > 1) n <- length(n)
     ret <- numeric(n)
+    l1 <- rep(l1, length.out=n)
+    mu1 <- rep(mu1, length.out=n)
+    mu2 <- rep(mu2, length.out=n)
     ret[l1<0 | mu1<0 | mu2<0] <- NaN
     ind <- (l1>=0 & mu1>=0 & mu2>=0)
     if(any(ind)) {

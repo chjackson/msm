@@ -135,7 +135,7 @@ mu2}, the maximum hazard ratio between any time \eqn{t} and time 0 is
 \eqn{1/(1-p)}.
 
 For increasing hazards with \eqn{\lambda_1 + \mu_1 \geq \mu_2}{l1 + mu1 >=
-mu2}, the maximum hazard ratio is \eqn{M_1/((1-p)(M_2 - }{M1/((1-p)(M2 -
+mu2}, the maximum hazard ratio is \eqn{M_1/((1-p)(M_2 - M_1))}{M1/((1-p)(M2 -
 M1))}\eqn{ M_1))}{M1/((1-p)(M2 - M1))}. This is the minimum hazard ratio for
 decreasing hazards.
 
