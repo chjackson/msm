@@ -18,4 +18,14 @@ test_that("pearson.msm help example",{
 #  psor.msm <- msm(state ~ months, subject=ptnum, data=psor[1:29,],
 #                  qmatrix = psor.q)
 #  p <- pearson.msm(psor.msm, timegroups=2, intervalgroups=2, covgroups=1, boot=TRUE, B=10)
-#})
+                                        #})
+
+test_that("pearson.msm, models with interactions",{
+  skip_on_cran()
+  expect_error({
+    psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
+    psor.msm <- msm(state ~ months, subject=ptnum, data=psor,
+                    qmatrix = psor.q, covariates = ~ollwsdrt:hieffusn)
+    pearson.msm(psor.msm, timegroups=2, intervalgroups=2, covgroups=2)
+  }, NA)
+})

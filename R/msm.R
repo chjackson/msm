@@ -983,8 +983,8 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     mf$"(obs)" <- seq_len(nrow(mf)) # row numbers before NAs omitted, for reporting in msm.check.*
     basenames <- c("(state)","(time)","(subject)","(obstype)","(obstrue)","(obs)")
     attr(mf, "covnames") <- setdiff(names(mf), basenames)
-    attr(mf, "covnames.q") <- colnames(attr(terms(covariates), "factors")) # names as in data, plus factor() if user
-    if (emodel$misc) attr(mf, "covnames.e") <- colnames(attr(terms(misccovariates), "factors"))
+    attr(mf, "covnames.q") <- rownames(attr(terms(covariates), "factors")) # names as in data, plus factor() if user
+    if (emodel$misc) attr(mf, "covnames.e") <- rownames(attr(terms(misccovariates), "factors"))
     attr(mf, "ncovs") <- length(attr(mf, "covnames"))
 
 
