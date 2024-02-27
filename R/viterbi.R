@@ -27,7 +27,7 @@
 #' \code{observed} = corresponding observed states
 #' 
 #' \code{fitted} = corresponding fitted states found by Viterbi recursion. If
-#' the model is not a hidden Markov model and there are no censored state
+#' the model is not a hidden Markov model, and there are no censored state
 #' observations, this is just the observed states.
 #' 
 #' For hidden Markov models, an additional matrix \code{pstate} is also
