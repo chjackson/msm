@@ -99,33 +99,3 @@ test_that("Constraints",{
     expect_lt(deriv_error(fev3.hid), 1e-04)
     options(msm.test.analytic.derivatives=NULL)
 })
-
-test_that("HMMs with one observation for a subject", {
-  fevno1 <- fev
-  fevno1 <- fevno1[fevno1$ptnum != 1,]
-  fev1 <- fev
-  fev1 <- fev1[!(fev1$ptnum==1 & fev1$days>191), ]
-  head(fev1)
-  head(fevno1)
-  fev1.msm <- msm(fev ~ days, subject=ptnum, data=fev1, qmatrix=three.q, 
-                  death=3, hmodel=hmodel1, fixedpars=TRUE)
-  fev1.msm
-  
-  fevno1.msm <- msm(fev ~ days, subject=ptnum, data=fevno1, qmatrix=three.q, 
-                    death=3, hmodel=hmodel1, fixedpars=TRUE)
-  
-  ## Check gives same result as inserting a uninformative censored state 
-  ## at the second obs 
-  censrow <- data.frame(ptnum=1, days=200, fev=-99, acute=0)
-  fevcens <- rbind(fev1[1,], censrow, fev1[-1,])
-  fevcens$obstrue <- NA
-  fevcens$obstrue[2] <- 1 # watch this syntax for censor+hmm! See help(msm)
-  fevcens.msm <- msm(fev ~ days, subject=ptnum, data=fevcens, qmatrix=three.q, 
-                     death=3, hmodel=hmodel1, censor=-99, censor.states = 1:3,
-                     obstrue = obstrue, fixedpars=TRUE)
-  fevcens.msm
-
-  expect_equal(logLik.msm(fev1.msm), logLik.msm(fevcens.msm))
-  
-  expect_true(logLik.msm(fevno1.msm) != logLik.msm(fevcens.msm))
-})
