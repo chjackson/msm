@@ -14,7 +14,7 @@ then an array of matrices is returned with different scaling factors.}
 
 \item{method}{Under the default of \code{NULL}, this simply wraps the
 \code{\link[expm]{expm}} function from the \pkg{expm} package.  This is
-recommended.  Options to \code{\link{expm}} can be supplied to
+recommended.  Options to \code{\link[expm]{expm}} can be supplied to
 \code{\link{MatrixExp}}, including \code{method}.
 
 Otherwise, for backwards compatibility, the following options, which use
@@ -25,7 +25,7 @@ intensity matrices (see below).  These options are only used if \code{mat}
 has repeated eigenvalues, thus the usual eigen-decomposition method cannot
 be used.}
 
-\item{...}{Arguments to pass to \code{\link{expm}}.}
+\item{...}{Arguments to pass to \code{\link[expm]{expm}}.}
 }
 \value{
 The exponentiated matrix \eqn{\exp(mat)}{exp(mat)}. Or, if \code{t}

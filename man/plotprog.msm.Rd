@@ -47,7 +47,7 @@ of the legend.}
 Default is the range of observation times.}
 
 \item{mark.time}{Mark the empirical survival curve at each censoring point,
-see \code{\link{lines.survfit}}.}
+see \code{\link[survival]{lines.survfit}}.}
 
 \item{...}{Other arguments to be passed to the \code{\link{plot}} and
 \code{\link[survival]{lines.survfit}} functions.}

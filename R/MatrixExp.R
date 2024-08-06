@@ -52,7 +52,7 @@
 #' 
 #' @param method Under the default of \code{NULL}, this simply wraps the
 #' \code{\link[expm]{expm}} function from the \pkg{expm} package.  This is
-#' recommended.  Options to \code{\link{expm}} can be supplied to
+#' recommended.  Options to \code{\link[expm]{expm}} can be supplied to
 #' \code{\link{MatrixExp}}, including \code{method}.
 #' 
 #' Otherwise, for backwards compatibility, the following options, which use
@@ -62,7 +62,7 @@
 #' intensity matrices (see below).  These options are only used if \code{mat}
 #' has repeated eigenvalues, thus the usual eigen-decomposition method cannot
 #' be used.
-#' @param ... Arguments to pass to \code{\link{expm}}.
+#' @param ... Arguments to pass to \code{\link[expm]{expm}}.
 #' @return The exponentiated matrix \eqn{\exp(mat)}{exp(mat)}. Or, if \code{t}
 #' is a vector of length 2 or more, an array of exponentiated matrices.
 #' @references Cox, D. R. and Miller, H. D. \emph{The theory of stochastic

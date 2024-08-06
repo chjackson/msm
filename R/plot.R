@@ -130,7 +130,7 @@ plot.msm <- function(x, from=NULL, to=NULL, range=NULL, covariates="mean", legen
 #' @param xlim x axis limits, e.g. c(0,10) for an axis ranging from 0 to 10.
 #' Default is the range of observation times.
 #' @param mark.time Mark the empirical survival curve at each censoring point,
-#' see \code{\link{lines.survfit}}.
+#' see \code{\link[survival]{lines.survfit}}.
 #' @param ... Other arguments to be passed to the \code{\link{plot}} and
 #' \code{\link[survival]{lines.survfit}} functions.
 #' @seealso \code{\link[survival]{survfit}},
