@@ -63,4 +63,16 @@ test_that("subject weights, model fitting",{
                      subject.weights = swt)
 
   expect_true(cav.msm$minus2loglik != cavwt2.msm$minus2loglik)
+
+  cav.msm <- msm( state ~ years, subject=PTNUM, data = cav, covariates = ~sex,
+                  qmatrix = twoway4.q, deathexact = TRUE, fixedpars=FALSE)
+  cav$swt <- 1
+  cavwt1.msm <- msm( state ~ years, subject=PTNUM, data = cav,
+                     covariates = ~sex, 
+                     qmatrix = rbind(c(-0.5,0.25,0,0.25),c(0.166, -0.498, 0.166, 0.166), 
+                                     c(0, 0.25, -0.5, 0.25), c(0, 0, 0, 0)),  
+                     deathexact = TRUE, fixedpars=FALSE,
+                     subject.weights = swt)
+  
+  pmatrix.msm(cavwt1.msm, covariates=list(sex=0), ci="boot", B=2)
 })
