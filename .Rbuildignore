@@ -10,7 +10,6 @@ vignettes/.+\.log
 vignettes/.+\.toc
 vignettes/.+\.bbl
 vignettes/.+\.blg
-inst/doc/msm-manual.Rnw
 Rplots\.ps
 tests/slow
 tests/test_slow.R
