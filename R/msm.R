@@ -981,7 +981,7 @@ msm <- function(formula, subject=NULL, data=list(), qmatrix, gen.inits=FALSE,
     mf$"(obstype)" <- msm.form.obstype(mf, obstype, dmodel, exacttimes)
     mf$"(obstrue)" <- msm.form.obstrue(mf, hmodel, cmodel)
     mf$"(obs)" <- seq_len(nrow(mf)) # row numbers before NAs omitted, for reporting in msm.check.*
-    basenames <- c("(state)","(time)","(subject)","(obstype)","(obstrue)","(obs)")
+    basenames <- c("(state)","(time)","(subject)","(obstype)","(obstrue)","(obs)","(subject.weights)")
     attr(mf, "covnames") <- setdiff(names(mf), basenames)
     attr(mf, "covnames.q") <- rownames(attr(terms(covariates), "factors")) # names as in data, plus factor() if user
     if (emodel$misc) attr(mf, "covnames.e") <- rownames(attr(terms(misccovariates), "factors"))
