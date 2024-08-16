@@ -65,7 +65,7 @@ jobs:
       - name: Install additional LaTeX packages
         run: |
           tlmgr update --self
-          tlmgr install grfext
+          tlmgr install grfext ae
           tlmgr list --only-installed
       - uses: r-hub/actions/run-check@v1
         with:
@@ -101,7 +101,7 @@ jobs:
       - name: Install additional LaTeX packages
         run: |
           tlmgr update --self
-          tlmgr install grfext
+          tlmgr install grfext ae
           tlmgr list --only-installed
       - uses: r-hub/actions/run-check@v1
         with:
