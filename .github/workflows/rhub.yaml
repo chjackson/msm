@@ -37,6 +37,8 @@ jobs:
       with:
         config: ${{ github.event.inputs.config }}
       id: rhub-setup
+    - uses: r-lib/actions/setup-tinytex@v2
+    - run: tlmgr --version
 
   linux-containers:
     needs: setup
