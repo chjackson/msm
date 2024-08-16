@@ -16,6 +16,7 @@ the matrix exponential.
 ### See .msm.graphs in R/constants.R for permutations.
 */
 
+#include <R.h>
 #include "msm.h"
 #include <stdio.h>
 
