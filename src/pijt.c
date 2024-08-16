@@ -53,9 +53,9 @@ void FormIdentity(Matrix A, int n)
 void MatInvDGE(Matrix A, Matrix Ainv, int n)
 {
     int i, j;
-    Matrix temp = (Matrix) Calloc(n*n, double);
-    Matrix work = (Matrix) Calloc(n*n, double);
-    int nsq=n*n, info, *pivot = Calloc(n, int);
+    Matrix temp = (Matrix) R_Calloc(n*n, double);
+    Matrix work = (Matrix) R_Calloc(n*n, double);
+    int nsq=n*n, info, *pivot = R_Calloc(n, int);
     for (i=0; i<nsq; ++i)
       temp[i] = A[i];
     F77_CALL(dgetrf) (&n, &n, temp, &n, pivot, &info);
@@ -67,18 +67,18 @@ void MatInvDGE(Matrix A, Matrix Ainv, int n)
     for (i=0; i<n; ++i)
 	for (j=0; j<n; ++j)
 	    Ainv[MI(i,j,n)] = temp[MI(i,j,n)];
-    Free(work); Free(pivot); Free(temp);
+    R_Free(work); R_Free(pivot); R_Free(temp);
 }
 
 /* # nocov start */
 void MatInvDQR(Matrix A, Matrix Ainv, int n)
 {
     int i, rank;
-    Matrix temp = (Matrix) Calloc(n*n, double);
-    Matrix work = (Matrix) Calloc(n*n, double);
-    Matrix qraux = (Matrix) Calloc(n*n, double);
-    Matrix ident = (Matrix) Calloc(n*n, double);
-    int nsq=n*n, info, *pivot = Calloc(n, int);
+    Matrix temp = (Matrix) R_Calloc(n*n, double);
+    Matrix work = (Matrix) R_Calloc(n*n, double);
+    Matrix qraux = (Matrix) R_Calloc(n*n, double);
+    Matrix ident = (Matrix) R_Calloc(n*n, double);
+    int nsq=n*n, info, *pivot = R_Calloc(n, int);
     double tol=1e-07;
     for (i=0; i<nsq; ++i)
       temp[i] = A[i];
@@ -87,7 +87,7 @@ void MatInvDQR(Matrix A, Matrix Ainv, int n)
     F77_CALL(dqrcf) (temp, &n, &rank, qraux, ident, &n, Ainv, &info);
     if (info < 0)
 	REprintf("error code %d from Linpack routine dqrcf\n", info);
-    Free(temp); Free(work); Free(qraux); Free(ident);Free(pivot);
+    R_Free(temp); R_Free(work); R_Free(qraux); R_Free(ident);R_Free(pivot);
 }
 /* # nocov end */
 
@@ -150,9 +150,9 @@ void MatrixExpSeries(Matrix A, int n, Matrix expmat, double t)
     int i, j;
     int order = 20;   /* number of terms in series */
     int overflow_correct = 3;
-    Matrix Apower = Calloc(n*n, double);
-    Matrix Temp = Calloc(n*n, double);
-    Matrix AA = Calloc(n*n, double);
+    Matrix Apower = R_Calloc(n*n, double);
+    Matrix Temp = R_Calloc(n*n, double);
+    Matrix AA = R_Calloc(n*n, double);
     for (i=0; i<(n*n); ++i)
 	AA[i] = A[i] * (t / pow(2, overflow_correct));
     FormIdentity(expmat, n);
@@ -168,7 +168,7 @@ void MatrixExpSeries(Matrix A, int n, Matrix expmat, double t)
 	MultMat(expmat, expmat, n, n, n, Temp);
 	CopyMat(Temp, expmat, n, n);
     }
-    Free(Apower); Free(Temp); Free(AA);
+    R_Free(Apower); R_Free(Temp); R_Free(AA);
 }
 
 /* Pade approximants method of calculating matrix exponentials
@@ -180,9 +180,9 @@ static void solve(double *X, double const *A, double const *B, int n)
 {
     /* Solve AX = B, where all matrices are square */
     int N = n*n;
-    double *Acopy = Calloc(N, double);
-    double *work = Calloc(N, double);
-    int *ipiv = Calloc(N, int);
+    double *Acopy = R_Calloc(N, double);
+    double *work = R_Calloc(N, double);
+    int *ipiv = R_Calloc(N, int);
     int info = 0;
     static int c_1 = 1;
     F77_CALL(dcopy)(&N, A, &c_1, Acopy, &c_1);
@@ -192,9 +192,9 @@ static void solve(double *X, double const *A, double const *B, int n)
 	REprintf("argument %d of Lapack routine dgesv had illegal value\n", -info);
     if (info > 0)
 	REprintf("Lapack routine dgesv: system is exactly singular\n");
-    Free(Acopy);
-    Free(ipiv);
-    Free(work);
+    R_Free(Acopy);
+    R_Free(ipiv);
+    R_Free(work);
 }
 
 static void
@@ -224,7 +224,7 @@ MatrixExpPade(double *ExpAt, double *A, int n, double t)
     int i, j;
   int order = 8;
   int N = n*n;
-  double *workspace =  Calloc( 4*N, double);
+  double *workspace =  R_Calloc( 4*N, double);
   double * Temp = workspace;
   double * At = workspace + N;
   double * Num = workspace + 2*N;
@@ -271,7 +271,7 @@ MatrixExpPade(double *ExpAt, double *A, int n, double t)
     }
     MultMat(Temp, Temp, n, n, n, ExpAt);
   }
-  Free(workspace);
+  R_Free(workspace);
 }
 
 /* Tests if a vector has any non-unique entries */
@@ -297,9 +297,9 @@ void Eigen(Matrix mat, int n, vector revals, vector ievals, Matrix evecs, int *e
     char jobVL[1], jobVR[1];
     double *left=0, tmp;
 #endif
-    Matrix work = (Matrix) Calloc(nsq, double);
-    iMatrix worki = (iMatrix) Calloc(nsq, int);
-    Matrix temp = (Matrix) Calloc(nsq, double);
+    Matrix work = (Matrix) R_Calloc(nsq, double);
+    iMatrix worki = (iMatrix) R_Calloc(nsq, int);
+    Matrix temp = (Matrix) R_Calloc(nsq, double);
     for (i=0; i<nsq; ++i) {
 	/* Check whether any of the elements of Q have overflowed.  If
 	   so, Fortran eigen function will hang in a infinite loop, so
@@ -321,7 +321,7 @@ void Eigen(Matrix mat, int n, vector revals, vector ievals, Matrix evecs, int *e
     /* calculate eigensystem */
     F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, work, &lwork, err FCONE FCONE);
 #endif
-    Free(work); Free(worki); Free(temp);
+    R_Free(work); R_Free(worki); R_Free(temp);
 }
 
 /* Compute exponential of a general matrix */
@@ -338,11 +338,11 @@ void MatrixExpMSM(Matrix mat, int n, Matrix expmat, double t,
 	       int method)
 {
     int i, err=0, complex_evals=0, nsq=n*n;
-    Matrix work = (Matrix) Calloc(nsq, double);
-    vector revals = (vector) Calloc(n, double);
-    vector ievals = (vector) Calloc(n, double);
-    Matrix evecs = (Matrix) Calloc(nsq, double);
-    Matrix evecsinv = (Matrix) Calloc(nsq, double);
+    Matrix work = (Matrix) R_Calloc(nsq, double);
+    vector revals = (vector) R_Calloc(n, double);
+    vector ievals = (vector) R_Calloc(n, double);
+    Matrix evecs = (Matrix) R_Calloc(nsq, double);
+    Matrix evecsinv = (Matrix) R_Calloc(nsq, double);
     /* calculate eigensystem */
     if (!degen)
 	Eigen(mat, n, revals, ievals, evecs, &err);
@@ -366,7 +366,7 @@ void MatrixExpMSM(Matrix mat, int n, Matrix expmat, double t,
 	MultMatDiag(revals, evecsinv, n, work);
 	MultMat(evecs, work, n, n, n, expmat);
     }
-    Free(work);  Free(revals);  Free(ievals); Free(evecs);  Free(evecsinv);
+    R_Free(work);  R_Free(revals);  R_Free(ievals); R_Free(evecs);  R_Free(evecsinv);
 }
 
 /* Exponential of a matrix.  If matrix represents one of certain
@@ -387,7 +387,7 @@ void MatrixExpEXPM(double *mat, int *n, double *expmat, double *t,
 		   int *degen, int *err){
     int i;
     int nsq = (*n)*(*n);
-    double *matt = Calloc(nsq, double);
+    double *matt = R_Calloc(nsq, double);
     if (*iso > 0)
 	AnalyticP(expmat, *t, *n, *iso, perm, qperm, mat, degen);
     else {
@@ -408,7 +408,7 @@ void MatrixExpEXPM(double *mat, int *n, double *expmat, double *t,
 	}
 	expm(matt, *n, expmat, Ward_2);
     }
-    Free(matt);
+    R_Free(matt);
 }
 
 /* Returns i-j transition intensity time t given vectors of intensities and transition indicators */
@@ -499,12 +499,12 @@ void DMatrixExpSeries(Matrix DA, Matrix A, int n, int npars, Array3 DexpA, doubl
     int order = 20;
     int nsq = n*n;
     double *DAp;
-    vector tpower = Calloc(order+1, double); /* values of t^i / i! */
-    Matrix DApower = Calloc(nsq, double); /* cumulative outer sum */
-    Array3 Apower = Calloc(nsq*(order+1), double);  /* storage for successive powers of A  */
-    Matrix Temp = Calloc(nsq, double); /* workspace  */
-    Matrix Inner = Calloc(nsq, double); /* one term of inner sum */
-    Matrix CInner = Calloc(nsq, double); /* cumulative inner sum */
+    vector tpower = R_Calloc(order+1, double); /* values of t^i / i! */
+    Matrix DApower = R_Calloc(nsq, double); /* cumulative outer sum */
+    Array3 Apower = R_Calloc(nsq*(order+1), double);  /* storage for successive powers of A  */
+    Matrix Temp = R_Calloc(nsq, double); /* workspace  */
+    Matrix Inner = R_Calloc(nsq, double); /* one term of inner sum */
+    Matrix CInner = R_Calloc(nsq, double); /* cumulative inner sum */
 
     FormIdentity(&Apower[0], n);  /* A to the power 0 is identity */
     tpower[0] = 1;
@@ -530,7 +530,7 @@ void DMatrixExpSeries(Matrix DA, Matrix A, int n, int npars, Array3 DexpA, doubl
 		DexpA[p*nsq + k] += CInner[k]*tpower[i]; /* Fill in next nsq entries of DexpA with derivative WRT pth parameter.  */
 	}
     }
-    Free(tpower); Free(DApower); Free(Apower); Free(Temp); Free(Inner); Free(CInner);
+    R_Free(tpower); R_Free(DApower); R_Free(Apower); R_Free(Temp); R_Free(Inner); R_Free(CInner);
 }
 
 void dpijdeath(int r, int s, Array3 dpmat, Matrix pmat, Array3 dqmat, Matrix qmat, int n, int npars, vector dcontrib)
@@ -551,13 +551,13 @@ void DPmat(Array3 dpmat, double t, Array3 dqmat, Matrix qmat, int n, int npars, 
     int i, j, p, err=0;
     double eit, ejt;
     Matrix DQ;
-    vector revals = (vector) Calloc(n, double);
-    vector ievals = (vector) Calloc(n, double);
-    Matrix evecs = (Matrix) Calloc(n*n, double);
-    Matrix evecsinv = (Matrix) Calloc(n*n, double);
-    Matrix work = (Matrix) Calloc(n*n, double);
-    Matrix G = (Matrix) Calloc(n*n, double);
-    Matrix V = (Matrix) Calloc(n*n, double);
+    vector revals = (vector) R_Calloc(n, double);
+    vector ievals = (vector) R_Calloc(n, double);
+    Matrix evecs = (Matrix) R_Calloc(n*n, double);
+    Matrix evecsinv = (Matrix) R_Calloc(n*n, double);
+    Matrix work = (Matrix) R_Calloc(n*n, double);
+    Matrix G = (Matrix) R_Calloc(n*n, double);
+    Matrix V = (Matrix) R_Calloc(n*n, double);
 
     if (exacttimes) {
 	DPmatEXACT(dqmat, qmat, n, npars, dpmat, t);
@@ -606,5 +606,5 @@ void DPmat(Array3 dpmat, double t, Array3 dqmat, Matrix qmat, int n, int npars, 
 	    }
 	}
     }
-    Free(revals); Free(ievals); Free(evecs); Free(evecsinv); Free(work); Free(G); Free(V);
+    R_Free(revals); R_Free(ievals); R_Free(evecs); R_Free(evecsinv); R_Free(work); R_Free(G); R_Free(V);
 }

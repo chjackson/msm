@@ -222,7 +222,7 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 {
     int i, j, k, l, r, s, ind;
     int p=0; /* indexes parameters up to totpars */
-    double *pout, *dptmp = Calloc(hm->totpars, double); /* will only use hm->npars[i] slots for each i */
+    double *pout, *dptmp = R_Calloc(hm->totpars, double); /* will only use hm->npars[i] slots for each i */
 #ifdef DERIVDEBUG
     printf("GetDOutcomeProb:\n");
 #endif
@@ -233,7 +233,7 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 	    if (nout > 1) {  /* multivariate outcomes. Censored states not supported			
 				TODO.  This is fiddlier than first thought.
 				not considered what hm->dpars should be, particularly with constraints  */ 
-		pout = Calloc(nout, double);
+		pout = R_Calloc(nout, double);
 		for (r=0; r<nout; ++r) {
 		    pout[r] = 0; 
 		    ind = (hm->mv ? MI(r,i,nout) : i);
@@ -271,7 +271,7 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 		    if (hm->mv) p += hm->npars[ind];
 		}
 		if (!hm->mv) p += hm->npars[i];
-		Free(pout);
+		R_Free(pout);
 	    }
 	    else { 
 		for (j=0; j<nc; ++j){
@@ -297,7 +297,7 @@ void GetDOutcomeProb(double *dpout, /* qm->nst x hm->nopt */
 	    }
 	}
     }
-    Free(dptmp);
+    R_Free(dptmp);
 }
 
 void normalize(double *in, double *out, int n, double *lweight)
@@ -319,7 +319,7 @@ void normalize(double *in, double *out, int n, double *lweight)
 void calc_p(msmdata *d, qmodel *qm, double *pmat)
 {
     double *qmat;
-    int pt, i, c, *comb_done = Calloc(d->npcombs, int);
+    int pt, i, c, *comb_done = R_Calloc(d->npcombs, int);
     for (i=0; i<d->npcombs; ++i)
 	comb_done[i] = 0;
     for (pt = 0;  pt < d->npts; ++pt){
@@ -333,7 +333,7 @@ void calc_p(msmdata *d, qmodel *qm, double *pmat)
 	    }
 	}
     }
-    Free(comb_done);
+    R_Free(comb_done);
 }
 
 void calc_dp(msmdata *d, qmodel *qm, double *dpmat)
@@ -341,7 +341,7 @@ void calc_dp(msmdata *d, qmodel *qm, double *dpmat)
     double *qmat, *dqmat;
     int pt, i, c, np=qm->nopt;
     //    int r,s,p;
-    int *comb_done = Calloc(d->npcombs, int);
+    int *comb_done = R_Calloc(d->npcombs, int);
     for (i=0; i<d->npcombs; ++i)
 	comb_done[i] = 0;
     for (pt = 0;  pt < d->npts; ++pt){
@@ -359,7 +359,7 @@ void calc_dp(msmdata *d, qmodel *qm, double *dpmat)
 	    }
 	}
     }
-    Free(comb_done);
+    R_Free(comb_done);
 }
 
 /* Find the true state that observation with an exact death time
@@ -390,7 +390,7 @@ void update_likhidden(double *outcome, int nc, int obsno, msmdata *d, qmodel *qm
 		      hmodel *hm, double *cump, double *newp, double *lweight, Array3 pmat)
 {
     int i, j, ideath=0;
-    double T, *pout = Calloc(qm->nst, double);
+    double T, *pout = R_Calloc(qm->nst, double);
     double *qmat = &(qm->intens[MI3(0, 0, obsno-1, qm->nst, qm->nst)]);
     double *hpars = &(hm->pars[MI(0, obsno, hm->totpars)]);
 
@@ -418,7 +418,7 @@ void update_likhidden(double *outcome, int nc, int obsno, msmdata *d, qmodel *qm
     /* re-scale the likelihood at each step to prevent it getting too small and underflowing */
     /*  while cumulatively recording the log scale factor   */
     normalize (newp, cump, qm->nst, lweight);
-    Free(pout);
+    R_Free(pout);
 }
 
 /* Likelihood for the hidden Markov model for one individual */
@@ -426,10 +426,10 @@ void update_likhidden(double *outcome, int nc, int obsno, msmdata *d, qmodel *qm
 double likhidden(int pt, /* ordinal subject ID */
 		 msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pmat)
 {
-    double *curr = Calloc (qm->nst, double);
-    double *cump     = Calloc(qm->nst, double);
-    double *newp     = Calloc(qm->nst, double);
-    double *pout = Calloc(qm->nst, double);
+    double *curr = R_Calloc (qm->nst, double);
+    double *cump     = R_Calloc(qm->nst, double);
+    double *newp     = R_Calloc(qm->nst, double);
+    double *pout = R_Calloc(qm->nst, double);
     double lweight, lik, *hpars, *outcome;
     int i, obsno, nc=1, allzero=1;
 
@@ -465,7 +465,7 @@ double likhidden(int pt, /* ordinal subject ID */
     for (i = 0, lik = 0; i < qm->nst; ++i) {
 	lik = lik + cump[i];
     }
-    Free(curr); Free(cump);  Free(newp); Free(pout);
+    R_Free(curr); R_Free(cump);  R_Free(newp); R_Free(pout);
     /* Transform the likelihood back to the proper scale */
     return -2*(log(lik) - lweight);
 }
@@ -482,8 +482,8 @@ void init_hmm_deriv(double *curr, int nc, int pt, int obsno, double *hpars,
 {
     int i, j, p, n=qm->nst, nqp=qm->nopt, nhp = hm->nopt, np = nqp + nhp;
     double suma, sumphi;
-    double *pout = Calloc(n, double);
-    double *dpout = Calloc(n * nhp, double);
+    double *pout = R_Calloc(n, double);
+    double *dpout = R_Calloc(n * nhp, double);
     int cens_not_hmm = (cm->ncens > 0 && !hm->hidden);
     GetOutcomeProb(pout, curr, nc, d->nout, hpars, hm, qm, d->obstrue[obsno]);
     GetDOutcomeProb(dpout, curr, nc, d->nout, hpars, hm, qm, obsno, d->obstrue[obsno]);
@@ -526,7 +526,7 @@ void init_hmm_deriv(double *curr, int nc, int pt, int obsno, double *hpars,
 	    dxi[MI(i,p,n)] = ((*pok)*phi[MI(i,p,n)] - a[i]*sumphi) / ((*pok)*(*pok));
 	}
     }
-    Free(pout); Free(dpout);
+    R_Free(pout); R_Free(dpout);
 }
 
 void update_hmm_deriv(double *curr, int nc, int obsno,
@@ -538,8 +538,8 @@ void update_hmm_deriv(double *curr, int nc, int obsno,
 {
     int i, j, p, s, n=qm->nst, nqp=qm->nopt, nhp = hm->nopt, np = nqp + nhp, ideath=0;
     double qs=0, suma, sumphi, ptrans, dptrans, dqs, dhp;
-    double *pout = Calloc(n, double);
-    double *dpout = Calloc(n * nhp, double);
+    double *pout = R_Calloc(n, double);
+    double *dpout = R_Calloc(n * nhp, double);
     GetOutcomeProb(pout, curr, nc, d->nout, hpars, hm, qm, d->obstrue[obsno]);
     GetDOutcomeProb(dpout, curr, nc, d->nout, hpars, hm, qm, obsno, d->obstrue[obsno]);
     if (d->obstype[obsno] == OBS_DEATH)
@@ -618,24 +618,24 @@ void update_hmm_deriv(double *curr, int nc, int obsno,
 #endif
 	}
     }
-    Free(pout); Free(dpout);
+    R_Free(pout); R_Free(dpout);
 }
 
 void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pmat, Array4 dpmat, double *dlp)
 {
     int i, k, p, obsno, nc=1, n=qm->nst, nqp=qm->nopt, nhp = hm->nopt, np = nqp + nhp;
     double lp, pok;
-    double *curr = Calloc (n, double);
+    double *curr = R_Calloc (n, double);
     int nobspt = d->firstobs[pt+1] - d->firstobs[pt];
-    double *anew = Calloc(n, double); /* alpha_k(i) = P(X(t_k) = i, o_1, ..., o_k),    X is true, O is obs */
-    double *aold = Calloc(n, double);
-    double *phinew = Calloc(n * np, double);   /* phi_k(theta_m, i) = deriv of alpha wrt theta_m. */
-    double *phiold = Calloc(n * np, double);
-    double *xinew = Calloc(n, double); /* xi(k,i) = P(x(k-1) = i | o_1, ..., o_(k-1)) */
-    double *xiold = Calloc(n, double);
-    double *dxinew = Calloc(n * np, double);
-    double *dxiold = Calloc(n * np, double);
-    double *dpok = Calloc(np, double);
+    double *anew = R_Calloc(n, double); /* alpha_k(i) = P(X(t_k) = i, o_1, ..., o_k),    X is true, O is obs */
+    double *aold = R_Calloc(n, double);
+    double *phinew = R_Calloc(n * np, double);   /* phi_k(theta_m, i) = deriv of alpha wrt theta_m. */
+    double *phiold = R_Calloc(n * np, double);
+    double *xinew = R_Calloc(n, double); /* xi(k,i) = P(x(k-1) = i | o_1, ..., o_(k-1)) */
+    double *xiold = R_Calloc(n, double);
+    double *dxinew = R_Calloc(n * np, double);
+    double *dxiold = R_Calloc(n * np, double);
+    double *dpok = R_Calloc(np, double);
     double *qmat, *dqmat, *hpars=NULL, *outcome=NULL;
     if (hm->hidden) hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
     outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
@@ -692,7 +692,7 @@ void hmm_deriv(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pm
     }
 	
     lp *= -2;
-    Free(curr); Free(aold); Free(anew); Free(phiold); Free(phinew); Free(xiold); Free(xinew); Free(dxiold); Free(dxinew); Free(dpok);
+    R_Free(curr); R_Free(aold); R_Free(anew); R_Free(phiold); R_Free(phinew); R_Free(xiold); R_Free(xinew); R_Free(dxiold); R_Free(dxinew); R_Free(dpok);
 }
 
 
@@ -700,18 +700,18 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
 {
     int i, j, k, p, q, obsno, nc=1, n=qm->nst, nqp=qm->nopt, nhp = hm->nopt, np = nqp + nhp;
     double pok;
-    double *curr = Calloc (n, double);
-    double *potential = Calloc (n, double);
+    double *curr = R_Calloc (n, double);
+    double *potential = R_Calloc (n, double);
     int nobspt = d->firstobs[pt+1] - d->firstobs[pt];
-    double *anew = Calloc(n, double); /* alpha_k(i) = P(X(t_k) = i, o_1, ..., o_k),    X is true, O is obs */
-    double *aold = Calloc(n, double);
-    double *phinew = Calloc(n * np, double);   /* phi_k(theta_m, i) = deriv of alpha wrt theta_m. */
-    double *phiold = Calloc(n * np, double);
-    double *xinew = Calloc(n, double); /* xi(k,i) = P(x(k-1) = i | o_1, ..., o_(k-1)) */
-    double *xiold = Calloc(n, double);
-    double *dxinew = Calloc(n * np, double);
-    double *dxiold = Calloc(n * np, double);
-    double *dpok = Calloc(np, double);
+    double *anew = R_Calloc(n, double); /* alpha_k(i) = P(X(t_k) = i, o_1, ..., o_k),    X is true, O is obs */
+    double *aold = R_Calloc(n, double);
+    double *phinew = R_Calloc(n * np, double);   /* phi_k(theta_m, i) = deriv of alpha wrt theta_m. */
+    double *phiold = R_Calloc(n * np, double);
+    double *xinew = R_Calloc(n, double); /* xi(k,i) = P(x(k-1) = i | o_1, ..., o_(k-1)) */
+    double *xiold = R_Calloc(n, double);
+    double *dxinew = R_Calloc(n * np, double);
+    double *dxiold = R_Calloc(n * np, double);
+    double *dpok = R_Calloc(np, double);
     double *qmat, *dqmat, *hpars=NULL, *outcome;
     if (hm->hidden) hpars = &(hm->pars[MI(0, d->firstobs[pt], hm->totpars)]);
     for (p=0; p<np; ++p)
@@ -768,7 +768,7 @@ void hmm_info(int pt, msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, Array3 pma
 	    }
 	}
     }
-    Free(curr); Free(potential); Free(anew); Free(aold); Free(phiold); Free(phinew); Free(xinew); Free(xiold); Free(dxiold); Free(dxinew); Free(dpok);
+    R_Free(curr); R_Free(potential); R_Free(anew); R_Free(aold); R_Free(phiold); R_Free(phinew); R_Free(xinew); R_Free(xiold); R_Free(dxiold); R_Free(dxinew); R_Free(dpok);
 }
 
 
@@ -810,10 +810,10 @@ double likcensor(int pt, /* ordinal subject ID */
 		 cmodel *cm, hmodel *hm, Array3 pmat
 		 )
 {
-    double *cump     = Calloc(qm->nst, double);
-    double *newp     = Calloc(qm->nst, double);
-    double *prev     = Calloc(qm->nst, double);
-    double *curr     = Calloc(qm->nst, double);
+    double *cump     = R_Calloc(qm->nst, double);
+    double *newp     = R_Calloc(qm->nst, double);
+    double *prev     = R_Calloc(qm->nst, double);
+    double *curr     = R_Calloc(qm->nst, double);
     double lweight = 0, lik;
     int i, obs, np=0, nc=0;
     if (d->firstobs[pt] + 1 == d->firstobs[pt+1])
@@ -833,7 +833,7 @@ double likcensor(int pt, /* ordinal subject ID */
 	}
     for (i = 0, lik = 0; i < nc; ++i)
 	lik = lik + cump[i];
-    Free(cump);  Free(newp);  Free(prev); Free(curr);
+    R_Free(cump);  R_Free(newp);  R_Free(prev); R_Free(curr);
     return -2*(log(lik) - lweight);
 }
 
@@ -845,7 +845,7 @@ double liksimple(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm)
 {
     int i;
     double lik=0, contrib=0;
-    double *pmat = Calloc((qm->nst)*(qm->nst), double), *qmat;
+    double *pmat = R_Calloc((qm->nst)*(qm->nst), double), *qmat;
     qmat = &(qm->intens[MI3(0, 0, 0, qm->nst, qm->nst)]);
     for (i=0; i < d->nagg; ++i)
 	{
@@ -869,7 +869,7 @@ double liksimple(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm)
 	    printf("%d-%d in %lf, q=%lf,%lf, lik=%20.20lf, ll=%lf\n",d->fromstate[i], d->tostate[i], d->timelag[i],qmat[0],qmat[1], contrib, d->nocc[i] * log(contrib));
 #endif
 	}
-    Free(pmat);
+    R_Free(pmat);
     return (-2*lik);
 }
 
@@ -880,7 +880,7 @@ double liksimple_subj(int pt, /* ordinal subject ID */
 {
     int i, from, to;
     double lik=0, pm=0, dt;
-    double *pmat = Calloc((qm->nst)*(qm->nst), double), *qmat;
+    double *pmat = R_Calloc((qm->nst)*(qm->nst), double), *qmat;
     for (i = d->firstobs[pt]+1; i < d->firstobs[pt+1]; ++i) {
 	R_CheckUserInterrupt();
 	dt = d->time[i] - d->time[i-1];
@@ -897,7 +897,7 @@ double liksimple_subj(int pt, /* ordinal subject ID */
 #endif
 	lik += log(pm);
     }
-    Free(pmat);
+    R_Free(pmat);
     return (-2*lik);
 }
 
@@ -905,7 +905,7 @@ void msmLikelihood (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *retu
 {
     int pt;
     double likone;
-    double *pmat = Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
+    double *pmat = R_Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
     *returned = 0;
     /* Likelihood for hidden Markov model */
     if (hm->hidden)
@@ -932,7 +932,7 @@ void msmLikelihood (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *retu
     else {
 	*returned = liksimple (d, qm, cm, hm);
     }
-    Free(pmat);
+    R_Free(pmat);
 }
 
 /* First derivatives of the log-likelihood for the non-hidden
@@ -942,9 +942,9 @@ void derivsimple(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *deriv)
 {
     int i, p, np=qm->nopt;
     double *qmat, *dqmat;
-    double *pmat = Calloc(qm->nst * qm->nst, double);
-    double *dpmat = Calloc(qm->nst * qm->nst * np, double);
-    double *dp = Calloc(np, double);
+    double *pmat = R_Calloc(qm->nst * qm->nst, double);
+    double *dpmat = R_Calloc(qm->nst * qm->nst * np, double);
+    double *dp = R_Calloc(np, double);
     double pm;
     qmat = &(qm->intens[MI3(0, 0, 0, qm->nst, qm->nst)]);
     dqmat = &(qm->dintens[MI4(0, 0, 0, 0, qm->nst, qm->nst, np)]);
@@ -978,7 +978,7 @@ void derivsimple(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *deriv)
 	deriv[p] *= -2;   /* above is dlogL/dtu as in Kalb+Law, we want
 			     deriv of -2 loglik  */
     }
-    Free(pmat); Free(dpmat); Free(dp);
+    R_Free(pmat); R_Free(dpmat); R_Free(dp);
 }
 
 /* First derivatives of the likelihood for the non-hidden multi-state
@@ -991,9 +991,9 @@ void derivsimple_subj(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *de
 {
     int pt, i, p, np=qm->nopt;
     double *qmat, *dqmat;
-    double *pmat = Calloc(qm->nst * qm->nst, double);
-    double *dpmat = Calloc(qm->nst * qm->nst * np, double);
-    double *dp = Calloc(np, double);
+    double *pmat = R_Calloc(qm->nst * qm->nst, double);
+    double *dpmat = R_Calloc(qm->nst * qm->nst * np, double);
+    double *dp = R_Calloc(np, double);
     double pm=0, dt;
     int from, to;
     for (pt = 0;  pt < d->npts; ++pt){
@@ -1034,17 +1034,17 @@ void derivsimple_subj(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *de
 		deriv[MI(pt,p,d->npts)] = 0;
 	}
     }
-    Free(pmat); Free(dpmat); Free(dp);
+    R_Free(pmat); R_Free(dpmat); R_Free(dp);
 }
 
 void infosimple(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *info)
 {
     int i, j, p, q, np=qm->nopt;
     double *qmat, *dqmat;
-    double *pmat = Calloc(qm->nst * qm->nst, double);
-    double *dpmat = Calloc(qm->nst * qm->nst * np, double);
-    double *dpm = Calloc(qm->nst* np, double);
-    double *pm = Calloc(qm->nst, double);
+    double *pmat = R_Calloc(qm->nst * qm->nst, double);
+    double *dpmat = R_Calloc(qm->nst * qm->nst * np, double);
+    double *dpm = R_Calloc(qm->nst* np, double);
+    double *pm = R_Calloc(qm->nst, double);
     for (p = 0; p < np; ++p)
 	for (q = 0; q < np; ++q)
 	    info[MI(p,q,np)] = 0;
@@ -1086,7 +1086,7 @@ void infosimple(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *info)
 					   we want second deriv of of -2 loglik */
 	}
     }
-    Free(pm); Free(dpm); Free(dpmat); Free(pmat);
+    R_Free(pm); R_Free(dpm); R_Free(dpmat); R_Free(pmat);
 }
 
 /* Derivatives of the P matrix, used for the Pearson test p-value */
@@ -1096,7 +1096,7 @@ void infosimple(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *info)
 void dpmat_obs(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *deriv)
 {
     int pt, i, j, k, p, from, np = qm->nopt;
-    double *dpmat = Calloc(qm->nst * qm->nst * np, double), *qmat, *dqmat;
+    double *dpmat = R_Calloc(qm->nst * qm->nst * np, double), *qmat, *dqmat;
     double dt;
 
     j=0;
@@ -1119,14 +1119,14 @@ void dpmat_obs(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *deriv)
 		}
 	    }
 	}
-    Free(dpmat);
+    R_Free(dpmat);
 }
 
 void derivhidden(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *deriv, int by_subject){
     int pt, p, np = qm->nopt + hm->nopt;
-    double *pmat = Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
-    double *dpmat = Calloc((qm->nst)*(qm->nst)*qm->nopt*(d->npcombs), double);
-    double *dlp = Calloc(np, double);
+    double *pmat = R_Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
+    double *dpmat = R_Calloc((qm->nst)*(qm->nst)*qm->nopt*(d->npcombs), double);
+    double *dlp = R_Calloc(np, double);
     calc_p(d, qm, pmat);
     calc_dp(d, qm, dpmat);
     if (!by_subject)
@@ -1141,7 +1141,7 @@ void derivhidden(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *deriv,
 		deriv[p] += -2*dlp[p];
 	}
     }
-    Free(pmat); Free(dpmat); Free(dlp);
+    R_Free(pmat); R_Free(dpmat); R_Free(dlp);
 }
 
 void msmDeriv_subj (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *returned)
@@ -1156,9 +1156,9 @@ void msmDeriv_subj (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *retu
 
 void infohidden(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *info){
     int pt, p, q, np = qm->nopt + hm->nopt;
-    double *pmat = Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
-    double *dpmat = Calloc((qm->nst)*(qm->nst)*qm->nopt*(d->npcombs), double);
-    double *itmp = Calloc(np*np, double);
+    double *pmat = R_Calloc((qm->nst)*(qm->nst)*(d->npcombs), double);
+    double *dpmat = R_Calloc((qm->nst)*(qm->nst)*qm->nopt*(d->npcombs), double);
+    double *itmp = R_Calloc(np*np, double);
     calc_p(d, qm, pmat);
     calc_dp(d, qm, dpmat);
     for (p=0; p<np; ++p)
@@ -1172,7 +1172,7 @@ void infohidden(msmdata *d, qmodel *qm,  cmodel *cm, hmodel *hm, double *info){
 //		printf("itmp[%d,%d]=%f,info[%d,%d]=%f\n",q,p,itmp[MI(q,p,np)],q,p,info[MI(q,p,np)]);
 	    }
     }
-    Free(pmat); Free(dpmat); Free(itmp);
+    R_Free(pmat); R_Free(dpmat); R_Free(itmp);
 }
 
 void msmDeriv (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *returned)
@@ -1196,7 +1196,7 @@ void msmInfo (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *returned)
 void msmLikelihood_subj (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *returned)
 {
     int pt;
-    double *pmat = Calloc((d->npcombs)*(qm->nst)*(qm->nst), double);
+    double *pmat = R_Calloc((d->npcombs)*(qm->nst)*(qm->nst), double);
     if (hm->hidden || (cm->ncens > 0))
 	calc_p(d, qm, pmat);
     for (pt = 0;  pt < d->npts; ++pt){
@@ -1207,7 +1207,7 @@ void msmLikelihood_subj (msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double 
 	else
 	    returned[pt] = liksimple_subj (pt, d, qm, cm, hm);
     }
-    Free(pmat);
+    R_Free(pmat);
 }
 
 /* Find zero-based index of maximum element of a vector x */
@@ -1231,21 +1231,21 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 {
     int i, tru, k, kmax, obs, nc = 1, first_obs;
 
-    double *pmat = Calloc((qm->nst)*(qm->nst), double);
-    int *ptr = Calloc((d->n)*(qm->nst), int);
-    double *lvold = Calloc(qm->nst, double);
-    double *lvnew = Calloc(qm->nst, double);
-    double *lvp = Calloc(qm->nst, double);
-    double *log_initp_pout = Calloc(qm->nst, double);
-    double *curr = Calloc (qm->nst, double), *outcome;
-    double *pout = Calloc(qm->nst, double);
-    double *pfwd = Calloc((d->n)*(qm->nst), double);
-    double *pbwd = Calloc((d->n)*(qm->nst), double);
+    double *pmat = R_Calloc((qm->nst)*(qm->nst), double);
+    int *ptr = R_Calloc((d->n)*(qm->nst), int);
+    double *lvold = R_Calloc(qm->nst, double);
+    double *lvnew = R_Calloc(qm->nst, double);
+    double *lvp = R_Calloc(qm->nst, double);
+    double *log_initp_pout = R_Calloc(qm->nst, double);
+    double *curr = R_Calloc (qm->nst, double), *outcome;
+    double *pout = R_Calloc(qm->nst, double);
+    double *pfwd = R_Calloc((d->n)*(qm->nst), double);
+    double *pbwd = R_Calloc((d->n)*(qm->nst), double);
 
     double dt, logpall, psum, pfwd_current;
     double *qmat, *hpars;
-    double *ucfwd = Calloc(d->n, double);
-    double *ucbwd = Calloc(d->n, double);
+    double *ucfwd = R_Calloc(d->n, double);
+    double *ucbwd = R_Calloc(d->n, double);
 
     i = 0;
     GetCensored(&d->obs, i, d->nout, cm, &nc, &curr);
@@ -1401,8 +1401,8 @@ void Viterbi(msmdata *d, qmodel *qm, cmodel *cm, hmodel *hm, double *fitted, dou
 		    }
 		}
 	}
-    Free(pmat); Free(ptr); Free(lvold); Free(lvnew); Free(lvp); Free(log_initp_pout); Free(curr); Free(pout);
-    Free(pfwd); Free(pbwd); Free(ucfwd); Free(ucbwd);
+    R_Free(pmat); R_Free(ptr); R_Free(lvold); R_Free(lvnew); R_Free(lvp); R_Free(log_initp_pout); R_Free(curr); R_Free(pout);
+    R_Free(pfwd); R_Free(pbwd); R_Free(ucfwd); R_Free(ucbwd);
 }
 
 /* get the list element named str, or return NULL */
