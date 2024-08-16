@@ -317,7 +317,7 @@ void Eigen(Matrix mat, int n, vector revals, vector ievals, Matrix evecs, int *e
     /* calculate optimal size of workspace */
     F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, &tmp, &lwork, err FCONE FCONE);
     lwork = (int) tmp;
-    work = (Matrix) Realloc(work, lwork, double);
+    work = (Matrix) R_Realloc(work, lwork, double);
     /* calculate eigensystem */
     F77_CALL(dgeev)(jobVL, jobVR, &n, temp, &n, revals, ievals, left, &n, evecs, &n, work, &lwork, err FCONE FCONE);
 #endif
