@@ -210,7 +210,7 @@ tidy.msm.est <- function(x, ...){
 ## for a hidden Markov model. 
 
 #' @noRd
-tidy.hmodel <- function(x){
+tidy.hmodel <- function(x, ...){
   xh <- x$hmodel
   p <- x$paramdata
   res <- data.frame(parclass = "hmm",

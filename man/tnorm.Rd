@@ -71,8 +71,7 @@ The truncated normal distribution has density
 
 \deqn{ f(x, \mu, \sigma) = \phi(x, \mu, \sigma) / (\Phi(u, \mu, \sigma) -
 \Phi(l, \mu, \sigma)) }{ f(x, mu, sigma) = phi(x, mu, sigma) / (Phi(upper,
-mu, sigma) - Phi(lower, mu, sigma)) }\deqn{ }{ f(x, mu, sigma) = phi(x, mu,
-sigma) / (Phi(upper, mu, sigma) - Phi(lower, mu, sigma)) } for \eqn{l <= x
+mu, sigma) - Phi(lower, mu, sigma)) } for \eqn{l <= x
 <= u}{lower <= x <= upper}, and 0 otherwise.
 
 \eqn{\mu}{mean} is the mean of the original Normal distribution before
