@@ -58,8 +58,8 @@ pfn P5FNS[] = {
 void AnalyticP(Matrix pmat, double t, int nstates, int iso, int *perm, int *qperm, Matrix qmat, int *degen)
 {
     int i, j;
-    Matrix qmat_base = (Matrix) Calloc( (nstates)*(nstates), double);
-    Matrix pmat_base = (Matrix) Calloc( (nstates)*(nstates), double);
+    Matrix qmat_base = (Matrix) R_Calloc( (nstates)*(nstates), double);
+    Matrix pmat_base = (Matrix) R_Calloc( (nstates)*(nstates), double);
     for (i=0; i<nstates; ++i) {
 	for (j=0; j<nstates; ++j) {
 	    qmat_base[MI(i,j,nstates)] = qmat[MI(qperm[i]-1,qperm[j]-1,nstates)];
@@ -79,7 +79,7 @@ void AnalyticP(Matrix pmat, double t, int nstates, int iso, int *perm, int *qper
 	for (j=0; j<nstates; ++j) {
 	    pmat[MI(i,j,nstates)] = pmat_base[MI(perm[i]-1,perm[j]-1,nstates)];
 	}
-    Free(pmat_base); Free(qmat_base);
+    R_Free(pmat_base); R_Free(qmat_base);
 }
 
 
