@@ -62,6 +62,11 @@ jobs:
           job-config: ${{ matrix.config.job-config }}
       - uses: r-lib/actions/setup-tinytex@v2
       - run: tlmgr --version
+      - name: Install additional LaTeX packages
+        run: |
+          tlmgr update --self
+          tlmgr install grfext
+          tlmgr list --only-installed
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
@@ -93,6 +98,11 @@ jobs:
           token: ${{ secrets.RHUB_TOKEN }}
       - uses: r-lib/actions/setup-tinytex@v2
       - run: tlmgr --version
+      - name: Install additional LaTeX packages
+        run: |
+          tlmgr update --self
+          tlmgr install grfext
+          tlmgr list --only-installed
       - uses: r-hub/actions/run-check@v1
         with:
           job-config: ${{ matrix.config.job-config }}
