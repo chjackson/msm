@@ -165,6 +165,6 @@ efpt.msm <- function(x=NULL, qmatrix=NULL, tostate, start="all", covariates="mea
                  normal = efpt.normci.msm(x=x, qmatrix=qmatrix, tostate=tostate, start=start, covariates=covariates, cl=cl, B=B),
                  none = NULL)
   res <- if (ci=="none") est else rbind(est, e.ci)
-  class(res) <- "msm.estbystate"
+  class(res) <- c("msm.estbystate", class(res))
   res
 }

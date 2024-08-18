@@ -402,7 +402,7 @@ prevalence.msm <- function(x,
                           piecewise.times, piecewise.covariates, obs$risk, subset, ci, cl, B, cores)
     res <- list(observed=obs$obstab, expected=expec[[1]], obsperc=obs$obsperc, expperc=expec[[2]])
     names(res) <- c("Observed", "Expected", "Observed percentages", "Expected percentages")
-    class(res) <- "msm.prevalence"
+    class(res) <- c("msm.prevalence", class(res))
     if (plot) plot.prevalence.msm(x, mintime=min(times), maxtime=max(times), timezero=timezero, initstates=initstates,
                                   interp=interp, censtime=censtime, covariates=covariates, misccovariates=misccovariates,
                                   piecewise.times=piecewise.times, piecewise.covariates=piecewise.covariates, ...)

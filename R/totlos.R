@@ -258,7 +258,7 @@ totlos.msm <- function(x, start=1, end=NULL, fromt=0, tot=Inf, covariates="mean"
                                             discount=discount, env=env, cl=cl, B=B, ...),
                  none = NULL)
   res <- if (ci=="none") res[end] else rbind(res, t.ci)[,end]
-  class(res) <- "msm.estbystate"
+  class(res) <- c("msm.estbystate", class(res))
   res
 }
 
