@@ -1,6 +1,6 @@
 Package: msm
 Version: 1.8
-Date: 2024-08-16
+Date: 2024-09-06
 Title: Multi-State Markov and Hidden Markov Models in Continuous Time
 Authors@R: c(person("Christopher", "Jackson",
          email="chris.jackson@mrc-bsu.cam.ac.uk",

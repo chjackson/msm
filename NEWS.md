@@ -1,6 +1,6 @@
 User-visible changes only.  For internal changes, see Github commits.
 
-# Version 1.8 (2024-08-16)
+# Version 1.8 (2024-09-06)
 
 * Subject-level weights supported for likelihood calculation with new `msm()` argument `subject.weights`.
 
