@@ -2307,14 +2307,18 @@ Ccall.msm <- function(params, do.what="lik", msmdata, qmodel, qcmodel, cmodel, h
     initprobs <- msm.initprobs2mat(hmodel, pars, msmdata$mm.icov, msmdata$mf, cmodel)
 
    mf <- msmdata$mf; mf.agg <- msmdata$mf.agg
+   if (is.data.frame(mf.agg)) {
+     nagg <- nrow(mf.agg)
+     mf.agg$"(fromstate)" <- mf.agg$"(fromstate)" - 1
+     mf.agg$"(tostate)" <- mf.agg$"(tostate)" - 1
+   } else {
+     nagg <- 0
+   }
    ## In R, ordinal variables indexed from 1.  In C, these are indexed from 0.
-   mf.agg$"(fromstate)" <- mf.agg$"(fromstate)" - 1
-   mf.agg$"(tostate)" <- mf.agg$"(tostate)" - 1
    firstobs <- c(which(!duplicated(model.extract(mf, "subject"))), nrow(mf)+1) - 1
    mf$"(subject)" <- match(mf$"(subject)", unique(mf$"(subject)"))
    ntrans <- sum(duplicated(model.extract(mf, "subject")))
    hmodel$models <- hmodel$models - 1
-   nagg <- if(is.null(mf.agg)) 0 else nrow(mf.agg)
    mf$"(pcomb)" <- mf$"(pcomb)" - 1
    npcombs <- length(unique(na.omit(model.extract(mf, "pcomb"))))
    qmodel$nopt <- if (is.null(DQ)) 0 else dim(DQ)[3]
