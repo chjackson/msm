@@ -1,5 +1,7 @@
 ## depends on psor.msm
 
+skip_if_not_installed("numDeriv")
+
 context("analytic derivatives of likelihood")
 
 test_that("derivatives by subject: sum to overall derivative",{
