@@ -34,6 +34,7 @@ options(msm.test.analytic.derivatives=TRUE)
 err <- 1e-04
 
 test_that("HMMs with multiple responses from the same distribution",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
@@ -43,6 +44,7 @@ test_that("HMMs with multiple responses from the same distribution",{
 })
 
 test_that("HMMs with multiple responses: cbind() in formula",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(cbind(obs1, obs2) ~ time, subject=subject, data=dat, qmatrix=two.q,
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
@@ -50,6 +52,7 @@ test_that("HMMs with multiple responses: cbind() in formula",{
 })
 
 test_that("HMMs with multiple responses from different distributions",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(dobs ~ time, subject=subject, data=dat, qmatrix=two.q,   
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
                hmmBinom(size=40, prob=0.3)),                 
@@ -70,6 +73,7 @@ test_that("HMMs with multiple responses from different distributions",{
 })
 
 test_that("HMMs with multiple responses from different distributions: non-default initprobs, different probs",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(dobs ~ time, subject=subject, data=dat, qmatrix=two.q,
                initprobs=c(0.6, 0.4),
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
@@ -84,6 +88,7 @@ dat$dobsmiss <- dat$dobs
 dat$dobsmiss[1:10,2] <- NA
 
 test_that("HMMs with multiple responses from different distributions: missing data",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(dobsmiss ~ time, subject=subject, data=dat, qmatrix=two.q,   
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
                hmmBinom(size=40, prob=0.3)),                 
@@ -98,6 +103,7 @@ obstimes <- seq(2, 147, by=5)  # times when true state is known
 dat$obstrue[obstimes] <- dat$state[obstimes]
 
 test_that("HMMs with multiple responses: true state known sometimes",{
+    skip_if_not_installed("numDeriv")
     hmm <- msm(dobs ~ time, subject=subject, data=dat, qmatrix=two.q,
                obstrue=obstrue,              
                hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
