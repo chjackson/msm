@@ -1,5 +1,10 @@
 User-visible changes only.  For internal changes, see Github commits.
 
+# Version 1.8.1 (2024-10-04)
+
+* Fix memory error that crashed reverse dependency checks (#106).
+
+
 # Version 1.8 (2024-09-06)
 
 * Subject-level weights supported for likelihood calculation with new `msm()` argument `subject.weights`.
@@ -16,9 +21,9 @@ User-visible changes only.  For internal changes, see Github commits.
 
 * New function `hmodel2list` to extract HMM constructor function calls from fitted HMMs. Thanks to Will Hulme for working on this.
 
-* Objects returned by `totlos.msm`, `efpt.msm` and `envisits.msm` now have class `"msm.estbystate"`
+* Objects returned by `totlos.msm`, `efpt.msm` and `envisits.msm` now have class `"msm.estbystate"`.
   
-* Objects returned by `prevalence.msm` now have class `"msm.prevalence"`
+* Objects returned by `prevalence.msm` now have class `"msm.prevalence"`.
 
 * Fix of bugs for models containing a covariate named `"baseline"` or `"Baseline"`.
 
