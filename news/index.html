@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">msm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,9 +29,13 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/chjackson/msm/blob/v1.8/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/chjackson/msm/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.8.1" id="version-181-2024-10-04">Version 1.8.1 (2024-10-04)<a class="anchor" aria-label="anchor" href="#version-181-2024-10-04"></a></h2>
+<ul><li>Fix memory error that crashed reverse dependency checks (<a href="https://github.com/chjackson/msm/issues/106" class="external-link">#106</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8" id="version-18-2024-09-06">Version 1.8 (2024-09-06)<a class="anchor" aria-label="anchor" href="#version-18-2024-09-06"></a></h2><p class="text-muted">CRAN release: 2024-09-08</p>
 <ul><li><p>Subject-level weights supported for likelihood calculation with new <code><a href="../reference/msm.html">msm()</a></code> argument <code>subject.weights</code>.</p></li>
@@ -43,8 +47,8 @@
 <li><p>Subjects with one observation are no longer dropped in HMMs, since they provide information about the distribution of the outcome given the hidden state.</p></li>
 <li><p><code>ppass.msm</code> now supports <code>pci</code> models and other time-inhomogeneous models. Thanks to Jon Fintzi for working on this.</p></li>
 <li><p>New function <code>hmodel2list</code> to extract HMM constructor function calls from fitted HMMs. Thanks to Will Hulme for working on this.</p></li>
-<li><p>Objects returned by <code>totlos.msm</code>, <code>efpt.msm</code> and <code>envisits.msm</code> now have class <code>"msm.estbystate"</code></p></li>
-<li><p>Objects returned by <code>prevalence.msm</code> now have class <code>"msm.prevalence"</code></p></li>
+<li><p>Objects returned by <code>totlos.msm</code>, <code>efpt.msm</code> and <code>envisits.msm</code> now have class <code>"msm.estbystate"</code>.</p></li>
+<li><p>Objects returned by <code>prevalence.msm</code> now have class <code>"msm.prevalence"</code>.</p></li>
 <li><p>Fix of bugs for models containing a covariate named <code>"baseline"</code> or <code>"Baseline"</code>.</p></li>
 </ul></div>
     <div class="section level2">
