@@ -1,5 +1,10 @@
 User-visible changes only.  For internal changes, see Github commits.
 
+# Version 1.8.2 (2024-11-07)
+
+* Fix a further memory error affecting CRAN checks of some dependent packages (#107).
+
+
 # Version 1.8.1 (2024-10-04)
 
 * Fix memory error that crashed reverse dependency checks (#106).

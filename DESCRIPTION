@@ -1,6 +1,6 @@
 Package: msm
 Version: 1.8.2
-Date: 2024-10-13
+Date: 2024-11-07
 Title: Multi-State Markov and Hidden Markov Models in Continuous Time
 Authors@R: c(person("Christopher", "Jackson",
          email="chris.jackson@mrc-bsu.cam.ac.uk",
@@ -33,4 +33,4 @@ URL: https://github.com/chjackson/msm,
 BugReports: https://github.com/chjackson/msm/issues
 LazyData: yes
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
