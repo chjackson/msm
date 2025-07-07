@@ -13,8 +13,7 @@ resample <- function(x, size, ...)
 
 #' Simulate one individual trajectory from a continuous-time Markov model
 #' 
-#' Simulate one realisation from a continuous-time Markov process up to a given
-#' time.
+#' Simulate the exact times of transition of a continuous-time Markov process up to a given time.
 #' 
 #' The effect of time-dependent covariates on the transition intensity matrix
 #' for an individual is determined by assuming that the covariate is a step
@@ -173,12 +172,12 @@ getobs.msm <- function(sim, obstimes, death=FALSE, drop.absorb=TRUE)
 
 
 
-#' Simulate multiple trajectories from a multi-state Markov model with
-#' arbitrary observation times
+#' Simulate intermittently-observed data from a set of individuals
+#' following a continuous-time Markov multi-state model.
 #' 
 #' Simulate a number of individual realisations from a continuous-time Markov
 #' process. Observations of the process are made at specified arbitrary times
-#' for each individual, giving panel-observed data.
+#' for each individual, giving "panel-observed" or intermittently-observed data.
 #' 
 #' \code{\link{sim.msm}} is called repeatedly to produce a simulated trajectory
 #' for each individual. The state at each specified observation time is then
