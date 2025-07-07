@@ -304,6 +304,10 @@ void Eigen(Matrix mat, int n, vector revals, vector ievals, Matrix evecs, int *e
 	/* Check whether any of the elements of Q have overflowed.  If
 	   so, Fortran eigen function will hang in a infinite loop, so
 	   bail out before this happens.  */
+
+	/* TODO return err at this point, allowing us to
+	   fall back to another method, e.g. pade or series */
+
 	if (!R_FINITE(mat[i])) { 
 	    error("numerical overflow in calculating likelihood\n");
 	}
