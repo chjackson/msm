@@ -1,0 +1,265 @@
+# msm
+
+The [msm](http://cran.r-project.org/package=msm) R package for
+continuous-time multi-state modelling of panel data.
+
+## Installation (stable CRAN version)
+
+``` r
+install.packages("msm")
+```
+
+## Installation (development version)
+
+``` r
+install.packages("devtools") # if devtools not already installed
+devtools::install_github('chjackson/msm')
+```
+
+## Tutorial material on msm
+
+[Multi-state modelling with msm: material from a web-based training
+course](https://chjackson.github.io/msm/msmcourse/)
+
+[User guide for the current CRAN
+version](https://cran.r-project.org/web/packages/msm/vignettes/msm-manual.pdf)
+
+[![R-CMD-check](https://github.com/chjackson/msm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/chjackson/msm/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/chjackson/msm/branch/master/graph/badge.svg)](https://app.codecov.io/gh/chjackson/msm?branch=master)
+
+# Package index
+
+## Summarising data
+
+- [`statetable.msm()`](https://chjackson.github.io/msm/reference/statetable.msm.md)
+  : Table of transitions
+
+## Fitting models
+
+- [`msm()`](https://chjackson.github.io/msm/reference/msm.md) :
+  Multi-state Markov and hidden Markov models in continuous time
+- [`crudeinits.msm()`](https://chjackson.github.io/msm/reference/crudeinits.msm.md)
+  : Calculate crude initial values for transition intensities
+- [`hmmCat()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmIdent()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmUnif()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmNorm()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmLNorm()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmExp()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmGamma()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmWeibull()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmPois()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmBinom()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmBetaBinom()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmNBinom()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmBeta()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmTNorm()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmMETNorm()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmMEUnif()`](https://chjackson.github.io/msm/reference/hmm-dists.md)
+  [`hmmT()`](https://chjackson.github.io/msm/reference/hmm-dists.md) :
+  Hidden Markov model constructors
+- [`hmmMV()`](https://chjackson.github.io/msm/reference/hmmMV.md) :
+  Multivariate hidden Markov models
+- [`msm2Surv()`](https://chjackson.github.io/msm/reference/msm2Surv.md)
+  : Convert data for \`msm' to data for \`survival', \`mstate' or
+  \`flexsurv' analysis
+
+## Output from fitted models
+
+- [`qmatrix.msm()`](https://chjackson.github.io/msm/reference/qmatrix.msm.md)
+  : Transition intensity matrix
+- [`pmatrix.msm()`](https://chjackson.github.io/msm/reference/pmatrix.msm.md)
+  : Transition probability matrix
+- [`pmatrix.piecewise.msm()`](https://chjackson.github.io/msm/reference/pmatrix.piecewise.msm.md)
+  : Transition probability matrix for processes with piecewise-constant
+  intensities
+- [`sojourn.msm()`](https://chjackson.github.io/msm/reference/sojourn.msm.md)
+  : Mean sojourn times from a multi-state model
+- [`totlos.msm()`](https://chjackson.github.io/msm/reference/totlos.msm.md)
+  [`envisits.msm()`](https://chjackson.github.io/msm/reference/totlos.msm.md)
+  : Total length of stay, or expected number of visits
+- [`pnext.msm()`](https://chjackson.github.io/msm/reference/pnext.msm.md)
+  : Probability of each state being next
+- [`ppass.msm()`](https://chjackson.github.io/msm/reference/ppass.msm.md)
+  : Passage probabilities
+- [`efpt.msm()`](https://chjackson.github.io/msm/reference/efpt.msm.md)
+  : Expected first passage time
+- [`qratio.msm()`](https://chjackson.github.io/msm/reference/qratio.msm.md)
+  : Estimated ratio of transition intensities
+- [`hazard.msm()`](https://chjackson.github.io/msm/reference/hazard.msm.md)
+  : Calculate tables of hazard ratios for covariates on transition
+  intensities
+- [`coef(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/coef.msm.md)
+  : Extract model coefficients
+- [`boot.msm()`](https://chjackson.github.io/msm/reference/boot.msm.md)
+  : Bootstrap resampling for multi-state models
+- [`ematrix.msm()`](https://chjackson.github.io/msm/reference/ematrix.msm.md)
+  : Misclassification probability matrix
+- [`odds.msm()`](https://chjackson.github.io/msm/reference/odds.msm.md)
+  : Calculate tables of odds ratios for covariates on misclassification
+  probabilities
+- [`viterbi.msm()`](https://chjackson.github.io/msm/reference/viterbi.msm.md)
+  : Calculate the probabilities of underlying states and the most likely
+  path through them
+- [`phasemeans.msm()`](https://chjackson.github.io/msm/reference/phasemeans.msm.md)
+  : Parameters of phase-type models in mixture form
+- [`plot(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/plot.msm.md)
+  : Plots of multi-state models
+- [`print(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/print.msm.md)
+  [`printnew.msm()`](https://chjackson.github.io/msm/reference/print.msm.md)
+  : Print a fitted msm model object
+- [`printold.msm()`](https://chjackson.github.io/msm/reference/printold.msm.md)
+  : Print a fitted msm model object
+- [`summary(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/summary.msm.md)
+  : Summarise a fitted multi-state model
+- [`msm.form.qoutput()`](https://chjackson.github.io/msm/reference/msm.form.qoutput.md)
+  [`msm.form.eoutput()`](https://chjackson.github.io/msm/reference/msm.form.qoutput.md)
+  : Extract msm model parameter estimates in compact format
+
+## Tidy model outputs
+
+- [`tidy(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/tidy.msm.md)
+  : Tidy the parameter estimates from an msm model
+- [`tidy(`*`<msm.est>`*`)`](https://chjackson.github.io/msm/reference/tidy.msm.est.md)
+  : Tidy the output of pmatrix.msm and similar functions
+- [`tidy(`*`<msm.estbystate>`*`)`](https://chjackson.github.io/msm/reference/tidy.msm.estbystate.md)
+  : Tidy the output of totlos.msm and similar functions
+- [`tidy(`*`<msm.prevalence>`*`)`](https://chjackson.github.io/msm/reference/tidy.msm.prevalence.md)
+  : Tidy the output of prevalence.msm
+
+## Model checking and comparison
+
+- [`prevalence.msm()`](https://chjackson.github.io/msm/reference/prevalence.msm.md)
+  : Tables of observed and expected prevalences
+- [`plot(`*`<prevalence.msm>`*`)`](https://chjackson.github.io/msm/reference/plot.prevalence.msm.md)
+  : Plot of observed and expected prevalences
+- [`plot(`*`<survfit.msm>`*`)`](https://chjackson.github.io/msm/reference/plot.survfit.msm.md)
+  : Plot empirical and fitted survival curves
+- [`plotprog.msm()`](https://chjackson.github.io/msm/reference/plotprog.msm.md)
+  : Kaplan Meier estimates of incidence
+- [`logLik(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/logLik.msm.md)
+  : Extract model log-likelihood
+- [`lrtest.msm()`](https://chjackson.github.io/msm/reference/lrtest.msm.md)
+  : Likelihood ratio test
+- [`pearson.msm()`](https://chjackson.github.io/msm/reference/pearson.msm.md)
+  : Pearson-type goodness-of-fit test
+- [`draic.msm()`](https://chjackson.github.io/msm/reference/draic.msm.md)
+  [`drlcv.msm()`](https://chjackson.github.io/msm/reference/draic.msm.md)
+  : Criteria for comparing two multi-state models with nested state
+  spaces
+- [`scoreresid.msm()`](https://chjackson.github.io/msm/reference/scoreresid.msm.md)
+  : Score residuals
+- [`surface.msm()`](https://chjackson.github.io/msm/reference/surface.msm.md)
+  [`contour(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/surface.msm.md)
+  [`persp(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/surface.msm.md)
+  [`image(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/surface.msm.md)
+  : Explore the likelihood surface
+
+## Simulation of data
+
+- [`sim.msm()`](https://chjackson.github.io/msm/reference/sim.msm.md) :
+  Simulate one individual trajectory from a continuous-time Markov model
+- [`simmulti.msm()`](https://chjackson.github.io/msm/reference/simmulti.msm.md)
+  : Simulate intermittently-observed data from a set of individuals
+  following a continuous-time Markov multi-state model.
+- [`simfitted.msm()`](https://chjackson.github.io/msm/reference/simfitted.msm.md)
+  : Simulate from a Markov model fitted using msm
+
+## Probability distributions
+
+- [`dpexp()`](https://chjackson.github.io/msm/reference/pexp.md)
+  [`ppexp()`](https://chjackson.github.io/msm/reference/pexp.md)
+  [`qpexp()`](https://chjackson.github.io/msm/reference/pexp.md)
+  [`rpexp()`](https://chjackson.github.io/msm/reference/pexp.md) :
+  Exponential distribution with piecewise-constant rate
+- [`dtnorm()`](https://chjackson.github.io/msm/reference/tnorm.md)
+  [`ptnorm()`](https://chjackson.github.io/msm/reference/tnorm.md)
+  [`qtnorm()`](https://chjackson.github.io/msm/reference/tnorm.md)
+  [`rtnorm()`](https://chjackson.github.io/msm/reference/tnorm.md) :
+  Truncated Normal distribution
+- [`d2phase()`](https://chjackson.github.io/msm/reference/twophase.md)
+  [`p2phase()`](https://chjackson.github.io/msm/reference/twophase.md)
+  [`q2phase()`](https://chjackson.github.io/msm/reference/twophase.md)
+  [`r2phase()`](https://chjackson.github.io/msm/reference/twophase.md)
+  [`h2phase()`](https://chjackson.github.io/msm/reference/twophase.md) :
+  Coxian phase-type distribution with two phases
+- [`dmenorm()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`pmenorm()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`qmenorm()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`rmenorm()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`dmeunif()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`pmeunif()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`qmeunif()`](https://chjackson.github.io/msm/reference/medists.md)
+  [`rmeunif()`](https://chjackson.github.io/msm/reference/medists.md) :
+  Measurement error distributions
+- [`qgeneric()`](https://chjackson.github.io/msm/reference/qgeneric.md)
+  : Generic function to find quantiles of a distribution
+
+## Datasets
+
+- [`cav`](https://chjackson.github.io/msm/reference/cav.md) : Heart
+  transplant monitoring data
+- [`psor`](https://chjackson.github.io/msm/reference/psor.md) :
+  Psoriatic arthritis data
+- [`aneur`](https://chjackson.github.io/msm/reference/aneur.md) : Aortic
+  aneurysm progression data
+- [`bos`](https://chjackson.github.io/msm/reference/bos.md)
+  [`bos3`](https://chjackson.github.io/msm/reference/bos.md)
+  [`bos4`](https://chjackson.github.io/msm/reference/bos.md) :
+  Bronchiolitis obliterans syndrome after lung transplants
+- [`fev`](https://chjackson.github.io/msm/reference/fev.md) : FEV1
+  measurements from lung transplant recipients
+
+## Miscellaneous utilities
+
+- [`deltamethod()`](https://chjackson.github.io/msm/reference/deltamethod.md)
+  : The delta method
+
+- [`MatrixExp()`](https://chjackson.github.io/msm/reference/MatrixExp.md)
+  : Matrix exponential
+
+- [`model.frame(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/model.frame.msm.md)
+  [`model.matrix(`*`<msm>`*`)`](https://chjackson.github.io/msm/reference/model.frame.msm.md)
+  :
+
+  Extract original data from `msm` objects.
+
+- [`recreate.olddata()`](https://chjackson.github.io/msm/reference/recreate.olddata.md)
+  : Convert data stored in msm object to old format
+
+- [`transient.msm()`](https://chjackson.github.io/msm/reference/transient.msm.md)
+  [`absorbing.msm()`](https://chjackson.github.io/msm/reference/transient.msm.md)
+  : Transient and absorbing states
+
+- [`hmodel2list()`](https://chjackson.github.io/msm/reference/hmodel2list.md)
+  : Convert a hmodel object to HMM constructor function calls
+
+## Package internals (advanced)
+
+- [`msm.object`](https://chjackson.github.io/msm/reference/msm.object.md)
+  : Fitted msm model objects
+- [`cmodel.object`](https://chjackson.github.io/msm/reference/cmodel.object.md)
+  : Developer documentation: censoring model object
+- [`qmodel.object`](https://chjackson.github.io/msm/reference/qmodel.object.md)
+  : Developer documentation: transition model structure object
+- [`qcmodel.object`](https://chjackson.github.io/msm/reference/qcmodel.object.md)
+  : Developer documentation: model for covariates on transition
+  intensities
+- [`emodel.object`](https://chjackson.github.io/msm/reference/emodel.object.md)
+  : Developer documentation: misclassification model structure object
+- [`ecmodel.object`](https://chjackson.github.io/msm/reference/ecmodel.object.md)
+  : Developer documentation: model for covariates on misclassification
+  probabilities
+- [`hmodel.object`](https://chjackson.github.io/msm/reference/hmodel.object.md)
+  : Developer documentation: hidden Markov model structure object
+- [`paramdata.object`](https://chjackson.github.io/msm/reference/paramdata.object.md)
+  : Developer documentation: internal msm parameters object
+- [`updatepars.msm()`](https://chjackson.github.io/msm/reference/updatepars.msm.md)
+  : Update the maximum likelihood estimates in a fitted model object.
+
+## Package overview
+
+- [`msm-package`](https://chjackson.github.io/msm/reference/msm-package.md)
+  : Multi-State Markov and Hidden Markov Models in Continuous Time
+

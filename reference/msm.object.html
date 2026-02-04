@@ -101,8 +101,10 @@ by the <code>cl</code> argument.</p></dd>
 
 
 <dt>estimates</dt>
-<dd><p>Vector of untransformed maximum likelihood estimates
-returned from <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></code>.  Transition intensities are on the log
+<dd><p>Vector of untransformed maximum likelihood estimates.
+This includes parameters being estimated (as returned from <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></code>)
+and those that are fixed or constrained by the model specification.
+Transition intensities are on the log
 scale and misclassification probabilities are given as log odds relative to
 the probability of the true state.</p></dd>
  <dt>estimates.t</dt>
@@ -161,7 +163,7 @@ of objects representing the model for covariates on transition intensities.
 See <code><a href="qcmodel.object.html">qcmodel.object</a></code>.</p></dd>
  <dt>ecmodel</dt>
 <dd><p>A list of objects
-representing the model for covariates on transition intensities.  See
+representing the model for covariates on misclassification probabilities.  See
 <code><a href="ecmodel.object.html">ecmodel.object</a></code>.</p></dd>
  <dt>hmodel</dt>
 <dd><p>A list of objects representing
@@ -214,7 +216,7 @@ center=FALSE).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
