@@ -89,7 +89,7 @@ intensities depend. See \code{\link{prevalence.msm}}.}
 \item{col.exp}{Line colour for expected prevalences. See \code{\link{par}}.}
 
 \item{legend.pos}{Vector of the \eqn{x} and \eqn{y} position, respectively,
-of the legend.}
+of the legend. If \code{NULL} then a default position will be used.}
 
 \item{...}{Further arguments to be passed to the generic \code{\link{plot}}
 function.}

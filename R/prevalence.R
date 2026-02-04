@@ -468,7 +468,7 @@ print.msm.prevalence <- function(x,...){
 #' @param col.obs Line colour for observed prevalences. See \code{\link{par}}.
 #' @param col.exp Line colour for expected prevalences. See \code{\link{par}}.
 #' @param legend.pos Vector of the \eqn{x} and \eqn{y} position, respectively,
-#' of the legend.
+#' of the legend. If \code{NULL} then a default position will be used.
 #' @param ... Further arguments to be passed to the generic \code{\link{plot}}
 #' function.
 #' @seealso \code{\link{prevalence.msm}}
