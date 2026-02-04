@@ -52,8 +52,7 @@ states}
 \item{qmatrix}{The given transition intensity matrix}
 }
 \description{
-Simulate one realisation from a continuous-time Markov process up to a given
-time.
+Simulate the exact times of transition of a continuous-time Markov process up to a given time.
 }
 \details{
 The effect of time-dependent covariates on the transition intensity matrix

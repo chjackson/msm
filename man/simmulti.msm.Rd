@@ -2,8 +2,8 @@
 % Please edit documentation in R/simul.R
 \name{simmulti.msm}
 \alias{simmulti.msm}
-\title{Simulate multiple trajectories from a multi-state Markov model with
-arbitrary observation times}
+\title{Simulate intermittently-observed data from a set of individuals
+following a continuous-time Markov multi-state model.}
 \usage{
 simmulti.msm(
   data,
@@ -109,7 +109,7 @@ supplied covariates.
 \description{
 Simulate a number of individual realisations from a continuous-time Markov
 process. Observations of the process are made at specified arbitrary times
-for each individual, giving panel-observed data.
+for each individual, giving "panel-observed" or intermittently-observed data.
 }
 \details{
 \code{\link{sim.msm}} is called repeatedly to produce a simulated trajectory

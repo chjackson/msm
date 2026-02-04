@@ -35,8 +35,10 @@ by the \code{cl} argument.  }
 \item{minus2loglik}{Minus twice the maximised log-likelihood.}
 \item{deriv}{Derivatives of the minus twice log-likelihood at its maximum.}
 
-\item{estimates}{Vector of untransformed maximum likelihood estimates
-returned from \code{\link{optim}}.  Transition intensities are on the log
+\item{estimates}{Vector of untransformed maximum likelihood estimates.
+This includes parameters being estimated (as returned from \code{\link{optim}})
+and those that are fixed or constrained by the model specification.
+Transition intensities are on the log
 scale and misclassification probabilities are given as log odds relative to
 the probability of the true state.} \item{estimates.t}{Vector of transformed
 maximum likelihood estimates with intensities and probabilities on their
@@ -72,7 +74,7 @@ structure, for models specified using the \code{ematrix} argument to
 \code{\link{msm}}. See \code{\link{emodel.object}}.} \item{qcmodel}{A list
 of objects representing the model for covariates on transition intensities.
 See \code{\link{qcmodel.object}}.} \item{ecmodel}{A list of objects
-representing the model for covariates on transition intensities.  See
+representing the model for covariates on misclassification probabilities.  See
 \code{\link{ecmodel.object}}.} \item{hmodel}{A list of objects representing
 the hidden Markov model structure. See \code{\link{hmodel.object}}.}
 \item{cmodel}{A list giving information about censored states.  See
