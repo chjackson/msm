@@ -61,6 +61,14 @@ test_that("misclassification model with initprobs",{
     expect_equal(4725.9078185031, miscinits.msm$minus2loglik, tol=1e-06)
 })
 
+test_that("misclassification model: obstrue overrides initprobs",{
+  miscinits1.msm <- msm(state ~ years, subject = PTNUM, data = cav,  qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4,
+                        obstrue=firstobs, initprobs=c(1, 0, 0, 0), fixedpars=TRUE)
+  miscinits2.msm <- msm(state ~ years, subject = PTNUM, data = cav,  qmatrix = oneway4.q, ematrix=ematrix, deathexact = 4,
+                        obstrue=firstobs, initprobs=c(0.7, 0.1, 0.1, 0.1), fixedpars=TRUE)
+  expect_equal(miscinits1.msm$minus2loglik, miscinits2.msm$minus2loglik, tol=1e-06)
+})
+
 test_that("misclassification model with est.initprobs",{
     expect_error({
         miscinits.msm <- msm(state ~ years, subject = PTNUM, data = cav,  

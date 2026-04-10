@@ -2274,14 +2274,18 @@ msm.initprobs2mat <- function(hmodel, pars, mm, mf, cmodel){
     ## and reweight other entries to sum to 1. 
     initstate <- mf$"(state)"[!duplicated(mf$"(subject)")]
     initobstrue <- mf$"(obstrue)"[!duplicated(mf$"(subject)")]
-    initknown <- (initstate %in% cmodel$censor) & (initobstrue != 0) 
-    if (cmodel$ncens > 0 && any(initknown)) {
+    initknown <- (initobstrue != 0) 
+    if (any(initknown)) {
         for (i in 1:npts) {
             if (initknown[i]){
+              initp[i,] <- 0
+              if (initstate[i] %in% cmodel$censor){
                 cs <- cmodel$states_list[[as.character(initstate[i])]]
                 ip <- initp[i,cs]
-                initp[i,] <- 0
                 initp[i,cs] <- ip / sum(ip)
+              } else {
+                initp[i,initstate[i]] <- 1
+              }
             }
         }
     }

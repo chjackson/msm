@@ -438,10 +438,8 @@ double likhidden(int pt, /* ordinal subject ID */
     outcome = GetCensored(&d->obs, d->firstobs[pt], d->nout, cm, &nc, &curr);
     GetOutcomeProb(pout, outcome, nc, d->nout, hpars, hm, qm, d->obstrue[d->firstobs[pt]]);
     /* Likelihood contribution for initial observation */
-//    printf("\nlikhidden:\n");
     for (i = 0; i < qm->nst; ++i) {
 	cump[i] = pout[i];
-//	printf("pout[%d]=%.4f\n",i,pout[i]);
 	/* If d->obstrue[i], then initprobs is now set appropriately in R (msm.R:msm.initprobs2mat) */
 	cump[i] = cump[i]*hm->initp[MI(pt,i,d->npts)];
 	if (!all_equal(cump[i], 0)) allzero = 0;
@@ -497,7 +495,6 @@ void init_hmm_deriv(double *curr, int nc, int pt, int obsno, double *hpars,
     printf("init_hmm_deriv:\n");
 #endif
     for (i = 0; i < n; ++i) {
-	/* printf("pout[%d]=%f, ", i, pout[i]); */
 	a[i] = (cens_not_hmm ? pout[i] : hm->initp[MI(pt,i,d->npts)] * pout[i]);
 #ifdef DERIVDEBUG
 	printf("i=%d,initp=%f,pout=%f,a=%f\n", i, hm->initp[MI(pt,i,d->npts)], pout[i], a[i]);
