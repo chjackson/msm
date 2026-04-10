@@ -94,10 +94,10 @@ estvar <- summary(toy.lm)$cov.unscaled * summary(toy.lm)$sigma^2
 ## Estimate of (1 / (alphahat + betahat))
 1 / (estmean[1] + estmean[2])
 #> (Intercept) 
-#>   0.2895236 
+#>   0.4072937 
 ## Approximate standard error
 deltamethod (~ 1 / (x1 + x2), estmean, estvar) 
-#> [1] 0.08478445
+#> [1] 0.1699689
 
 ## We have a variable z we would like to use within the formula.
 z <- 1
@@ -107,6 +107,6 @@ form <- sprintf("~ %f / (x1 + x2)", z)
 form
 #> [1] "~ 1.000000 / (x1 + x2)"
 deltamethod(as.formula(form), estmean, estvar)
-#> [1] 0.08478445
+#> [1] 0.1699689
 
 ```

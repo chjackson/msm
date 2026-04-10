@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.8.3 (future)
+
+- Fix of a bug in the likelihood calculation where `obstrue` is set for
+  a subject’s first observation in a HMM and is inconsistent with
+  `initprobs`. `obstrue` should override `initprobs`.
+
 ## Version 1.8.2 (2024-11-07)
 
 CRAN release: 2024-11-07
