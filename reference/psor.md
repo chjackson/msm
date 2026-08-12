@@ -10,15 +10,15 @@ psoriatic arthritis (PsA) clinic from 305 patients. The rows are grouped
 by patient number and ordered by examination time. Each row represents
 an examination and contains additional covariates.
 
-|            |             |                                                         |
-|------------|-------------|---------------------------------------------------------|
-| `ptnum`    | (numeric)   | Patient identification number                           |
-| `months`   | (numeric)   | Examination time in months                              |
-| `state`    | (numeric)   | Clinical state of PsA. Patients in states 1, 2, 3 and 4 |
-|            |             | have 0, 1 to 4, 5 to 9 and 10 or more damaged joints,   |
-|            |             | respectively.                                           |
-| `hieffusn` | (numeric)   | Presence of five or more effusions                      |
-| `ollwsdrt` | (character) | Erythrocyte sedimentation rate of less than 15 mm/h     |
+|  |  |  |
+|----|----|----|
+| `ptnum` | (numeric) | Patient identification number |
+| `months` | (numeric) | Examination time in months |
+| `state` | (numeric) | Clinical state of PsA. Patients in states 1, 2, 3 and 4 |
+|  |  | have 0, 1 to 4, 5 to 9 and 10 or more damaged joints, |
+|  |  | respectively. |
+| `hieffusn` | (numeric) | Presence of five or more effusions |
+| `ollwsdrt` | (character) | Erythrocyte sedimentation rate of less than 15 mm/h |
 
 ## References
 
@@ -29,6 +29,7 @@ arthritis: role of time-varying clinical indicators. J. Rheumatol.
 ## Examples
 
 ``` r
+
 ## Four-state progression-only model with high effusion and low
 ## sedimentation rate as covariates on the progression rates.  High
 ## effusion is assumed to have the same effect on the 1-2, 2-3, and 3-4
@@ -57,7 +58,7 @@ psor.msm <- msm(state ~ months, subject=ptnum, data=psor,
 #> iter  11 value 1114.899461
 #> final  value 1114.899461 
 #> converged
-#> Used 38 function and 11 gradient evaluations
+#> Used 36 function and 11 gradient evaluations
 qmatrix.msm(psor.msm)
 #>         State 1                    State 2                   
 #> State 1 -0.09594 (-0.1216,-0.0757)  0.09594 ( 0.0757, 0.1216)
@@ -71,20 +72,20 @@ qmatrix.msm(psor.msm)
 #> State 4 0                          0                         
 sojourn.msm(psor.msm)
 #>         estimates        SE        L         U
-#> State 1 10.423724 1.2597644 8.225277 13.209771
-#> State 2  6.086186 0.7266461 4.816349  7.690816
-#> State 3  3.931084 0.5796054 2.944488  5.248254
+#> State 1 10.423724 1.2597644 8.225277 13.209772
+#> State 2  6.086186 0.7266462 4.816349  7.690817
+#> State 3  3.931083 0.5796052 2.944488  5.248253
 hazard.msm(psor.msm)
 #> $ollwsdrt
 #>                          HR         L        U
 #> State 1 - State 2 0.5651903 0.3853452 0.828971
 #> State 2 - State 3 0.5651903 0.3853452 0.828971
-#> State 3 - State 4 1.6407662 0.8154000 3.301587
+#> State 3 - State 4 1.6407660 0.8153999 3.301586
 #> 
 #> $hieffusn
 #>                         HR        L        U
-#> State 1 - State 2 1.645956 1.148294 2.359299
-#> State 2 - State 3 1.645956 1.148294 2.359299
-#> State 3 - State 4 1.645956 1.148294 2.359299
+#> State 1 - State 2 1.645955 1.148294 2.359299
+#> State 2 - State 3 1.645955 1.148294 2.359299
+#> State 3 - State 4 1.645955 1.148294 2.359299
 #> 
 ```

@@ -84,6 +84,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 
 ``` r
 
+
 ## Simple linear regression, E(y) = alpha + beta x 
 x <- 1:100
 y <- rnorm(100, 4*x, 5)

@@ -21,3 +21,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
+
+Authors:
+
+- Christopher Jackson <chris.jackson@mrc-bsu.cam.ac.uk>

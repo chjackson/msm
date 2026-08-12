@@ -145,6 +145,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 ## In a clinical study, suppose patients are given a placebo in the
 ## first 5 weeks, then they begin treatment 1 at 5 weeks, and

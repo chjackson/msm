@@ -168,6 +168,7 @@ C.H.Jackson \<chris.jackson@mrc-bsu.cam.ac.uk\>
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
   ## Psoriatic arthritis example
   data(psor)

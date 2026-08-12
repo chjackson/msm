@@ -93,6 +93,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 data(cav)
 #> Warning: data set ‘cav’ not found
 twoway4.q <- rbind(c(-0.5, 0.25, 0, 0.25), c(0.166, -0.498, 0.166, 0.166),

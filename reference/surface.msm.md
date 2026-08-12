@@ -50,12 +50,12 @@ image(x, ...)
 
   Character string specifying the type of plot to produce.
 
-  |                    |                                                                                                                    |
-  |--------------------|--------------------------------------------------------------------------------------------------------------------|
-  | `"contour"`        | Contour plot, using the R function [`contour`](https://rdrr.io/r/graphics/contour.html).                           |
+  |  |  |
+  |----|----|
+  | `"contour"` | Contour plot, using the R function [`contour`](https://rdrr.io/r/graphics/contour.html). |
   | `"filled.contour"` | Solid-color contour plot, using the R function [`filled.contour`](https://rdrr.io/r/graphics/filled.contour.html). |
-  | `"persp"`          | Perspective plot, using the R function [`persp`](https://rdrr.io/r/graphics/persp.html).                           |
-  | `"image"`          | Grid color plot, using the R function [`image`](https://rdrr.io/r/graphics/image.html).                            |
+  | `"persp"` | Perspective plot, using the R function [`persp`](https://rdrr.io/r/graphics/persp.html). |
+  | `"image"` | Grid color plot, using the R function [`image`](https://rdrr.io/r/graphics/image.html). |
 
 - point:
 

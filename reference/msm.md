@@ -1035,6 +1035,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 ### Heart transplant data
 ### For further details and background to this example, see
 ### Jackson (2011) or the PDF manual in the doc directory.

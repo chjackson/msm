@@ -52,6 +52,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 ## Heart transplant data
 data(cav)
 #> Warning: data set ‘cav’ not found

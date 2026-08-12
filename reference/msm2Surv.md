@@ -169,6 +169,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 msmdat <- data.frame(
  subj = c(1, 1, 1, 1, 1, 2, 2, 2),
  days = c(0, 27, 75, 97, 1106, 0, 90, 1037),

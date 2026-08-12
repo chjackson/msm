@@ -150,6 +150,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 twoway4.q <- rbind(c(-0.5, 0.25, 0, 0.25), c(0.166, -0.498, 0.166, 0.166),
              c(0, 0.25, -0.5, 0.25), c(0, 0, 0, 0))
 efpt.msm(qmatrix=twoway4.q, tostate=3)

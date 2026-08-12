@@ -10,13 +10,13 @@ A data frame containing 5896 rows. There are 204 patients, the rows are
 grouped by patient number and ordered by days after transplant. Each row
 represents an examination and containing an additional covariate.
 
-|         |           |                                                                                   |
-|---------|-----------|-----------------------------------------------------------------------------------|
-| `ptnum` | (numeric) | Patient identification number.                                                    |
-| `days`  | (numeric) | Examination time (days after transplant).                                         |
-| `fev`   | (numeric) | Percentage of baseline FEV1. A code of 999 indicates the patient's date of death. |
-| `acute` | (numeric) | 0/1 indicator for whether the patient suffered an acute infection or rejection    |
-|         |           | within 14 days of the visit.                                                      |
+|  |  |  |
+|----|----|----|
+| `ptnum` | (numeric) | Patient identification number. |
+| `days` | (numeric) | Examination time (days after transplant). |
+| `fev` | (numeric) | Percentage of baseline FEV1. A code of 999 indicates the patient's date of death. |
+| `acute` | (numeric) | 0/1 indicator for whether the patient suffered an acute infection or rejection |
+|  |  | within 14 days of the visit. |
 
 ## Source
 

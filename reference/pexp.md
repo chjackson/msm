@@ -94,6 +94,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 x <- seq(0.1, 50, by=0.1)
 rate <- c(0.1, 0.2, 0.05, 0.3)
 t <- c(0, 10, 20, 30)

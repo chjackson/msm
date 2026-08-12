@@ -176,6 +176,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 ### Simulate 100 individuals with common observation times
 sim.df <- data.frame(subject = rep(1:100, rep(13,100)), time = rep(seq(0, 24, 2), 100))
 qmatrix <- rbind(c(-0.11,   0.1,  0.01 ),

@@ -73,6 +73,7 @@ Christopher Jackson \<chris.jackson@mrc-bsu.cam.ac.uk\>
 ## Examples
 
 ``` r
+
 qnorm(c(0.025, 0.975), 0, 1)
 #> [1] -1.959964  1.959964
 qgeneric(pnorm, c(0.025, 0.975), mean=0, sd=1) # must name the arguments

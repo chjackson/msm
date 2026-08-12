@@ -81,6 +81,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 ## Simulate data from a Markov model 
 nsubj <- 30; nobspt <- 5
 sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),

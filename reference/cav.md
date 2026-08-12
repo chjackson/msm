@@ -11,21 +11,21 @@ grouped by patient number and ordered by years after transplant, with
 each row representing an examination and containing additional
 covariates.
 
-|            |           |                                                                         |
-|------------|-----------|-------------------------------------------------------------------------|
-| `PTNUM`    | (numeric) | Patient identification number                                           |
-| `age`      | (numeric) | Recipient age at examination (years)                                    |
-| `years`    | (numeric) | Examination time (years after transplant)                               |
-| `dage`     | (numeric) | Age of heart donor (years)                                              |
-| `sex`      | (numeric) | sex (0=male, 1=female)                                                  |
-| `pdiag`    | (factor)  | Primary diagnosis (reason for transplant)                               |
-|            |           | IHD=ischaemic heart disease, IDC=idiopathic dilated cardiomyopathy.     |
-| `cumrej`   | (numeric) | Cumulative number of acute rejection episodes                           |
-| `state`    | (numeric) | State at the examination.                                               |
-|            |           | State 1 represents no CAV, state 2 is mild/moderate CAV                 |
-|            |           | and state 3 is severe CAV. State 4 indicates death.                     |
-| `firstobs` | (numeric) | 0 = record represents an angiogram or date of death.                    |
-|            |           | 1 = record represents transplant (patient's first observation)          |
+|  |  |  |
+|----|----|----|
+| `PTNUM` | (numeric) | Patient identification number |
+| `age` | (numeric) | Recipient age at examination (years) |
+| `years` | (numeric) | Examination time (years after transplant) |
+| `dage` | (numeric) | Age of heart donor (years) |
+| `sex` | (numeric) | sex (0=male, 1=female) |
+| `pdiag` | (factor) | Primary diagnosis (reason for transplant) |
+|  |  | IHD=ischaemic heart disease, IDC=idiopathic dilated cardiomyopathy. |
+| `cumrej` | (numeric) | Cumulative number of acute rejection episodes |
+| `state` | (numeric) | State at the examination. |
+|  |  | State 1 represents no CAV, state 2 is mild/moderate CAV |
+|  |  | and state 3 is severe CAV. State 4 indicates death. |
+| `firstobs` | (numeric) | 0 = record represents an angiogram or date of death. |
+|  |  | 1 = record represents transplant (patient's first observation) |
 | `statemax` | (numeric) | Maximum observed state so far for this patient (added in version 1.5.1) |
 
 ## Source

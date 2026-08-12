@@ -210,6 +210,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ## Examples
 
 ``` r
+
 ## what does the distribution look like?
 x <- seq(50, 90, by=1)
 plot(x, dnorm(x, 70, 10), type="l", ylim=c(0,0.06)) ## standard Normal

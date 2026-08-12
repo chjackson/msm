@@ -94,6 +94,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 
 ``` r
 
+
 qmatrix <- rbind(
                  c(-0.2,   0.1,  0.1 ),
                  c(0.5,   -0.6,  0.1 ),
