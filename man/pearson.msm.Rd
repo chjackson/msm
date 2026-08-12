@@ -91,7 +91,7 @@ observations.}
 
 \item{B}{Number of bootstrap replicates.}
 
-\item{next.obstime}{This is a vector of length \code{x$data$n} (the number
+\item{next.obstime}{This is a vector of length \code{nrow(model.frame(x))} (the number
 of observations used in the model fit) giving the time to the next
 \emph{scheduled} observation following each time point.  This is only used
 when times to death are known exactly.

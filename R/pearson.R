@@ -41,6 +41,7 @@
 #' \code{pearson.msm}.
 #' 
 #' @param x A fitted multi-state model, as returned by \code{\link{msm}}.
+#'
 #' @param transitions This should be an integer vector indicating which
 #' interval transitions should be grouped together in the contingency table.
 #' Its length should be the number of allowed interval transitions, excluding
@@ -60,10 +61,13 @@
 #' 
 #' Only transitions from the same state may be grouped.  By default, each
 #' interval transition forms a separate group.
+#'
 #' @param timegroups Number of groups based on quantiles of the time since the
 #' start of the process.
+#'
 #' @param intervalgroups Number of groups based on quantiles of the time
 #' interval between observations, within time groups
+#'
 #' @param covgroups Number of groups based on quantiles of \eqn{\sum_r
 #' q_{irr}}{sum_r q_{irr}}, where \eqn{q_{irr}} are the diagonal entries of the
 #' transition intensity matrix for the \emph{i}th transition.  These are a
@@ -79,6 +83,7 @@
 #' \code{\link{msm}}, if the only covariate is the time period,
 #' \code{covgroups} is set to 1, since \code{timegroups} ensures that
 #' transitions are grouped by time.
+#'
 #' @param groups A vector of arbitrary groups in which to categorise each
 #' transition. This can be an integer vector or a factor.  This can be used to
 #' diagnose specific areas of poor fit.  For example, the contingency table
@@ -91,6 +96,7 @@
 #' \code{groups} at observation \eqn{i} is used to categorise the transition
 #' which \emph{ends} at observation i. Values of \code{groups} at the first
 #' observation for each subject are ignored.
+#'
 #' @param boot Estimate an "exact" p-value using a parametric bootstrap.
 #' 
 #' All objects used in the original call to \code{\link{msm}} which produced
@@ -101,8 +107,10 @@
 #' Note that \code{groups} cannot be used with bootstrapping, as the simulated
 #' observations will not be in the same categories as the original
 #' observations.
+#'
 #' @param B Number of bootstrap replicates.
-#' @param next.obstime This is a vector of length \code{x$data$n} (the number
+#'
+#' @param next.obstime This is a vector of length \code{nrow(model.frame(x))} (the number
 #' of observations used in the model fit) giving the time to the next
 #' \emph{scheduled} observation following each time point.  This is only used
 #' when times to death are known exactly.
@@ -124,12 +132,15 @@
 #' product-limit estimate based on the intervals to observations other than
 #' deaths. The resulting tables of transitions are averaged over these
 #' imputations.  This may be slow.
+#'
 #' @param N Number of imputations for the estimation of the distribution of the
 #' next scheduled observation time, when there are exact death times.
+#'
 #' @param indep.cens If \code{TRUE}, then times to censoring are included in
 #' the estimation of the distribution to the next scheduled observation time.
 #' If \code{FALSE}, times to censoring are assumed to be systematically
 #' different from other observation times.
+#'
 #' @param maxtimes A vector of length \code{x$data$n}, or a common scalar,
 #' giving an upper bound for the next scheduled observation time.  Used in the
 #' multiple imputation when times to death are known exactly.  If a value
@@ -138,12 +149,14 @@
 #' not supplied, this is taken to be the maximum interval occurring in the
 #' data, plus one time unit.  For observations which are not exact death times,
 #' this should be the time since the previous observation.
+#'
 #' @param pval Calculate a p-value using the improved approximation of Titman
 #' (2009).  This is optional since it is not needed during bootstrapping, and
 #' it is computationally non-trivial.  Only available currently for non-hidden
 #' Markov models for panel data without exact death times.  Also not available
 #' for models with censoring, including time-homogeneous models fitted with the
 #' \code{pci} option to \code{\link{msm}}.
+#'
 #' @return A list whose first two elements are contingency tables of observed
 #' transitions \eqn{O} and expected transitions \eqn{E}, respectively, for each
 #' combination of groups.  The third element is a table of the deviances
@@ -194,10 +207,13 @@
 #' this contains the weights defining the null distribution of the test
 #' statistic as a weighted sum of \ifelse{latex}{\eqn{\chi^2_1}}{chi-squared(1)}
 #' random variables (not printed by default).}
+#'
 #' @author Andrew Titman \email{a.titman@@lancaster.ac.uk}, Chris Jackson
 #' \email{chris.jackson@@mrc-bsu.cam.ac.uk}
+#'
 #' @seealso \code{\link{msm}}, \code{\link{prevalence.msm}},
 #' \code{\link{scoreresid.msm}},
+#'
 #' @references Aguirre-Hernandez, R. and Farewell, V. (2002) A Pearson-type
 #' goodness-of-fit test for stationary and time-continuous Markov regression
 #' models. \emph{Statistics in Medicine} 21:1899-1911.
@@ -211,7 +227,9 @@
 #' 
 #' Titman, A. (2008) Model diagnostics in multi-state models of biological
 #' systems. PhD thesis, University of Cambridge.
+#'
 #' @keywords models
+#'
 #' @examples
 #' 
 #' psor.q <- rbind(c(0,0.1,0,0),c(0,0,0.1,0),c(0,0,0,0.1),c(0,0,0,0))
@@ -405,10 +423,13 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
     }
     else imputation <- deathindex <- NULL
     ndeathindex <- setdiff(1:ntrans, deathindex)
-
+  
+    use.imputation <- exact.death && is.null(next.obstime)
+    excl <- if (use.imputation) (md$obtype != 1) else rep(TRUE, ntrans )
+  
     ## Transition probability matrices are indexed by unique combinations of time intervals and Q matrices.
-    timeint <- c(md$timeinterval[md$obtype != 1],c(imputation[,,"times"])) # time intervals, excluding deaths, concatenated with imputations of next interval after death
-    qmatint <- c(qmatindex[md$obtype != 1],rep(qmatindex[deathindex],N)) # index into unique Q matrices
+    timeint <- c(md$timeinterval[excl],c(imputation[,,"times"])) # time intervals, excluding deaths, concatenated with imputations of next interval after death
+    qmatint <- c(qmatindex[excl],rep(qmatindex[deathindex],N)) # index into unique Q matrices
     timeqmat <- paste(timeint,qmatint,sep="-")
     timeqmata <- data.frame(timeint,qmatint)[!duplicated(timeqmat),]
     pastedu <- unique(timeqmat)
@@ -419,8 +440,8 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
     for (i in unique(timeqmata[,2]))
         pmi[,,timeqmata[,2]==i] <- MatrixExp(qmatmaster[,,i], timeqmata[timeqmata[,2]==i,1], method="pade")
     md$timeqmatindex<-rep(0,ntrans)
-    md$timeqmatindex[md$obtype != 1] <- timeqmatindex[1:(ntrans-ndeath)]
-    if (exact.death && is.null(next.obstime))
+    md$timeqmatindex[excl] <- timeqmatindex[1:sum(excl)]
+    if (use.imputation)
         imputation[,,"timeqmatindex"] <- timeqmatindex[(ntrans-ndeath+1):length(timeqmatindex)]
 
     ### Calculate transition probabilities for non-death intervals
@@ -453,10 +474,13 @@ pearson.msm <- function(x, transitions=NULL, timegroups=3, intervalgroups=3, cov
             }
         }
     }
-    else
-        prob[cbind(rep(1:nst,ntrans-ndeath),rep((1:ntrans)[ndeathindex],each=nst))] <-
-            pmi[cbind(rep(md$prevstate[(1:ntrans)[ndeathindex]],each=nst),
-                      rep(1:nst,ntrans - ndeath),rep(md$timeqmatindex[(1:ntrans)[ndeathindex]],each=nst))]
+    else {
+        fillindex <- if (use.imputation) ndeathindex else 1:ntrans
+        nfill <- length(fillindex)        
+        prob[cbind(rep(1:nst,nfill),rep(fillindex,each=nst))] <-
+            pmi[cbind(rep(md$prevstate[fillindex],each=nst),
+                      rep(1:nst,nfill),rep(md$timeqmatindex[fillindex],each=nst))]
+    }
 
     if (exact.death && is.null(next.obstime)) {
         stat.sim <- rep(0,N)
