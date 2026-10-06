@@ -46,4 +46,4 @@ docs
 ^.*\.gcda$
 ^.*\.gcno$
 ^revdep$
-
+.vscode

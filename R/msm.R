@@ -2829,6 +2829,7 @@ msm.form.cri <- function(covlist, qmodel, mf, mm, tdmodel) {
 ## non-atomic, matrix within df
 
 #' @noRd
+#' @exportS3Method NULL
 na.omit.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     xx <- object[!omit, , drop = FALSE]
@@ -2841,6 +2842,7 @@ na.omit.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
 }
 
 #' @noRd
+#' @exportS3Method NULL
 na.fail.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     omit <- na.find.msmdata(object, hidden=hidden, misc=misc)
     if (any(omit))
@@ -2849,6 +2851,7 @@ na.fail.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
 }
 
 #' @noRd
+#' @exportS3Method NULL
 na.find.msmdata <- function(object, hidden=FALSE, misc=FALSE, ...) {
     subj <- as.character(object[,"(subject)"])
     firstobs <- !duplicated(subj)

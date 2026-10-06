@@ -66,8 +66,7 @@
 #' page for further details.
 #'
 #' @name medists
-#' @aliases medists dmenorm pmenorm qmenorm rmenorm dmeunif pmeunif qmeunif
-#' rmeunif
+#' @aliases medists dmenorm pmenorm qmenorm rmenorm dmeunif pmeunif qmeunif rmeunif
 #' @param x,q vector of quantiles.
 #' @param p vector of probabilities.
 #' @param n number of observations. If \code{length(n) > 1}, the length is

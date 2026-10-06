@@ -210,6 +210,7 @@ tidy.msm.est <- function(x, ...){
 ## for a hidden Markov model. 
 
 #' @noRd
+#' @exportS3Method NULL
 tidy.hmodel <- function(x, ...){
   xh <- x$hmodel
   p <- x$paramdata

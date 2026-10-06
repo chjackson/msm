@@ -18,3 +18,5 @@ inst/#*
 *.gcda
 *.gcno
 revdep
+*.code-workspace
+.vscode

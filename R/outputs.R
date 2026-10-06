@@ -676,6 +676,7 @@ print.msm.est <- function(x, digits=NULL, ...)
 }
 
 #' @noRd
+#' @exportS3Method NULL
 format.ci <- function(x, l, u, noci=NULL, digits=NULL, ...)
 {
     if (is.null(noci)) noci <- rep(FALSE, length(x))

@@ -73,9 +73,7 @@
 #' (relative to \code{basecat}).
 #'
 #' @name hmm-dists
-#' @aliases hmm-dists hmmCat hmmIdent hmmUnif hmmNorm hmmLNorm hmmExp hmmGamma
-#' hmmWeibull hmmPois hmmBinom hmmTNorm hmmMETNorm hmmMEUnif hmmNBinom
-#' hmmBetaBinom hmmBeta hmmT
+#' @aliases hmm-dists hmmCat hmmIdent hmmUnif hmmNorm hmmLNorm hmmExp hmmGamma hmmWeibull hmmPois hmmBinom hmmTNorm hmmMETNorm hmmMEUnif hmmNBinom hmmBetaBinom hmmBeta hmmT
 #' @param prob (\code{hmmCat}) Vector of probabilities of observing category
 #' \code{1, 2, \dots{}, length(prob)} respectively.  Or the probability
 #' governing a binomial or negative binomial distribution.
@@ -247,7 +245,7 @@ hmmDIST <- function(label, link, r, call, ...)
 #' @examples
 #' 
 #' ## Simulate data from a Markov model 
-#' nsubj <- 30; nobspt <- 5
+#' nsubj <- 100; nobspt <- 5
 #' sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
 #'                      time = seq(0, 20, length=nobspt))
 #' set.seed(1)
