@@ -2,9 +2,23 @@ context("msm data summaries")
 
 test_that("statetable.msm", {
     stab <- statetable.msm(state, PTNUM, data=cav)
-    expect_that(stab, equals(structure(c(1367L, 46L, 4L, 204L, 134L, 13L, 44L, 54L, 107L, 148L, 48L, 55L), .Dim = 3:4, .Dimnames = structure(list(from = c("1","2", "3"), to = c("1", "2", "3", "4")), .Names = c("from", "to")), class = "table")))
-    expect_equal(as.numeric(stab), c(1367, 46, 4, 204, 134, 13, 44, 54, 107, 148, 48, 55))
-    expect_error(statetable.msm(state,PTNUM), "not found")
+    expect_that(
+        stab,
+        equals(structure(
+            c(1367L, 46L, 4L, 204L, 134L, 13L, 44L, 54L, 107L, 148L, 48L, 55L),
+            dim = 3:4,
+            dimnames = structure(
+                list(from = c("1", "2", "3"), to = c("1", "2", "3", "4")),
+                names = c("from", "to")
+            ),
+            class = "table"
+        ))
+    )
+    expect_equal(
+        as.numeric(stab),
+        c(1367, 46, 4, 204, 134, 13, 44, 54, 107, 148, 48, 55)
+    )
+    expect_error(statetable.msm(state, PTNUM), "not found")
     stabc <- statetable.msm(state, PTNUM, cav.cens)
     expect_equal(as.numeric(stabc), c(1367, 46, 4, 204, 134, 13, 44, 54, 107, 127, 40, 34, 21, 8, 21))
 })
