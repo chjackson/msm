@@ -58,7 +58,7 @@ psor.msm <- msm(state ~ months, subject=ptnum, data=psor,
 #> iter  11 value 1114.899461
 #> final  value 1114.899461 
 #> converged
-#> Used 36 function and 11 gradient evaluations
+#> Used 38 function and 11 gradient evaluations
 qmatrix.msm(psor.msm)
 #>         State 1                    State 2                   
 #> State 1 -0.09594 (-0.1216,-0.0757)  0.09594 ( 0.0757, 0.1216)
@@ -72,20 +72,20 @@ qmatrix.msm(psor.msm)
 #> State 4 0                          0                         
 sojourn.msm(psor.msm)
 #>         estimates        SE        L         U
-#> State 1 10.423724 1.2597644 8.225277 13.209772
-#> State 2  6.086186 0.7266462 4.816349  7.690817
-#> State 3  3.931083 0.5796052 2.944488  5.248253
+#> State 1 10.423724 1.2597644 8.225277 13.209771
+#> State 2  6.086186 0.7266461 4.816349  7.690816
+#> State 3  3.931084 0.5796054 2.944488  5.248254
 hazard.msm(psor.msm)
 #> $ollwsdrt
 #>                          HR         L        U
 #> State 1 - State 2 0.5651903 0.3853452 0.828971
 #> State 2 - State 3 0.5651903 0.3853452 0.828971
-#> State 3 - State 4 1.6407660 0.8153999 3.301586
+#> State 3 - State 4 1.6407662 0.8154000 3.301587
 #> 
 #> $hieffusn
 #>                         HR        L        U
-#> State 1 - State 2 1.645955 1.148294 2.359299
-#> State 2 - State 3 1.645955 1.148294 2.359299
-#> State 3 - State 4 1.645955 1.148294 2.359299
+#> State 1 - State 2 1.645956 1.148294 2.359299
+#> State 2 - State 3 1.645956 1.148294 2.359299
+#> State 3 - State 4 1.645956 1.148294 2.359299
 #> 
 ```

@@ -5,10 +5,10 @@ Converts longitudinal data for a
 where observations represent the exact transition times of the process,
 to counting process data. This enables, for example, flexible parametric
 multi-state models to be fitted with
-[`flexsurvreg`](https://rdrr.io/pkg/flexsurv/man/flexsurvreg.html) from
-the flexsurv package, or semiparametric models to be implemented with
-[`coxph`](https://rdrr.io/pkg/survival/man/coxph.html) and the mstate
-package.
+[`flexsurvreg`](http://chjackson.github.io/flexsurv-dev/reference/flexsurvreg.md)
+from the flexsurv package, or semiparametric models to be implemented
+with [`coxph`](https://rdrr.io/pkg/survival/man/coxph.html) and the
+mstate package.
 
 ## Usage
 
