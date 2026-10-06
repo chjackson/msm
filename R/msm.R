@@ -2179,6 +2179,8 @@ msm.form.dh <- function(hmodel,
 ### for r!=s,  exp(lp_r) * (-exp(lp_s)/ (sum_all())^2
 ### for r=s,  d/dlp_s p_r  =  exp(lp_r) / sum_all() - exp(lp_r)^2 / (sum_all())^2
 
+#' @noRd
+#' @exportS3Method NULL
 msm.dmninvlogit <- function(hmodel, pars, mml, hcov, dh){
     plabs <- hmodel$plabs
     states <- hmodel$parstate

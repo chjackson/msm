@@ -100,11 +100,64 @@ test_that("Categorical, 4 potential obs",{
     expect_lt(deriv_error(tm), err)
 })
 
-test_that("Derivatives not supported with misclassification constraints",{
-    expect_warning(tm <- msm(obs ~ time, qmatrix=rbind(c(0,1),c(0,0)), ematrix=rbind(c(0.8,0.2),c(0.9,0.1)), econstraint=c(1,1), data=test.df, fixedpars=TRUE), "Analytic derivatives not available")
-    expect_warning(tm <- msm(obs ~ time, qmatrix=rbind(c(0,1),c(0,0)), hmodel=list(hmmCat(c(0.8,0.1,0.05,0.05)),hmmCat(c(0.05,0.9,0.02,0.03))),  data=test.df, hconstraint=list(p=c(1,1,2,3,4,5)), fixedpars=TRUE), "Analytic derivatives not available")
-    expect_warning(tm <- msm(obs ~ time, qmatrix=rbind(c(0,1),c(0,0)), hmodel=list(hmmCat(c(0.8,0.1,0.05,0.05)),hmmCat(c(0.05,0.9,0.02,0.03))),  data=test.df, hcovariates=list(~x+y,~x+y), hconstraint=list(p=c(1,1,2,3,4,5),x=c(1,2,2,3,4,5),y=c(1,2,3,3,3,3)), fixedpars=TRUE), "Analytic derivatives not available")
-    expect_warning(tm <- msm(obs ~ time, qmatrix=rbind(c(0,1),c(0,0)), hmodel=list(hmmCat(c(0.8,0.2)),hmmCat(c(0.9,0.1))), hcovariates=list(~x,~x),  hconstraint=list(x=c(1,1)), data=test.df, fixedpars=TRUE), "Analytic derivatives not available")
+test_that("Derivatives not supported with misclassification constraints", {
+    expect_warning(
+        tm <- msm(
+            obs ~ time,
+            qmatrix = rbind(c(0, 1), c(0, 0)),
+            ematrix = rbind(c(0.8, 0.2), c(0.9, 0.1)),
+            econstraint = c(1, 1),
+            data = test.df,
+            fixedpars = TRUE
+        ),
+        "Analytic derivatives not available"
+    )
+    expect_warning(
+        tm <- msm(
+            obs ~ time,
+            qmatrix = rbind(c(0, 1), c(0, 0)),
+            hmodel = list(
+                hmmCat(c(0.8, 0.1, 0.05, 0.05)),
+                hmmCat(c(0.05, 0.9, 0.02, 0.03))
+            ),
+            data = test.df,
+            hconstraint = list(p = c(1, 1, 2, 3, 4, 5)),
+            fixedpars = TRUE
+        ),
+        "Analytic derivatives not available"
+    )
+    expect_warning(
+        tm <- msm(
+            obs ~ time,
+            qmatrix = rbind(c(0, 1), c(0, 0)),
+            hmodel = list(
+                hmmCat(c(0.8, 0.1, 0.05, 0.05)),
+                hmmCat(c(0.05, 0.9, 0.02, 0.03))
+            ),
+            data = test.df,
+            hcovariates = list(~ x + y, ~ x + y),
+            hconstraint = list(
+                p = c(1, 1, 2, 3, 4, 5),
+                x = c(1, 2, 2, 3, 4, 5),
+                y = c(1, 2, 3, 3, 3, 3)
+            ),
+            fixedpars = TRUE
+        ),
+        "Analytic derivatives not available"
+    )
+
+    expect_warning(
+        tm <- msm(
+            obs ~ time,
+            qmatrix = rbind(c(0, 1), c(0, 0)),
+            hmodel = list(hmmCat(c(0.8, 0.2)), hmmCat(c(0.9, 0.1))),
+            hcovariates = list(~x, ~x),
+            hconstraint = list(x = c(1, 1)),
+            data = test.df,
+            fixedpars = TRUE
+        ),
+        "Analytic derivatives not available"
+    )
 })
 
 test_that("Derivatives with CAV misclassification model",{
