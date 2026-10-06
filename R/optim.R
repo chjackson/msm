@@ -1,16 +1,20 @@
 deriv_supported <- function(msmdata, hmodel, cmodel){
     single_outcome <- (is.null(ncol(msmdata$mf$"(state)")) || (ncol(msmdata$mf$"(state)")==1))
-    (!hmodel$hidden || (hmodel$hidden &&
-                        ## Models where derivatives not supported: 
-                        ## multiple outcomes where any outcome is categorical
-                        (single_outcome || (!any(na.omit(as.vector(hmodel$labels)) == "categorical"))) &&
-                        ## unknown initial state probs
-                        !hmodel$est.initprobs &&
-                        ## constraints on misclassification / categorical outcome probabilities
-                        (!any(duplicated(hmodel$constr[hmodel$plabs=="p"]))) &&
-                        (!any(duplicated(hmodel$covconstr[.msm.HMODELS[hmodel$models[hmodel$coveffstate]]=="categorical"]))) &&
-                        all(.msm.HMODELS[hmodel$models %in% .msm.HMODELS.DERIV])
-                        ))
+    (!hmodel$hidden ||
+        (hmodel$hidden &&
+            ## Models where derivatives not supported:
+            ## multiple outcomes where any outcome is categorical
+            (single_outcome ||
+                (!any(na.omit(as.vector(hmodel$labels)) == "categorical"))) &&
+            ## unknown initial state probs
+            !hmodel$est.initprobs &&
+            ## constraints on misclassification / categorical outcome probabilities
+            (!any(duplicated(hmodel$constr[hmodel$plabs == "p"]))) &&
+            (!any(duplicated(hmodel$covconstr[
+                .msm.HMODELS[hmodel$mnamesodels[hmodel$coveffstate]] ==
+                    "categorical"
+            ]))) &&
+            all(.msm.HMODELS[hmodel$models] %in% .msm.HMODELS.DERIV)))
 }
 
 info_supported <- function(msmdata, hmodel, cmodel){

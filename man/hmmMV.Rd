@@ -59,7 +59,7 @@ supported.
 \examples{
 
 ## Simulate data from a Markov model 
-nsubj <- 30; nobspt <- 5
+nsubj <- 100; nobspt <- 5
 sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
                      time = seq(0, 20, length=nobspt))
 set.seed(1)
