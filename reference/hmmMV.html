@@ -117,7 +117,7 @@ supported.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Simulate data from a Markov model </span></span></span>
-<span class="r-in"><span><span class="va">nsubj</span> <span class="op">&lt;-</span> <span class="fl">30</span>; <span class="va">nobspt</span> <span class="op">&lt;-</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="va">nsubj</span> <span class="op">&lt;-</span> <span class="fl">100</span>; <span class="va">nobspt</span> <span class="op">&lt;-</span> <span class="fl">5</span></span></span>
 <span class="r-in"><span><span class="va">sim.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>subject <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">nsubj</span>, each<span class="op">=</span><span class="va">nobspt</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                     time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, length<span class="op">=</span><span class="va">nobspt</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
@@ -138,15 +138,32 @@ supported.</p>
 <span class="r-in"><span><span class="fu"><a href="msm.html">msm</a></span><span class="op">(</span><span class="va">obs</span> <span class="op">~</span> <span class="va">time</span>, subject<span class="op">=</span><span class="va">subject</span>, data<span class="op">=</span><span class="va">dat</span>, qmatrix<span class="op">=</span><span class="va">two.q</span>,</span></span>
 <span class="r-in"><span>    hmodel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="hmm-dists.html">hmmBinom</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">40</span>, prob<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                  <span class="fu"><a href="hmm-dists.html">hmmBinom</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">40</span>, prob<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> msm(formula = obs ~ time, subject = subject, data = dat, qmatrix = two.q,     hmodel = list(hmmBinom(size = 40, prob = 0.2), hmmBinom(size = 40,         prob = 0.2)))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Optimisation probably not converged to the maximum likelihood.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> optim() reported convergence but estimated Hessian not positive-definite.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -2 * log-likelihood:  3706.02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transition intensities</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   Baseline                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 1 -0.09467 (-0.11718,-0.07648)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 2  0.09467 ( 0.07648, 0.11718)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hidden Markov model, 2 states</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - binomial distribution</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameters: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate        LCL       UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000         NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.1005689 0.09641094 0.1048854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 2 - binomial distribution</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameters: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate      LCL       UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000       NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.4968071 0.489987 0.5036284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -2 * log-likelihood:  4961.656 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### EXAMPLE 2</span></span></span>
 <span class="r-in"><span><span class="co">## Generate two observations at each time from different</span></span></span>
@@ -175,35 +192,35 @@ supported.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maximum likelihood estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Transition intensities</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   Baseline                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 1 -0.09458 (-0.13940,-0.06416)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 2  0.09458 ( 0.06416, 0.13940)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   Baseline                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 1 -0.0947 (-0.11722,-0.07651)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> State 1 - State 2  0.0947 ( 0.07651, 0.11722)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hidden Markov model, 2 states</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> State 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Outcome 1 - binomial distribution</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL       UCL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.1054793 0.0948457 0.1171507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate        LCL       UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000         NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.0954585 0.08976316 0.1014749</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Outcome 2 - binomial distribution</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL       UCL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.1958908 0.1818942 0.2106871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.2017562 0.1938799 0.2098691</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> State 2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Outcome 1 - binomial distribution</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL      UCL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.5954564 0.5780108 0.612664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL       UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.5984499 0.5889565 0.6078701</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Outcome 2 - binomial distribution</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL      UCL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.5110363 0.4933762 0.528669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate       LCL       UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size 40.0000000        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prob  0.4924422 0.4828006 0.5020894</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -2 * log-likelihood:  1523.652 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -2 * log-likelihood:  5149.681 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

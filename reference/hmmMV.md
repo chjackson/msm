@@ -83,7 +83,7 @@ C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>
 ``` r
 
 ## Simulate data from a Markov model 
-nsubj <- 30; nobspt <- 5
+nsubj <- 100; nobspt <- 5
 sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt),
                      time = seq(0, 20, length=nobspt))
 set.seed(1)
@@ -104,15 +104,32 @@ dat$obs <- cbind(obs1 = dat$obs1, obs2 = dat$obs2)
 msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
     hmodel = list(hmmBinom(size=40, prob=0.2),
                   hmmBinom(size=40, prob=0.2)))
-#> Warning: Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.
 #> 
 #> Call:
 #> msm(formula = obs ~ time, subject = subject, data = dat, qmatrix = two.q,     hmodel = list(hmmBinom(size = 40, prob = 0.2), hmmBinom(size = 40,         prob = 0.2)))
 #> 
-#> Optimisation probably not converged to the maximum likelihood.
-#> optim() reported convergence but estimated Hessian not positive-definite.
+#> Maximum likelihood estimates
 #> 
-#> -2 * log-likelihood:  3706.02 
+#> Transition intensities
+#>                   Baseline                    
+#> State 1 - State 1 -0.09467 (-0.11718,-0.07648)
+#> State 1 - State 2  0.09467 ( 0.07648, 0.11718)
+#> 
+#> Hidden Markov model, 2 states
+#> State 1 - binomial distribution
+#> Parameters: 
+#>        Estimate        LCL       UCL
+#> size 40.0000000         NA        NA
+#> prob  0.1005689 0.09641094 0.1048854
+#> 
+#> State 2 - binomial distribution
+#> Parameters: 
+#>        Estimate      LCL       UCL
+#> size 40.0000000       NA        NA
+#> prob  0.4968071 0.489987 0.5036284
+#> 
+#> 
+#> -2 * log-likelihood:  4961.656 
 
 ### EXAMPLE 2
 ## Generate two observations at each time from different
@@ -141,33 +158,33 @@ msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
 #> Maximum likelihood estimates
 #> 
 #> Transition intensities
-#>                   Baseline                    
-#> State 1 - State 1 -0.09458 (-0.13940,-0.06416)
-#> State 1 - State 2  0.09458 ( 0.06416, 0.13940)
+#>                   Baseline                   
+#> State 1 - State 1 -0.0947 (-0.11722,-0.07651)
+#> State 1 - State 2  0.0947 ( 0.07651, 0.11722)
 #> 
 #> Hidden Markov model, 2 states
 #> State 1 
 #> Outcome 1 - binomial distribution
-#>        Estimate       LCL       UCL
-#> size 40.0000000        NA        NA
-#> prob  0.1054793 0.0948457 0.1171507
+#>        Estimate        LCL       UCL
+#> size 40.0000000         NA        NA
+#> prob  0.0954585 0.08976316 0.1014749
 #> 
 #> Outcome 2 - binomial distribution
 #>        Estimate       LCL       UCL
 #> size 40.0000000        NA        NA
-#> prob  0.1958908 0.1818942 0.2106871
+#> prob  0.2017562 0.1938799 0.2098691
 #> 
 #> State 2 
 #> Outcome 1 - binomial distribution
-#>        Estimate       LCL      UCL
-#> size 40.0000000        NA       NA
-#> prob  0.5954564 0.5780108 0.612664
+#>        Estimate       LCL       UCL
+#> size 40.0000000        NA        NA
+#> prob  0.5984499 0.5889565 0.6078701
 #> 
 #> Outcome 2 - binomial distribution
-#>        Estimate       LCL      UCL
-#> size 40.0000000        NA       NA
-#> prob  0.5110363 0.4933762 0.528669
+#>        Estimate       LCL       UCL
+#> size 40.0000000        NA        NA
+#> prob  0.4924422 0.4828006 0.5020894
 #> 
 #> 
-#> -2 * log-likelihood:  1523.652 
+#> -2 * log-likelihood:  5149.681 
 ```
