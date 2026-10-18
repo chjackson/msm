@@ -48,7 +48,7 @@ psor.msm <- msm(state ~ months, subject=ptnum, data=psor,
 #> iter   3 value 1122.654955
 #> iter   4 value 1121.606113
 #> iter   5 value 1120.763406
-#> iter   6 value 1119.769934
+#> iter   6 value 1119.769933
 #> iter   7 value 1116.747874
 #> iter   8 value 1116.596341
 #> iter   9 value 1114.972649
@@ -74,7 +74,7 @@ sojourn.msm(psor.msm)
 #>         estimates        SE        L         U
 #> State 1 10.423724 1.2597644 8.225277 13.209771
 #> State 2  6.086186 0.7266461 4.816349  7.690816
-#> State 3  3.931084 0.5796054 2.944488  5.248254
+#> State 3  3.931084 0.5796053 2.944488  5.248254
 hazard.msm(psor.msm)
 #> $ollwsdrt
 #>                          HR         L        U
