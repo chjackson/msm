@@ -229,8 +229,8 @@ MatrixExpPade(double *ExpAt, double *A, int n, double t)
   double * At = workspace + N;
   double * Num = workspace + 2*N;
   double * Denom = workspace + 3*N;
-  double l1 = F77_CALL(dlange)("1", &n, &n, At, &n, 0 FCONE); /* L-1 norm */
-  double linf = F77_CALL(dlange)("i", &n, &n, At, &n, Temp FCONE); /* L-Infinity norm */
+  double l1 = t * F77_CALL(dlange)("1", &n, &n, A, &n, 0 FCONE); /* L-1 norm of At */
+  double linf = t * F77_CALL(dlange)("i", &n, &n, A, &n, Temp FCONE); /* L-Infinity norm of At */
   double K = (log(l1) + log(linf))/log(4);
   int npower = (R_FINITE(K) ? (int)(K)+4 : NA_INTEGER);
   double scale = 1;
