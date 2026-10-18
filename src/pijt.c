@@ -497,45 +497,30 @@ void DPmatEXACT(Array3 dqmat, Matrix qmat, int n, int npars, Array3 dpmat, doubl
     }
 }
 
-void DMatrixExpSeries(Matrix DA, Matrix A, int n, int npars, Array3 DexpA, double t)
-{
-    int i, j, k, p;
-    int order = 20;
-    int nsq = n*n;
-    double *DAp;
-    vector tpower = R_Calloc(order+1, double); /* values of t^i / i! */
-    Matrix DApower = R_Calloc(nsq, double); /* cumulative outer sum */
-    Array3 Apower = R_Calloc(nsq*(order+1), double);  /* storage for successive powers of A  */
-    Matrix Temp = R_Calloc(nsq, double); /* workspace  */
-    Matrix Inner = R_Calloc(nsq, double); /* one term of inner sum */
-    Matrix CInner = R_Calloc(nsq, double); /* cumulative inner sum */
+/* Derivatives of exp(At) from the block-triangular identity (Van Loan 1978)
+   exp(t [[A, dA], [0, A]]) = [[exp(At), d exp(At)], [0, exp(At)]] */
 
-    FormIdentity(&Apower[0], n);  /* A to the power 0 is identity */
-    tpower[0] = 1;
-    for (i=1; i<=order; ++i) {
-	/* calculate ith power of A and store it in next nsq entries of Apower.  */
-	MultMat(A, &Apower[(i-1)*nsq], n, n, n, &Apower[i*nsq]);
-	tpower[i] = tpower[i-1] * t/i;
-    }
+void DMatrixExpBlock(Array3 DA, Matrix A, int n, int npars, Array3 DexpA, double t)
+{
+    int i, j, p, m = 2*n;
+    Matrix B = (Matrix) R_Calloc(m*m, double);
+    Matrix expB = (Matrix) R_Calloc(m*m, double);
+    for (i=0; i<n; ++i)
+	for (j=0; j<n; ++j)
+	    B[MI(i,j,m)] = B[MI(n+i,n+j,m)] = A[MI(i,j,n)] * t;
     for (p=0; p<npars; ++p) {
-	DAp = &(DA[MI3(0,0,p,n,n)]);
-	for (k=0; k<nsq; ++k)
-	    DexpA[p*nsq + k] =  DAp[k]*tpower[1];
-	for (i=2; i<=order; ++i) {
-	    for (k=0; k<nsq; ++k)
-		CInner[k] = 0;
-	    for (j=0; j <=(i-1); ++j) {
-		MultMat(&Apower[j*nsq], DAp, n, n, n, Temp);
-		MultMat(Temp, &Apower[(i-1-j)*nsq], n, n, n, Inner);
-		for (k=0; k<nsq; ++k)
-		    CInner[k] += Inner[k];
-	    }
-	    for (k=0; k<nsq; ++k)
-		DexpA[p*nsq + k] += CInner[k]*tpower[i]; /* Fill in next nsq entries of DexpA with derivative WRT pth parameter.  */
-	}
+	for (i=0; i<n; ++i)
+	    for (j=0; j<n; ++j)
+	    	B[MI(i,n+j,m)] = DA[MI3(i,j,p,n,n)] * t;
+	expm(B, m, expB, Ward_2);
+    for (i=0; i<n; ++i)
+	    for (j=0; j<n; ++j)
+		DexpA[MI3(i,j,p,n,n)] = expB[MI(i,n+j,m)];
     }
-    R_Free(tpower); R_Free(DApower); R_Free(Apower); R_Free(Temp); R_Free(Inner); R_Free(CInner);
+    R_Free(B); R_Free(expB);
 }
+
+
 
 void dpijdeath(int r, int s, Array3 dpmat, Matrix pmat, Array3 dqmat, Matrix qmat, int n, int npars, vector dcontrib)
 {
@@ -571,7 +556,7 @@ void DPmat(Array3 dpmat, double t, Array3 dqmat, Matrix qmat, int n, int npars, 
 	if (err > 0)
 	    REprintf("error code %d from EISPACK eigensystem routine rg\n", err);
 	if (repeated_entries (revals, n)) {
-	    DMatrixExpSeries(dqmat, qmat, n, npars, dpmat, t);
+	    DMatrixExpBlock(dqmat, qmat, n, npars, dpmat, t);
 	}
 	else {
 	    MatInv(evecs, evecsinv, n);
