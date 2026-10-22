@@ -1,11 +1,11 @@
-test_that("simfitted.msm",{ 
+test_that("simfitted.msm",{
   skip_on_cran()
   psor.msm <- msm(state ~ months, subject=ptnum, data=psor, qmatrix = psor.q, covariates = ~ollwsdrt)
   expect_equal(simfitted.msm(psor.msm)$time[1], psor$months[1])
-  
+ 
   psorc <- psor
-  psorc$state[2] <- 99 
-  psorc.msm <- msm(state ~ months, subject=ptnum, data=psorc, qmatrix = psor.q, 
+  psorc$state[2] <- 99
+  psorc.msm <- msm(state ~ months, subject=ptnum, data=psorc, qmatrix = psor.q,
                    covariates = ~ollwsdrt, censor=99)
   set.seed(1)
   simdat <- simfitted.msm(psorc.msm)$state[2]
