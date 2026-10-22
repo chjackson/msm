@@ -38,7 +38,7 @@ test_that("HMMs with multiple responses from the same distribution",{
     hmm <- msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
-    expect_equal(hmm$minus2loglik, 4387.58552977954, tol=1e-06)
+    expect_equal(hmm$minus2loglik, 4295.94494110204, tol=1e-06)
     expect_lt(deriv_error(hmm), err)
     print(hmmBinom(size=40, prob=0.2))
 })
@@ -48,7 +48,7 @@ test_that("HMMs with multiple responses: cbind() in formula",{
     hmm <- msm(cbind(obs1, obs2) ~ time, subject=subject, data=dat, qmatrix=two.q,
                hmodel = list(hmmBinom(size=40, prob=0.2),
                hmmBinom(size=40, prob=0.2)), fixedpars=TRUE)
-    expect_equal(hmm$minus2loglik, 4387.58552977954, tol=1e-06)
+    expect_equal(hmm$minus2loglik, 4295.94494110204, tol=1e-06)
 })
 
 test_that("HMMs with multiple responses from different distributions",{
@@ -59,7 +59,7 @@ test_that("HMMs with multiple responses from different distributions",{
                hmmMV(hmmBinom(size=40, prob=0.3),
                      hmmBinom(size=40, prob=0.3))),
                fixedpars=TRUE)
-    expect_equal(hmm$minus2loglik, 3767.11569380418, tol=1e-06)
+    expect_equal(hmm$minus2loglik, 3706.56542325708, tol=1e-06)
     expect_lt(deriv_error(hmm), err)
     expect_error(msm(obs1 ~ time, subject=subject, data=dat, qmatrix=two.q,   
                      hmodel = list(hmmMV(hmmBinom(size=40, prob=0.3),
@@ -111,7 +111,7 @@ test_that("HMMs with multiple responses: true state known sometimes",{
                hmmMV(hmmBinom(size=40, prob=0.3),
                      hmmBinom(size=40, prob=0.3))),
                fixedpars=TRUE)
-    expect_equal(hmm$minus2loglik, 3804.03972787726, tol=1e-06)
+    expect_equal(hmm$minus2loglik, 3745.22046584842, tol=1e-06)
     expect_lt(deriv_error(hmm), err)
 })
 

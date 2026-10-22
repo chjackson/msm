@@ -1386,7 +1386,7 @@ msm.check.times <- function(time, subject, state=NULL, hidden=FALSE)
 ### Check if any individuals have only one observation (after excluding missing data)
 ### Note this shouldn't happen after 1.2
     subj.num <- match(subject,unique(subject)) # avoid problems with factor subjects with empty levels
-    nobspt <- table(subj.num)
+    nobspt <- tabulate(subj.num)
     if (any (nobspt == 1)) {
         badsubjs <- unique(subject)[ nobspt == 1 ]
         andothers <- if (length(badsubjs)>3) " and others" else ""
@@ -1398,10 +1398,10 @@ msm.check.times <- function(time, subject, state=NULL, hidden=FALSE)
           warning ("Subject", plural, " ", badlist, andothers, " only ", has, " one complete observation, which doesn't give any information")
     }
 ### Check if observations within a subject are adjacent
-    ind <- tapply(seq_along(subj.num), subj.num, length)
-    imin <- tapply(seq_along(subj.num), subj.num, min)
-    imax <- tapply(seq_along(subj.num), subj.num, max)
-    adjacent <- (ind == imax-imin+1)
+    nsubj <- length(nobspt)
+    imin <- match(seq_len(nsubj), subj.num)
+    imax <- length(subj.num) + 1 - match(seq_len(nsubj), rev(subj.num))
+    adjacent <- (nobspt == imax-imin+1)
     if (any (!adjacent)) {
         badsubjs <- unique(subject)[ !adjacent ]
         andothers <- if (length(badsubjs)>3) " and others" else ""
@@ -1411,7 +1411,9 @@ msm.check.times <- function(time, subject, state=NULL, hidden=FALSE)
         stop ("Observations within subject", plural, " ", badlist, andothers, " are not adjacent in the data")
     }
 ### Check if observations are ordered in time within subject
-    orderedpt <- ! tapply(time, subj.num, is.unsorted)
+    nobs <- length(time)
+    backwards <- c(FALSE, subj.num[-1] == subj.num[-nobs] & time[-1] < time[-nobs])
+    orderedpt <- ! (seq_len(nsubj) %in% subj.num[backwards])
     if (any (!orderedpt)) {
         badsubjs <- unique(subject)[ !orderedpt ]
         andothers <- if (length(badsubjs)>3) " and others" else ""

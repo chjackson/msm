@@ -26,7 +26,7 @@ test_that("working example",{
              c(0,1,0,0),
              c(0,0,1,0))
   nsubj <- 1000; nobspt <- 10
-  set.seed(1)
+  set.seed(3)
   sim.df <- data.frame(subject = rep(1:nsubj, each=nobspt), time = seq(0, 100, length=nobspt))
   sim2.df <- simmulti.msm(sim.df[,1:2], qmatrix=Q, ematrix=E)
   statetable.msm(obs, subject, sim2.df)

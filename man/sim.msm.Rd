@@ -58,7 +58,13 @@ Simulate the exact times of transition of a continuous-time Markov process up to
 The effect of time-dependent covariates on the transition intensity matrix
 for an individual is determined by assuming that the covariate is a step
 function which remains constant in between the individual's observation
-times.
+times.  The covariate values in row \code{k} of \code{covs} apply from
+\code{obstimes[k]} until \code{obstimes[k+1]}, those in the first row also
+apply from \code{mintime} if this is earlier than \code{obstimes[1]}, and
+those in the last row apply until \code{maxtime}.
+
+The simulation is done in compiled code, using the same engine as
+\code{\link{simmulti.msm}}.
 }
 \examples{
 

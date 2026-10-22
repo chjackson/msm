@@ -95,7 +95,10 @@ censoring indicator at censoring times.  By default this is all transient
 states (representing alive, with unknown state).}
 
 \item{drop.absorb}{Drop repeated observations in the absorbing state,
-retaining only one.}
+retaining only one.  If \code{FALSE} and an individual enters a state in
+\code{death}, the observation at the exact death time takes the place of the
+next scheduled observation, and any later scheduled observations are
+retained, in the death state.}
 }
 \value{
 A data frame with columns, \item{subject}{Subject identification
@@ -112,8 +115,10 @@ process. Observations of the process are made at specified arbitrary times
 for each individual, giving "panel-observed" or intermittently-observed data.
 }
 \details{
-\code{\link{sim.msm}} is called repeatedly to produce a simulated trajectory
-for each individual. The state at each specified observation time is then
+A trajectory is simulated for each individual, equivalently to calling
+\code{\link{sim.msm}} for each one, though this is done for all individuals
+at once in compiled code, so that large datasets can be simulated quickly.
+The state at each specified observation time is then
 taken to produce a new column \code{state}.  The effect of time-dependent
 covariates on the transition intensity matrix for an individual is
 determined by assuming that the covariate is a step function which remains

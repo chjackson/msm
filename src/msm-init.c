@@ -9,6 +9,8 @@ extern void MatrixExpR(void *, void *, void *, void *, void *, void *, void *, v
 
 /* .Call calls */
 extern SEXP msmCEntry(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP msm_simmulti_engine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP msm_sim_path(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CMethodDef CEntries[] = {
     {"MatrixExpR", (DL_FUNC) &MatrixExpR, 9},
@@ -17,6 +19,8 @@ static const R_CMethodDef CEntries[] = {
 
 static const R_CallMethodDef CallEntries[] = {
     {"msmCEntry", (DL_FUNC) &msmCEntry, 8},
+    {"msm_simmulti_engine", (DL_FUNC) &msm_simmulti_engine, 9},
+    {"msm_sim_path", (DL_FUNC) &msm_sim_path, 8},
     {NULL, NULL, 0}
 };
 
