@@ -80,7 +80,13 @@ A list with components,
 The effect of time-dependent covariates on the transition intensity
 matrix for an individual is determined by assuming that the covariate is
 a step function which remains constant in between the individual's
-observation times.
+observation times. The covariate values in row `k` of `covs` apply from
+`obstimes[k]` until `obstimes[k+1]`, those in the first row also apply
+from `mintime` if this is earlier than `obstimes[1]`, and those in the
+last row apply until `maxtime`.
+
+The simulation is done in compiled code, using the same engine as
+[`simmulti.msm`](https://chjackson.github.io/msm/reference/simmulti.msm.md).
 
 ## See also
 
@@ -102,10 +108,10 @@ qmatrix <- rbind(
                  )
 sim.msm(qmatrix, 30)
 #> $states
-#> [1] 1 3
+#> [1] 1 2 1 2 1 2 3
 #> 
 #> $times
-#> [1] 0.00000000 0.09612124
+#> [1]  0.000000  5.498836  6.008989  7.184385  7.417190 15.406795 15.723980
 #> 
 #> $qmatrix
 #>      [,1] [,2] [,3]

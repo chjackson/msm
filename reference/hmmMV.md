@@ -104,32 +104,15 @@ dat$obs <- cbind(obs1 = dat$obs1, obs2 = dat$obs2)
 msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
     hmodel = list(hmmBinom(size=40, prob=0.2),
                   hmmBinom(size=40, prob=0.2)))
+#> Warning: Optimisation has probably not converged to the maximum likelihood - Hessian is not positive definite.
 #> 
 #> Call:
 #> msm(formula = obs ~ time, subject = subject, data = dat, qmatrix = two.q,     hmodel = list(hmmBinom(size = 40, prob = 0.2), hmmBinom(size = 40,         prob = 0.2)))
 #> 
-#> Maximum likelihood estimates
+#> Optimisation probably not converged to the maximum likelihood.
+#> optim() reported convergence but estimated Hessian not positive-definite.
 #> 
-#> Transition intensities
-#>                   Baseline                    
-#> State 1 - State 1 -0.09467 (-0.11718,-0.07648)
-#> State 1 - State 2  0.09467 ( 0.07648, 0.11718)
-#> 
-#> Hidden Markov model, 2 states
-#> State 1 - binomial distribution
-#> Parameters: 
-#>        Estimate        LCL       UCL
-#> size 40.0000000         NA        NA
-#> prob  0.1005689 0.09641094 0.1048854
-#> 
-#> State 2 - binomial distribution
-#> Parameters: 
-#>        Estimate      LCL       UCL
-#> size 40.0000000       NA        NA
-#> prob  0.4968071 0.489987 0.5036284
-#> 
-#> 
-#> -2 * log-likelihood:  4961.656 
+#> -2 * log-likelihood:  12569.91 
 
 ### EXAMPLE 2
 ## Generate two observations at each time from different
@@ -158,33 +141,33 @@ msm(obs ~ time, subject=subject, data=dat, qmatrix=two.q,
 #> Maximum likelihood estimates
 #> 
 #> Transition intensities
-#>                   Baseline                   
-#> State 1 - State 1 -0.0947 (-0.11722,-0.07651)
-#> State 1 - State 2  0.0947 ( 0.07651, 0.11722)
+#>                   Baseline                    
+#> State 1 - State 1 -0.08784 (-0.10869,-0.07099)
+#> State 1 - State 2  0.08784 ( 0.07099, 0.10869)
 #> 
 #> Hidden Markov model, 2 states
 #> State 1 
 #> Outcome 1 - binomial distribution
 #>        Estimate        LCL       UCL
 #> size 40.0000000         NA        NA
-#> prob  0.0954585 0.08976316 0.1014749
+#> prob  0.1015712 0.09586795 0.1075735
 #> 
 #> Outcome 2 - binomial distribution
-#>        Estimate       LCL       UCL
-#> size 40.0000000        NA        NA
-#> prob  0.2017562 0.1938799 0.2098691
+#>       Estimate      LCL       UCL
+#> size 40.000000       NA        NA
+#> prob  0.195021 0.187461 0.2028097
 #> 
 #> State 2 
 #> Outcome 1 - binomial distribution
 #>        Estimate       LCL       UCL
 #> size 40.0000000        NA        NA
-#> prob  0.5984499 0.5889565 0.6078701
+#> prob  0.6058288 0.5960934 0.6154808
 #> 
 #> Outcome 2 - binomial distribution
 #>        Estimate       LCL       UCL
 #> size 40.0000000        NA        NA
-#> prob  0.4924422 0.4828006 0.5020894
+#> prob  0.5036739 0.4937545 0.5135905
 #> 
 #> 
-#> -2 * log-likelihood:  5149.681 
+#> -2 * log-likelihood:  5143.351 
 ```

@@ -2,6 +2,12 @@
 
 ## Version 1.8.3 (future)
 
+- `simmulti.msm` is now much faster for large datasets, since the
+  simulation is done in C for all individuals at once. `sim.msm` uses
+  the same C code, so is also faster. Note that the values simulated by
+  `sim.msm` and `simmulti.msm` for a specific seed will now be different
+  from previous versions.
+
 - Fix of a bug in the likelihood calculation where `obstrue` is set for
   a subject’s first observation in a HMM and is inconsistent with
   `initprobs`. `obstrue` should override `initprobs`.
