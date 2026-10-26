@@ -3027,6 +3027,8 @@ msm.center.covs <- function(covmat, cm, center=TRUE){
     covmat
 }
 
+#' @noRd
+#' @exportS3Method NULL
 expand.data <- function(x){
     x$data$mf.agg <- msm.form.mf.agg(x)
     x$data$mm.cov <- msm.form.mm.cov(x)

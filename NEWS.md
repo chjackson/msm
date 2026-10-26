@@ -1,10 +1,18 @@
 User-visible changes only.  For internal changes, see Github commits.
 
-# Version 1.8.3 (future)
+# Version 1.9 (2026-10-??)
 
-* `simmulti.msm` is now much faster for large datasets, since the simulation is done in C for all individuals at once.  `sim.msm` uses the same C code, so is also faster.  Note that the values simulated by `sim.msm` and `simmulti.msm` for a specific seed will now be different from previous versions.
+* `simmulti.msm` is now much faster, since the simulation is done in C.  `sim.msm` uses the same C code, so is also faster.  Note that the values simulated by `sim.msm` and `simmulti.msm` for a specific seed will now be different from previous versions.
+
+* More robust method for computing matrix exponential derivatives, which may improve convergence in some cases (#136).
+
+* Bug fix in legacy code for computing matrix exponentials (#137)
 
 * Fix of a bug in the likelihood calculation where `obstrue` is set for a subject's first observation in a HMM and is inconsistent with `initprobs`. `obstrue` should override `initprobs`.
+
+* Fix for `pearson.msm` with exact death times and next.obstime (#134)
+
+* Fix for `hmmMV` example code (#135)
 
 
 # Version 1.8.2 (2024-11-07)
