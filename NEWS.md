@@ -6,7 +6,7 @@ User-visible changes only.  For internal changes, see Github commits.
 
 * More robust method for computing matrix exponential derivatives, which may improve convergence in some cases (#136).
 
-* Bug fix in legacy code for computing matrix exponentials (#137)
+* Robustness fix in legacy code for computing matrix exponentials (#137).
 
 * Fix of a bug in the likelihood calculation where `obstrue` is set for a subject's first observation in a HMM and is inconsistent with `initprobs`. `obstrue` should override `initprobs`.
 
