@@ -49,3 +49,4 @@ docs
 .vscode
 .claude
 msm.code-workspace
+^msmcourse_src$

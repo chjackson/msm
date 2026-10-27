@@ -5,4 +5,4 @@ language:
   ui:
     chapter_name: "Part "
 delete_merged_file: true
-output_dir: "../msmcourse"
+output_dir: "../pkgdown/assets/msmcourse"
