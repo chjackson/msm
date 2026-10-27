@@ -16,7 +16,8 @@ simmulti.msm(
   hmodel = NULL,
   hcovariates = NULL,
   censor.states = NULL,
-  drop.absorb = TRUE
+  drop.absorb = TRUE,
+  method = "C"
 )
 }
 \arguments{
@@ -99,6 +100,13 @@ retaining only one.  If \code{FALSE} and an individual enters a state in
 \code{death}, the observation at the exact death time takes the place of the
 next scheduled observation, and any later scheduled observations are
 retained, in the death state.}
+
+\item{method}{The default from \code{msm} version 1.9,
+\code{method="C"}, uses a fast C-based method, which will
+simulate different specific values for a given seed from the
+previous slower R-based method. Set \code{method="legacy"} to use
+the old method, in case reproducibility of older results for the
+same seed is needed.}
 }
 \value{
 A data frame with columns, \item{subject}{Subject identification

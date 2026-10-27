@@ -44,6 +44,7 @@ resample <- function(x, size, ...)
 #' @param obstimes Vector of times at which the covariates are observed.
 #' @param start Starting state of the process. Defaults to 1.
 #' @param mintime Starting time of the process. Defaults to 0.
+#' @inheritParams simmulti.msm
 #' @return A list with components,
 #' 
 #' \item{states}{Simulated states through which the process moves.  This ends
@@ -74,9 +75,14 @@ sim.msm <- function(qmatrix,   # intensity matrix
                     beta=NULL,     # matrix of cov effects on qmatrix. ncovs rows, nintens cols.
                     obstimes=0, # times at which time-dependent covariates change
                     start = 1,     # starting state
-                    mintime = 0    # time to start from
+                    mintime = 0,    # time to start from
+                    method = "C"
                     )
 {
+    if (method=="legacy"){
+      return(sim_msm_legacy(qmatrix=qmatrix, maxtime=maxtime, covs=covs, beta=beta,
+                            obstimes=obstimes, start=start, mintime=mintime))
+    }
     if (!is.null(covs)) {
         covs <- as.matrix(covs)
         if (is.vector(beta)) beta <- matrix(beta, ncol=length(beta))
@@ -226,6 +232,14 @@ msm.sim.qindex <- function(qmatrix)
 #' \code{death}, the observation at the exact death time takes the place of the
 #' next scheduled observation, and any later scheduled observations are
 #' retained, in the death state.
+#' 
+#' @param method The default from \code{msm} version 1.9,
+#'   \code{method="C"}, uses a fast C-based method, which will
+#'   simulate different specific values for a given seed from the
+#'   previous slower R-based method. Set \code{method="legacy"} to use
+#'   the old method, in case reproducibility of older results for the
+#'   same seed is needed.
+#'  
 #' @return A data frame with columns, \item{subject}{Subject identification
 #' indicators} \item{time}{Observation times} \item{state}{Simulated (true)
 #' state at the corresponding time} \item{obs}{Observed outcome at the
@@ -257,9 +271,16 @@ simmulti.msm <- function(data,           # data frame with subject, times, covar
                          hmodel = NULL,  # hidden Markov model formula
                          hcovariates = NULL,   # covariate effects on hidden Markov model response distribution
                          censor.states = NULL,
-                         drop.absorb = TRUE
+                         drop.absorb = TRUE,
+                         method = "C"
                          )
 {
+    if (method=="legacy"){
+      return(simmulti_legacy(data=data, qmatrix=qmatrix, covariates=covariates,
+        death=death, start=start, ematrix=ematrix, misccovariates=misccovariates, 
+        hmodel=hmodel, hcovariates=hcovariates, censor.states=censor.states,
+        drop.absorb=drop.absorb))
+    }
 
 ### Check consistency of qmatrix and covariate inits
     nstates <- nrow(qmatrix)

@@ -47,3 +47,5 @@ docs
 ^.*\.gcno$
 ^revdep$
 .vscode
+.claude
+msm.code-workspace

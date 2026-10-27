@@ -35,15 +35,15 @@ test_that("simmulti.msm C engine matches original R implementation", {
   d <- simul_data(2000)
   cv <- list(z=c(1, 0.5, -1, 0.7))
   expect_same_dist(simmulti.msm(d, simul.q3, covariates=cv),
-                   simmulti_legacy(d, simul.q3, covariates=cv))
+                   simmulti.msm(d, simul.q3, covariates=cv, method="legacy"))
   expect_same_dist(simmulti.msm(d, simul.q3, covariates=cv, death=3),
-                   simmulti_legacy(d, simul.q3, covariates=cv, death=3))
+                   simmulti.msm(d, simul.q3, covariates=cv, death=3, method="legacy"))
   expect_same_dist(simmulti.msm(d[,1:2], simul.q3, drop.absorb=FALSE),
-                   simmulti_legacy(d[,1:2], simul.q3, drop.absorb=FALSE))
+                   simmulti.msm(d[,1:2], simul.q3, drop.absorb=FALSE, method="legacy"))
   em <- rbind(c(0,.1,0), c(.1,0,0), c(0,0,0))
   d$x <- rnorm(nrow(d))
   expect_same_dist(simmulti.msm(d, simul.q3, ematrix=em, misccovariates=list(x=c(0.5,-0.5))),
-                   simmulti_legacy(d, simul.q3, ematrix=em, misccovariates=list(x=c(0.5,-0.5))),
+                   simmulti.msm(d, simul.q3, ematrix=em, misccovariates=list(x=c(0.5,-0.5)), method="legacy"),
                    by=c("time","state","obs"))
 })
 
@@ -87,7 +87,7 @@ test_that("sim.msm C engine matches original R implementation", {
     c(n=length(s$states), last=s$states[length(s$states)], tend=s$times[length(s$times)]) }))
   set.seed(1)
   a <- summ(function() sim.msm(simul.q3, 12, covs=z, beta=c(1,0.5,-1,0.7), obstimes=0:9))
-  b <- summ(function() sim_msm_legacy(simul.q3, 12, covs=z, beta=c(1,0.5,-1,0.7), obstimes=0:9))
+  b <- summ(function() sim.msm(simul.q3, 12, covs=z, beta=c(1,0.5,-1,0.7), obstimes=0:9, method="legacy"))
   expect_same_dist(as.data.frame(a), as.data.frame(b), by=c("n","last"))
   expect_gt(suppressWarnings(ks.test(a[,"tend"], b[,"tend"])$p.value), 0.001)
 })

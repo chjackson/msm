@@ -11,7 +11,8 @@ sim.msm(
   beta = NULL,
   obstimes = 0,
   start = 1,
-  mintime = 0
+  mintime = 0,
+  method = "C"
 )
 }
 \arguments{
@@ -38,6 +39,13 @@ off-diagonal elements of the matrix.}
 \item{start}{Starting state of the process. Defaults to 1.}
 
 \item{mintime}{Starting time of the process. Defaults to 0.}
+
+\item{method}{The default from \code{msm} version 1.9,
+\code{method="C"}, uses a fast C-based method, which will
+simulate different specific values for a given seed from the
+previous slower R-based method. Set \code{method="legacy"} to use
+the old method, in case reproducibility of older results for the
+same seed is needed.}
 }
 \value{
 A list with components,
