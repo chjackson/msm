@@ -12,8 +12,8 @@
   may improve convergence in some cases
   ([\#136](https://github.com/chjackson/msm/issues/136)).
 
-- Bug fix in legacy code for computing matrix exponentials
-  ([\#137](https://github.com/chjackson/msm/issues/137))
+- Robustness fix in legacy code for computing matrix exponentials
+  ([\#137](https://github.com/chjackson/msm/issues/137)).
 
 - Fix of a bug in the likelihood calculation where `obstrue` is set for
   a subject’s first observation in a HMM and is inconsistent with
