@@ -20,3 +20,4 @@ inst/#*
 revdep
 *.code-workspace
 .vscode
+docs
