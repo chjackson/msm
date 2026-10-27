@@ -13,7 +13,8 @@ sim.msm(
   beta = NULL,
   obstimes = 0,
   start = 1,
-  mintime = 0
+  mintime = 0,
+  method = "C"
 )
 ```
 
@@ -56,6 +57,14 @@ sim.msm(
 - mintime:
 
   Starting time of the process. Defaults to 0.
+
+- method:
+
+  The default from `msm` version 1.9, `method="C"`, uses a fast C-based
+  method, which will simulate different specific values for a given seed
+  from the previous slower R-based method. Set `method="legacy"` to use
+  the old method, in case reproducibility of older results for the same
+  seed is needed.
 
 ## Value
 

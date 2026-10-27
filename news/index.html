@@ -33,13 +33,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.9" id="version-19-2026-10-">Version 1.9 (2026-10-??)<a class="anchor" aria-label="anchor" href="#version-19-2026-10-"></a></h2>
-<ul><li><p><code>simmulti.msm</code> is now much faster, since the simulation is done in C. <code>sim.msm</code> uses the same C code, so is also faster. Note that the values simulated by <code>sim.msm</code> and <code>simmulti.msm</code> for a specific seed will now be different from previous versions.</p></li>
+<h2 class="pkg-version" data-toc-text="1.9" id="version-19-2026-10-27">Version 1.9 (2026-10-27)<a class="anchor" aria-label="anchor" href="#version-19-2026-10-27"></a></h2>
+<ul><li><p><code>simmulti.msm</code> and <code>sim.msm</code> are now faster as they have been rewritten in C. <code>simmulti.msm</code> will be noticeably faster for large datasets. Note that the values simulated by these functions for a specific seed will now be different from previous versions unless the <code>method="legacy"</code> argument is set.</p></li>
 <li><p>More robust method for computing matrix exponential derivatives, which may improve convergence in some cases (<a href="https://github.com/chjackson/msm/issues/136" class="external-link">#136</a>).</p></li>
 <li><p>Bug fix in legacy code for computing matrix exponentials (<a href="https://github.com/chjackson/msm/issues/137" class="external-link">#137</a>)</p></li>
 <li><p>Fix of a bug in the likelihood calculation where <code>obstrue</code> is set for a subject’s first observation in a HMM and is inconsistent with <code>initprobs</code>. <code>obstrue</code> should override <code>initprobs</code>.</p></li>
-<li><p>Fix for <code>pearson.msm</code> with exact death times and next.obstime (<a href="https://github.com/chjackson/msm/issues/134" class="external-link">#134</a>)</p></li>
-<li><p>Fix for <code>hmmMV</code> example code (<a href="https://github.com/chjackson/msm/issues/135" class="external-link">#135</a>)</p></li>
+<li><p>Fix for <code>pearson.msm</code> with exact death times and next.obstime (<a href="https://github.com/chjackson/msm/issues/134" class="external-link">#134</a>).</p></li>
+<li><p>Fix for <code>hmmMV</code> example code (<a href="https://github.com/chjackson/msm/issues/135" class="external-link">#135</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8.2" id="version-182-2024-11-07">Version 1.8.2 (2024-11-07)<a class="anchor" aria-label="anchor" href="#version-182-2024-11-07"></a></h2><p class="text-muted">CRAN release: 2024-11-07</p>

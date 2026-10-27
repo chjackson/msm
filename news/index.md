@@ -1,11 +1,12 @@
 # Changelog
 
-## Version 1.9 (2026-10-??)
+## Version 1.9 (2026-10-27)
 
-- `simmulti.msm` is now much faster, since the simulation is done in C.
-  `sim.msm` uses the same C code, so is also faster. Note that the
-  values simulated by `sim.msm` and `simmulti.msm` for a specific seed
-  will now be different from previous versions.
+- `simmulti.msm` and `sim.msm` are now faster as they have been
+  rewritten in C. `simmulti.msm` will be noticeably faster for large
+  datasets. Note that the values simulated by these functions for a
+  specific seed will now be different from previous versions unless the
+  `method="legacy"` argument is set.
 
 - More robust method for computing matrix exponential derivatives, which
   may improve convergence in some cases
@@ -19,10 +20,10 @@
   `initprobs`. `obstrue` should override `initprobs`.
 
 - Fix for `pearson.msm` with exact death times and next.obstime
-  ([\#134](https://github.com/chjackson/msm/issues/134))
+  ([\#134](https://github.com/chjackson/msm/issues/134)).
 
 - Fix for `hmmMV` example code
-  ([\#135](https://github.com/chjackson/msm/issues/135))
+  ([\#135](https://github.com/chjackson/msm/issues/135)).
 
 ## Version 1.8.2 (2024-11-07)
 
